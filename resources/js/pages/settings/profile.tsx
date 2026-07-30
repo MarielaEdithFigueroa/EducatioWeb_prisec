@@ -68,7 +68,10 @@ export default function Profile({ status }: { status?: string }) {
                                     autoComplete="family-name"
                                     placeholder="Apellido"
                                 />
-                                <InputError className="mt-2" message={errors.apellido} />
+                                <InputError
+                                    className="mt-2"
+                                    message={errors.apellido}
+                                />
                             </div>
 
                             {status === 'profile-information-updated' && (

@@ -40,6 +40,12 @@ import {
 import type { DisplayBreadcrumb, RoleNavItem } from '@/layouts/role-shell';
 import { cn } from '@/lib/utils';
 import { dashboard } from '@/routes';
+import { index as aniosLectivosIndex } from '@/routes/academico/anios-lectivos';
+import { index as cursosIndex } from '@/routes/academico/cursos';
+import { index as divisionesIndex } from '@/routes/academico/divisiones';
+import { index as gruposIndex } from '@/routes/academico/grupos';
+import { index as nivelesIndex } from '@/routes/academico/niveles';
+import { index as turnosIndex } from '@/routes/academico/turnos';
 import type { BreadcrumbItem } from '@/types';
 
 interface Props extends PropsWithChildren {
@@ -83,9 +89,39 @@ const APP_MENU_SECTIONS: AppMenuSection[] = [
             },
             {
                 label: 'Grupos',
-                description: 'Cursos y divisiones',
+                description: 'Matrícula por año lectivo',
                 icon: LayersIcon,
-                disabled: true,
+                href: gruposIndex().url,
+            },
+            {
+                label: 'Niveles',
+                description: 'Primaria, Secundaria',
+                icon: ListTreeIcon,
+                href: nivelesIndex().url,
+            },
+            {
+                label: 'Cursos',
+                description: 'Grados y años por nivel',
+                icon: ListTreeIcon,
+                href: cursosIndex().url,
+            },
+            {
+                label: 'Divisiones',
+                description: 'A, B, C',
+                icon: ListTreeIcon,
+                href: divisionesIndex().url,
+            },
+            {
+                label: 'Turnos',
+                description: 'Mañana, Tarde, Única',
+                icon: ListTreeIcon,
+                href: turnosIndex().url,
+            },
+            {
+                label: 'Años lectivos',
+                description: 'Ciclos lectivos',
+                icon: ListTreeIcon,
+                href: aniosLectivosIndex().url,
             },
             {
                 label: 'Materias y planes',
