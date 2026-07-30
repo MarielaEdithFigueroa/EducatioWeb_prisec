@@ -1,0 +1,410 @@
+@import 'tailwindcss';
+
+@import 'tw-animate-css';
+
+@source '../views';
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+    --font-sans:
+        'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
+        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+        'Noto Color Emoji';
+
+    --radius-lg: var(--radius);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-sm: calc(var(--radius) - 4px);
+
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+
+    --color-destructive: var(--destructive);
+    --color-destructive-foreground: var(--destructive-foreground);
+
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+
+    --color-chart-1: var(--chart-1);
+    --color-chart-2: var(--chart-2);
+    --color-chart-3: var(--chart-3);
+    --color-chart-4: var(--chart-4);
+    --color-chart-5: var(--chart-5);
+
+    --color-sidebar: var(--sidebar);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-ring: var(--sidebar-ring);
+
+    /* Educatio brand */
+    --color-brand-orange: var(--brand-orange);
+    --color-brand-orange-strong: var(--brand-orange-strong);
+    --color-brand-blue: var(--brand-blue);
+    --color-brand-blue-deep: var(--brand-blue-deep);
+    --color-brand-gray: var(--brand-gray);
+
+    /* Operational state tokens */
+    --color-status-pending: var(--status-pending);
+    --color-status-confirmed: var(--status-confirmed);
+    --color-status-delivered: var(--status-delivered);
+    --color-status-cancelled: var(--status-cancelled);
+    --color-status-warning: var(--status-warning);
+
+    /* Eure component color utilities */
+    --color-eure-primary: var(--eure-primary);
+    --color-eure-primary-strong: var(--eure-primary-strong);
+    --color-eure-accent: var(--eure-accent);
+    --color-eure-success: var(--eure-success);
+    --color-eure-success-bg: var(--eure-success-bg);
+    --color-eure-error: var(--eure-error);
+    --color-eure-warning: var(--eure-warning);
+    --color-eure-warning-bg: var(--eure-warning-bg);
+    --color-eure-info: var(--eure-info);
+    --color-eure-info-bg: var(--eure-info-bg);
+    --color-eure-error-bg: var(--eure-error-bg);
+    --color-eure-border: var(--eure-border);
+    --color-eure-table-row-alt: var(--eure-table-row-alt);
+    --color-eure-table-row-hover: var(--eure-table-row-hover);
+}
+
+@theme inline {
+    /* Application shell */
+    --color-shell-frame: var(--shell-frame);
+    --color-shell-sidebar: var(--shell-sidebar);
+    --color-shell-sidebar-foreground: var(--shell-sidebar-foreground);
+    --color-shell-sidebar-muted: var(--shell-sidebar-muted);
+    --color-shell-canvas: var(--shell-canvas);
+    --color-shell-surface: var(--shell-surface);
+    --color-shell-public-background: var(--shell-public-background);
+    --color-shell-public-surface: var(--shell-public-surface);
+    --color-shell-foreground: var(--shell-foreground);
+    --color-shell-secondary-foreground: var(--shell-secondary-foreground);
+    --color-shell-heading: var(--shell-heading);
+    --color-shell-muted-foreground: var(--shell-muted-foreground);
+    --color-shell-subtle-foreground: var(--shell-subtle-foreground);
+    --color-shell-border: var(--shell-border);
+    --color-shell-hover: var(--shell-hover);
+    --color-shell-control: var(--shell-control);
+    --color-shell-control-foreground: var(--shell-control-foreground);
+    --color-shell-control-hover: var(--shell-control-hover);
+    --color-shell-overlay: var(--shell-overlay);
+    --color-shell-brand: var(--shell-brand);
+    --color-shell-brand-foreground: var(--shell-brand-foreground);
+    --color-shell-active: var(--shell-active);
+    --color-shell-active-foreground: var(--shell-active-foreground);
+    --color-shell-active-border: var(--shell-active-border);
+    --shadow-shell: var(--shell-shadow);
+}
+
+:root {
+    --background: #f5f7f9;
+    --foreground: #263845;
+    --card: var(--color-white);
+    --card-foreground: #263845;
+    --popover: var(--color-white);
+    --popover-foreground: #263845;
+    --primary: var(--brand-blue);
+    --primary-foreground: var(--color-white);
+    --secondary: #e9eff3;
+    --secondary-foreground: var(--brand-blue-deep);
+    --muted: #eef2f5;
+    --muted-foreground: #667784;
+    --accent: #edf2f5;
+    --accent-foreground: var(--brand-blue-deep);
+    --destructive: oklch(0.577 0.245 27.325);
+    --destructive-foreground: oklch(0.577 0.245 27.325);
+    --border: var(--brand-gray);
+    --input: var(--brand-gray);
+    --ring: var(--brand-blue);
+    --chart-1: var(--brand-orange);
+    --chart-2: var(--brand-blue);
+    --chart-3: #8797a1;
+    --chart-4: #eeb07f;
+    --chart-5: #5f8da8;
+    --radius: 0.625rem;
+    --sidebar: #1f668d;
+    --sidebar-foreground: var(--color-white);
+    --sidebar-primary: var(--brand-orange);
+    --sidebar-primary-foreground: var(--brand-blue-deep);
+    --sidebar-accent: #164a68;
+    --sidebar-accent-foreground: var(--color-white);
+    --sidebar-border: #3b7d9e;
+    --sidebar-ring: var(--brand-orange);
+
+    /* Educatio brand */
+    --brand-orange: #e47b32;
+    --brand-orange-strong: #c65d1c;
+    --brand-blue: #1f6388;
+    --brand-blue-deep: #102f44;
+    --brand-gray: #dde3e7;
+
+    /* Application shell */
+    --shell-frame: var(--brand-orange);
+    --shell-sidebar: #1f668d;
+    --shell-sidebar-foreground: var(--color-white);
+    --shell-sidebar-muted: #d7e2e8;
+    --shell-canvas: #f5f7f9;
+    --shell-surface: var(--color-white);
+    --shell-public-background: #eef3f6;
+    --shell-public-surface: var(--color-white);
+    --shell-foreground: #3f5361;
+    --shell-secondary-foreground: #5d6e79;
+    --shell-heading: var(--brand-blue-deep);
+    --shell-muted-foreground: #687985;
+    --shell-subtle-foreground: #95a2aa;
+    --shell-border: var(--brand-gray);
+    --shell-hover: #eef3f6;
+    --shell-control: var(--brand-blue);
+    --shell-control-foreground: var(--color-white);
+    --shell-control-hover: #164a68;
+    --shell-overlay: var(--brand-blue-deep);
+    --shell-brand: var(--brand-orange);
+    --shell-brand-foreground: var(--brand-blue-deep);
+    --shell-active: #164a68;
+    --shell-active-foreground: var(--color-white);
+    --shell-active-border: var(--brand-orange);
+    --shell-shadow: 0 10px 30px rgb(16 47 68 / 0.1);
+    --inertia-progress: var(--brand-orange);
+
+    /* Operational state tokens */
+    --status-pending: oklch(0.84 0.17 84);
+    --status-confirmed: oklch(0.55 0.14 148);
+    --status-delivered: oklch(0.62 0.12 250);
+    --status-cancelled: oklch(0.577 0.245 27.325);
+    --status-warning: oklch(0.78 0.16 55);
+
+    /* Eure component tokens — anchored to the Educatio palette */
+    --eure-primary: var(--primary);
+    --eure-primary-strong: var(--brand-blue-deep);
+    --eure-accent: var(--brand-orange);
+    --eure-text: var(--foreground);
+    --eure-sub: var(--muted-foreground);
+    --eure-bg: var(--muted);
+    --eure-border: var(--border);
+    --eure-error: var(--destructive);
+    --eure-error-border: oklch(0.7 0.17 27);
+    --eure-success: oklch(0.55 0.13 150);
+    --eure-success-bg: oklch(0.95 0.04 150);
+    --eure-warning: oklch(0.7 0.16 75);
+    --eure-warning-bg: oklch(0.96 0.06 90);
+    --eure-info: oklch(0.62 0.08 220);
+    --eure-info-bg: oklch(0.97 0.015 220);
+    --eure-error-bg: oklch(0.97 0.02 27);
+    --eure-table-row-alt: color-mix(in oklch, var(--eure-primary) 8%, white);
+    --eure-table-row-hover: color-mix(in oklch, var(--eure-primary) 12%, white);
+}
+
+.dark {
+    --background: #0b1821;
+    --foreground: #f1f5f7;
+    --card: #12242f;
+    --card-foreground: #f1f5f7;
+    --popover: #12242f;
+    --popover-foreground: #f1f5f7;
+    --primary: var(--brand-blue);
+    --primary-foreground: var(--color-white);
+    --secondary: #1b3443;
+    --secondary-foreground: #f1f5f7;
+    --muted: #1a303d;
+    --muted-foreground: #afbec6;
+    --accent: #203e50;
+    --accent-foreground: #f1f5f7;
+    --destructive: oklch(0.396 0.141 25.723);
+    --destructive-foreground: oklch(0.637 0.237 25.331);
+    --border: #2b4555;
+    --input: #2b4555;
+    --ring: #4d8eaf;
+    --chart-1: #efa36e;
+    --chart-2: #5a98b8;
+    --chart-3: #9eacb4;
+    --chart-4: #f3bf98;
+    --chart-5: #7caac1;
+    --sidebar: var(--brand-blue-deep);
+    --sidebar-foreground: var(--color-white);
+    --sidebar-primary: var(--brand-orange);
+    --sidebar-primary-foreground: var(--brand-blue-deep);
+    --sidebar-accent: #163c50;
+    --sidebar-accent-foreground: var(--color-white);
+    --sidebar-border: #254b60;
+    --sidebar-ring: var(--brand-orange);
+
+    /* Educatio brand */
+    --brand-orange: #efa36e;
+    --brand-orange-strong: #d68148;
+    --brand-blue: #2f7195;
+    --brand-blue-deep: #081c27;
+    --brand-gray: #405765;
+
+    /* Application shell */
+    --shell-sidebar-muted: #d6e4eb;
+    --shell-canvas: #0b1821;
+    --shell-surface: #12242f;
+    --shell-public-background: #0f202b;
+    --shell-public-surface: #12242f;
+    --shell-foreground: #dae4e9;
+    --shell-secondary-foreground: #b4c2c9;
+    --shell-heading: #f4f7f8;
+    --shell-muted-foreground: #97a9b2;
+    --shell-subtle-foreground: #718690;
+    --shell-border: #2b4555;
+    --shell-hover: #1a303d;
+    --shell-control-hover: #245d7a;
+    --shell-overlay: #050f15;
+    --shell-active: #163c50;
+    --shell-shadow: 0 12px 32px rgb(0 0 0 / 0.3);
+    --inertia-progress: var(--brand-orange);
+
+    /* Eure component tokens */
+    --eure-primary-strong: #245d7a;
+    --eure-accent: var(--brand-orange);
+
+    /* Operational state tokens */
+    --status-pending: oklch(0.84 0.17 84);
+    --status-confirmed: oklch(0.65 0.14 148);
+    --status-delivered: oklch(0.72 0.12 250);
+    --status-cancelled: oklch(0.396 0.141 25.723);
+    --status-warning: oklch(0.78 0.16 55);
+}
+
+@layer base {
+    * {
+        @apply border-border;
+    }
+
+    body {
+        @apply bg-background text-foreground;
+    }
+}
+
+/* Scoped react-datepicker overrides for EureDatePicker */
+.eure-datepicker .react-datepicker__header {
+    background-color: var(--eure-primary);
+    border-bottom-color: var(--eure-primary-strong);
+    padding-top: 0.75rem;
+}
+
+.eure-datepicker .react-datepicker__current-month,
+.eure-datepicker .react-datepicker__day-name,
+.eure-datepicker .react-datepicker-time__header {
+    color: white;
+}
+
+.eure-datepicker .react-datepicker__day {
+    color: var(--eure-text);
+    border-radius: 0.25rem;
+}
+
+.eure-datepicker .react-datepicker__day:hover {
+    background-color: var(--eure-table-row-hover);
+}
+
+.eure-datepicker .react-datepicker__day--selected,
+.eure-datepicker .react-datepicker__day--keyboard-selected {
+    background-color: var(--eure-primary);
+    color: white;
+}
+
+.eure-datepicker .react-datepicker__day--selected:hover,
+.eure-datepicker .react-datepicker__day--keyboard-selected:hover {
+    background-color: var(--eure-primary);
+    opacity: 0.9;
+}
+
+.eure-datepicker .react-datepicker__day--outside-month {
+    color: var(--eure-sub);
+    opacity: 0.5;
+}
+
+.eure-datepicker .react-datepicker__day--disabled {
+    color: var(--eure-sub);
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.eure-datepicker .react-datepicker__year-wrapper {
+    max-width: 240px;
+    justify-content: center;
+}
+
+.eure-datepicker .react-datepicker__year-text {
+    border-radius: 0.25rem;
+    padding: 0.25rem;
+    font-size: 0.875rem;
+    color: var(--eure-text);
+}
+
+.eure-datepicker .react-datepicker__year-text:hover {
+    background-color: var(--eure-table-row-hover);
+}
+
+.eure-datepicker .react-datepicker__year-text--selected,
+.eure-datepicker .react-datepicker__year-text--keyboard-selected {
+    background-color: var(--eure-primary);
+    color: white;
+}
+
+.eure-datepicker .react-datepicker__year-text--disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.eure-datepicker .react-datepicker__month-text {
+    border-radius: 0.25rem;
+    padding: 0.375rem 0.25rem;
+    font-size: 0.875rem;
+    text-transform: capitalize;
+    color: var(--eure-text);
+}
+
+.eure-datepicker .react-datepicker__month-text:hover {
+    background-color: var(--eure-table-row-hover);
+}
+
+.eure-datepicker .react-datepicker__month-text--selected,
+.eure-datepicker .react-datepicker__month-text--keyboard-selected {
+    background-color: var(--eure-primary);
+    color: white;
+}
+
+.eure-datepicker .react-datepicker__month-text--disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.eure-datepicker .react-datepicker__navigation-icon::before {
+    border-color: white;
+}
+
+.eure-datepicker
+    .react-datepicker__navigation:hover
+    .react-datepicker__navigation-icon::before {
+    border-color: rgba(255, 255, 255, 0.75);
+}
+
+.eure-datepicker .react-datepicker__triangle {
+    display: none;
+}
