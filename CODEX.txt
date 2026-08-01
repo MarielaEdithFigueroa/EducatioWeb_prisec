@@ -1,1 +1,70 @@
-run codex resume 019faaa9-8ca5-7f83-a0dd-6276624585d4
+ESTE ARCHIVO NO ES PARA IAS
+SALIR
+
+run codex resume 019fb539-5e82-7b61-8edb-1c9419eef47d
+
+
+ Continuá la implementación de la Fase 1 de estructura académica en:
+
+  D:\Eureka\EducatioWeb\EducatioWeb_PriSec-main
+
+  No empieces de nuevo. Primero ejecutá `git status -sb` y revisá todo el `git diff`; el trabajo quedó parcialmente
+  implementado en la rama `feat/estructura-academica-codex`.
+
+  Importante:
+  - `CODEX.txt` contiene un cambio previo del usuario. No modificarlo ni descartarlo.
+  - Leer AGENTS.md y activar las skills Laravel, Inertia React, Wayfinder, Tailwind y Pest.
+  - Leer los issues GitHub #1 y #3 con las respuestas de Mariela si necesitás recuperar contexto.
+  - Preservar todo lo ya implementado y corregirlo donde sea necesario.
+  - No editar manualmente los archivos generados por Wayfinder.
+
+  Estado aproximado:
+  - Creadas migraciones para niveles, años lectivos, cursos, divisiones, turnos, planes de estudio y grupos.
+  - Creados modelos, factories, NivelSeeder y enum EstadoAnioLectivo.
+  - Creadas policies permisivas para usuarios autenticados.
+  - Creados Form Requests con validaciones.
+  - Creadas acciones transaccionales y auditadas:
+    - PersistirEntidadAcademica
+    - MarcarAnioLectivoVigente
+    - ProyectarGrupos
+  - Creados controladores académicos y 28 rutas.
+  - Wayfinder fue regenerado con `--with-form`.
+  - Backend todavía necesita revisión y ejecución de tests.
+  - No se crearon todavía las pantallas:
+    - `resources/js/pages/academico/estructura.tsx`
+    - `resources/js/pages/academico/grupos.tsx`
+  - Falta centralizar/agregar la navegación académica.
+  - Los tests Pest generados siguen vacíos.
+  - No se ejecutaron Pint, tests, chequeo de tipos, lint ni build.
+  - No ejecutar `migrate:fresh --seed` sobre MariaDB sin confirmar primero, porque elimina los datos locales.
+
+  Objetivo:
+  1. Revisar y corregir el backend existente.
+  2. Implementar las dos pantallas Inertia usando EureFramework, Wayfinder, Tailwind v4, selects buscables, modo oscuro
+  y EureDataTable.
+  3. Agregar menú para “Estructura académica” y “Grupos”.
+  4. Completar tests Pest para catálogos, años, grupos, auditoría, cambio de año vigente y proyección idempotente.
+  5. Ejecutar:
+     - `vendor/bin/pint --dirty --format agent`
+     - tests Pest afectados
+     - `npm run lint:check`
+     - `npm run types:check`
+     - `npm run build`
+  6. Informar resultados, cualquier deuda y los archivos modificados.
+
+  Decisiones de dominio:
+  - Alcance: sólo Primaria y Secundaria.
+  - Divisiones y turnos pertenecen a un nivel.
+  - Existe un único año lectivo vigente para ambos niveles y puede prepararse el siguiente.
+  - Grupo = año + plan + curso + división + turno.
+  - Todos los componentes del grupo deben ser del mismo nivel.
+  - La combinación del grupo es única incluso si está inactiva; debe reactivarse, no duplicarse.
+  - La proyección copia sólo grupos activos, reactiva coincidencias inactivas, omite activas y no toca grupos manuales
+  del destino.
+  - `activo` siempre inmediatamente después de `id`.
+  - Sin timestamps, SoftDeletes, cascadas ni eliminación física.
+  - Toda mutación se audita en `logs` dentro de la misma transacción.
+  - `INGRESANTES` es un plan configurable normal, no lógica hardcodeada.
+  - Alumnos, responsables, matrículas y facturación quedan fuera de esta fase.
+
+  Los cambios ya están guardados en el disco; aunque se corte la luz, el nuevo Codex debe continuar desde el git diff.

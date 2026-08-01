@@ -40,6 +40,8 @@ import {
 import type { DisplayBreadcrumb, RoleNavItem } from '@/layouts/role-shell';
 import { cn } from '@/lib/utils';
 import { dashboard } from '@/routes';
+import { index as estructuraAcademica } from '@/routes/academico/estructura';
+import { index as gruposAcademicos } from '@/routes/academico/grupos';
 import type { BreadcrumbItem } from '@/types';
 
 interface Props extends PropsWithChildren {
@@ -62,6 +64,12 @@ type AppMenuSection = {
 
 const NAV_ITEMS: RoleNavItem[] = [
     { label: 'Inicio', href: dashboard.url(), icon: LayoutDashboardIcon },
+    {
+        label: 'Estructura',
+        href: estructuraAcademica.url(),
+        icon: ListTreeIcon,
+    },
+    { label: 'Grupos', href: gruposAcademicos.url(), icon: LayersIcon },
 ];
 
 const APP_MENU_SECTIONS: AppMenuSection[] = [
@@ -69,6 +77,12 @@ const APP_MENU_SECTIONS: AppMenuSection[] = [
         title: 'Académico',
         icon: GraduationCapIcon,
         items: [
+            {
+                label: 'Estructura académica',
+                description: 'Años, cursos, divisiones, turnos y planes',
+                icon: ListTreeIcon,
+                href: estructuraAcademica.url(),
+            },
             {
                 label: 'Alumnos',
                 description: 'Legajos y matrícula',
@@ -85,7 +99,7 @@ const APP_MENU_SECTIONS: AppMenuSection[] = [
                 label: 'Grupos',
                 description: 'Cursos y divisiones',
                 icon: LayersIcon,
-                disabled: true,
+                href: gruposAcademicos.url(),
             },
             {
                 label: 'Materias y planes',
