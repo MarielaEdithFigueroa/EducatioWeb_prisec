@@ -3,8 +3,11 @@
 use App\EstadoAnioLectivo;
 use App\Models\AnioLectivo;
 use App\Models\Curso;
+use App\Models\Division;
 use App\Models\Grupo;
 use App\Models\Nivel;
+use App\Models\PlanEstudio;
+use App\Models\Turno;
 use App\Models\User;
 use Inertia\Testing\AssertableInertia as Assert;
 
@@ -23,6 +26,9 @@ it('muestra la estructura académica a un usuario autenticado', function () {
     $nivel = Nivel::factory()->create();
     AnioLectivo::factory()->create(['anio' => 2026]);
     Curso::factory()->for($nivel)->create();
+    Division::factory()->for($nivel)->create();
+    Turno::factory()->for($nivel)->create();
+    PlanEstudio::factory()->for($nivel)->create();
 
     $this->actingAs(User::factory()->create())
         ->get(route('academico.estructura.index'))
@@ -31,7 +37,10 @@ it('muestra la estructura académica a un usuario autenticado', function () {
             ->component('academico/estructura')
             ->has('niveles', 1)
             ->has('aniosLectivos', 1)
-            ->has('cursos', 1));
+            ->has('cursos', 1)
+            ->has('divisiones', 1)
+            ->has('turnos', 1)
+            ->has('planesEstudio', 1));
 });
 
 it('crea los catálogos académicos y registra la auditoría', function () {

@@ -1,12 +1,17 @@
 import { Form, Head, router } from '@inertiajs/react';
 import type { ColumnDef } from '@tanstack/react-table';
 import {
+    BookOpenCheckIcon,
     CheckCircle2Icon,
+    Clock3Icon,
     Edit3Icon,
+    GraduationCapIcon,
+    LayoutGridIcon,
     PlusIcon,
     PowerIcon,
     RotateCcwIcon,
 } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import {
     desactivar as desactivarAnio,
@@ -56,13 +61,13 @@ import {
     EureConfirmSwal,
     EureDataTable,
     EureInputGroup,
-    EureSelect,
     EureSelectGroup,
 } from '@/components/ui/eure';
 import type {
     EureDataTableAccion,
     EureSelectOption,
 } from '@/components/ui/eure';
+import { cn } from '@/lib/utils';
 import { index as estructuraIndex } from '@/routes/academico/estructura';
 import type { AnioLectivo, CatalogoConNivel, Nivel } from '@/types';
 
@@ -85,6 +90,8 @@ type DefinicionFormulario = {
 type ConfiguracionCatalogo = {
     singular: string;
     plural: string;
+    descripcion: string;
+    icono: LucideIcon;
     usaCodigo: boolean;
     crear: () => DefinicionFormulario;
     actualizar: (id: number) => DefinicionFormulario;
@@ -96,6 +103,8 @@ const CONFIGURACION_CATALOGOS: Record<TipoCatalogo, ConfiguracionCatalogo> = {
     curso: {
         singular: 'curso',
         plural: 'Cursos',
+        descripcion: 'Grados o años disponibles en cada nivel.',
+        icono: GraduationCapIcon,
         usaCodigo: false,
         crear: () => crearCurso.form(),
         actualizar: (id) => actualizarCurso.form(id),
@@ -105,6 +114,8 @@ const CONFIGURACION_CATALOGOS: Record<TipoCatalogo, ConfiguracionCatalogo> = {
     division: {
         singular: 'división',
         plural: 'Divisiones',
+        descripcion: 'Secciones que permiten organizar cada curso.',
+        icono: LayoutGridIcon,
         usaCodigo: false,
         crear: () => crearDivision.form(),
         actualizar: (id) => actualizarDivision.form(id),
@@ -114,6 +125,8 @@ const CONFIGURACION_CATALOGOS: Record<TipoCatalogo, ConfiguracionCatalogo> = {
     turno: {
         singular: 'turno',
         plural: 'Turnos',
+        descripcion: 'Franjas horarias habilitadas por nivel.',
+        icono: Clock3Icon,
         usaCodigo: false,
         crear: () => crearTurno.form(),
         actualizar: (id) => actualizarTurno.form(id),
@@ -123,6 +136,8 @@ const CONFIGURACION_CATALOGOS: Record<TipoCatalogo, ConfiguracionCatalogo> = {
     plan: {
         singular: 'plan de estudio',
         plural: 'Planes de estudio',
+        descripcion: 'Propuestas académicas asociadas a cada nivel.',
+        icono: BookOpenCheckIcon,
         usaCodigo: true,
         crear: () => crearPlan.form(),
         actualizar: (id) => actualizarPlan.form(id),
@@ -618,12 +633,9 @@ export default function EstructuraAcademica({
         },
     ];
 
-    const opcionesCatalogo: EureSelectOption[] = (
-        Object.keys(CONFIGURACION_CATALOGOS) as TipoCatalogo[]
-    ).map((tipo) => ({
-        value: tipo,
-        label: CONFIGURACION_CATALOGOS[tipo].plural,
-    }));
+    const tiposCatalogo = Object.keys(
+        CONFIGURACION_CATALOGOS,
+    ) as TipoCatalogo[];
 
     return (
         <>
@@ -660,41 +672,108 @@ export default function EstructuraAcademica({
                     />
                 </EureCard>
 
-                <EureCard title="Catálogos por nivel">
-                    <div className="mb-4 max-w-sm">
-                        <EureSelect
-                            options={opcionesCatalogo}
-                            value={
-                                opcionesCatalogo.find(
-                                    (opcion) => opcion.value === tipoCatalogo,
-                                ) ?? null
-                            }
-                            onChange={(opcion) => {
-                                setTipoCatalogo(
-                                    (opcion?.value as TipoCatalogo) ?? 'curso',
+                <EureCard title="Cursos, divisiones, turnos y planes de estudio">
+                    <div className="mb-5 grid gap-2">
+                        <div>
+                            <h2 className="font-medium text-foreground">
+                                ¿Qué querés administrar?
+                            </h2>
+                            <p className="text-sm text-muted-foreground">
+                                Elegí una opción para consultar sus registros o
+                                dar de alta uno nuevo.
+                            </p>
+                        </div>
+
+                        <div
+                            role="tablist"
+                            aria-label="Catálogos académicos"
+                            className="grid grid-cols-2 gap-2 lg:grid-cols-4"
+                        >
+                            {tiposCatalogo.map((tipo) => {
+                                const opcion = CONFIGURACION_CATALOGOS[tipo];
+                                const Icono = opcion.icono;
+                                const seleccionada = tipoCatalogo === tipo;
+                                const cantidad = catalogos[tipo].length;
+
+                                return (
+                                    <button
+                                        key={tipo}
+                                        id={`catalogo-tab-${tipo}`}
+                                        type="button"
+                                        role="tab"
+                                        aria-selected={seleccionada}
+                                        aria-controls="catalogo-panel"
+                                        onClick={() => {
+                                            setTipoCatalogo(tipo);
+                                            setCatalogoEditando(null);
+                                        }}
+                                        className={cn(
+                                            'flex min-h-20 items-center gap-3 rounded-lg border p-3 text-left transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none',
+                                            seleccionada
+                                                ? 'border-primary bg-primary/5 text-foreground shadow-sm ring-1 ring-primary/20 dark:bg-primary/10'
+                                                : 'border-border bg-background text-muted-foreground hover:border-primary/40 hover:bg-muted/50 hover:text-foreground',
+                                        )}
+                                    >
+                                        <span
+                                            className={cn(
+                                                'flex size-9 shrink-0 items-center justify-center rounded-md',
+                                                seleccionada
+                                                    ? 'bg-primary text-primary-foreground'
+                                                    : 'bg-muted text-muted-foreground',
+                                            )}
+                                        >
+                                            <Icono className="size-5" />
+                                        </span>
+                                        <span className="min-w-0">
+                                            <span className="block font-medium">
+                                                {opcion.plural}
+                                            </span>
+                                            <span className="block text-xs tabular-nums opacity-80">
+                                                {cantidad}{' '}
+                                                {cantidad === 1
+                                                    ? 'registro'
+                                                    : 'registros'}
+                                            </span>
+                                        </span>
+                                    </button>
                                 );
-                                setCatalogoEditando(null);
-                            }}
-                            placeholder="Seleccionar catálogo"
+                            })}
+                        </div>
+                    </div>
+
+                    <div
+                        id="catalogo-panel"
+                        role="tabpanel"
+                        aria-labelledby={`catalogo-tab-${tipoCatalogo}`}
+                        className="border-t border-border pt-4"
+                    >
+                        <div className="mb-3">
+                            <h3 className="text-lg font-semibold text-foreground">
+                                {configuracion.plural}
+                            </h3>
+                            <p className="text-sm text-muted-foreground">
+                                {configuracion.descripcion}
+                            </p>
+                        </div>
+
+                        <EureDataTable
+                            columns={columnasCatalogo}
+                            data={catalogos[tipoCatalogo]}
+                            acciones={accionesCatalogo}
+                            globalFilterPlaceholder={`Buscar en ${configuracion.plural.toLocaleLowerCase('es-AR')}...`}
+                            toolbarActions={
+                                <EureButtonPrimary
+                                    onClick={() => {
+                                        setCatalogoEditando(null);
+                                        setDialogoCatalogoAbierto(true);
+                                    }}
+                                >
+                                    <PlusIcon className="size-4" />
+                                    Nuevo {configuracion.singular}
+                                </EureButtonPrimary>
+                            }
                         />
                     </div>
-                    <EureDataTable
-                        columns={columnasCatalogo}
-                        data={catalogos[tipoCatalogo]}
-                        acciones={accionesCatalogo}
-                        globalFilterPlaceholder="Buscar en resultados..."
-                        toolbarActions={
-                            <EureButtonPrimary
-                                onClick={() => {
-                                    setCatalogoEditando(null);
-                                    setDialogoCatalogoAbierto(true);
-                                }}
-                            >
-                                <PlusIcon className="size-4" />
-                                Nuevo {configuracion.singular}
-                            </EureButtonPrimary>
-                        }
-                    />
                 </EureCard>
             </div>
 
