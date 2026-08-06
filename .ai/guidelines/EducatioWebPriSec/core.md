@@ -77,7 +77,30 @@ Para que ese agregado después sea un **relleno y no una reescritura**, dejar la
 
 ---
 
-## Convenciones de UI
+## Convenciones de UI  y experiencia de uso
+
+## Principios de diseño de Educatio
+
+Educatio es una herramienta interna de trabajo diario para personal administrativo y docente. No es una aplicación de marketing ni una app destinada a vender el producto.
+
+- Priorizar productividad, claridad, consistencia y velocidad de carga por encima de efectos visuales o elementos decorativos.
+- Mantener una estética moderna, limpia, sobria y profesional, sin colores llamativos innecesarios.
+- La información principal, los filtros y las acciones frecuentes deben estar visibles y accesibles con la menor cantidad razonable de clics.
+- La interfaz puede ser densa cuando el trabajo lo requiera, pero nunca confusa.
+- Una acción frecuente debe requerir la menor cantidad posible de pasos sin sacrificar claridad, validación o seguridad.
+
+## Navegación con teclado
+
+Educatio debe poder operarse eficientemente con teclado. Sus usuarios realizan carga intensiva de datos durante gran parte de la jornada.
+
+- `TAB` define el recorrido natural entre controles.
+- `ENTER` ejecuta la acción principal de la pantalla o formulario, como Aceptar, Guardar o Buscar, siempre que el foco no esté en un campo multilínea ni en un componente donde Enter tenga otra función esperable.
+- El orden de tabulación debe coincidir con el flujo lógico de carga.
+- El primer campo editable debe recibir foco cuando corresponda.
+- Los campos `readonly` o deshabilitados no deben interrumpir innecesariamente el recorrido con `TAB`.
+- No aceptar componentes que rompan la navegación por teclado o requieran el mouse para una operación habitual.
+- Todo componente personalizado debe conservar estados de foco visibles y accesibles.
+
 
 ### Tablas (`EureDataTable`)
 
@@ -108,6 +131,10 @@ Para que ese agregado después sea un **relleno y no una reescritura**, dejar la
 ### Formularios
 
 - El ancho del campo acompaña al dato: un precio **no** ocupa el 100% del ancho; una descripción sí.
+- Los labels deben permanecer visibles. No usar placeholders como reemplazo del label.
+- Los formularios deben abrir listos para trabajar y respetar un recorrido de carga predecible.
+- Los mensajes de validación deben aparecer junto al campo correspondiente y conservar el valor ingresado cuando sea posible.
+- La acción principal debe ser inequívoca y compatible con `ENTER` según las reglas de navegación por teclado.
 
 ### General
 
