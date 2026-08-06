@@ -18,8 +18,11 @@ class UsersSeeder extends Seeder
             throw new \RuntimeException('Definí SEED_ADMIN_PASSWORD antes de ejecutar DatabaseSeeder.');
         }
 
-        User::factory()->create([
-            'login' => env('SEED_ADMIN_LOGIN', 'admin'),
+        $login = env('SEED_ADMIN_LOGIN', 'admin');
+
+        User::query()->updateOrCreate([
+            'login' => $login,
+        ], [
             'nombre' => env('SEED_ADMIN_NOMBRE', 'Administrador'),
             'apellido' => env('SEED_ADMIN_APELLIDO', 'Local'),
             'password' => $password,
