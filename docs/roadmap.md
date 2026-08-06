@@ -2,6 +2,23 @@
 
 Educatio está siendo migrado desde una aplicación existente desarrollada en VB6. La nueva versión utiliza Laravel 13, React, Inertia y MariaDB. Este documento registra el avance técnico general del proyecto, pero no reemplaza el análisis funcional detallado de cada módulo. El orden de las etapas puede ajustarse a medida que se conozcan nuevas dependencias.
 
+# Principios del proyecto
+
+Las siguientes reglas deberán respetarse durante todo el desarrollo:
+
+- Mantener una arquitectura consistente por encima de la velocidad de implementación.
+- Priorizar la claridad y mantenibilidad del código.
+- No debilitar el modelo nuevo para aceptar inconsistencias del sistema VB6.
+- Perfilar, sanear y transformar los datos legacy antes de importarlos.
+- Documentar toda decisión funcional o técnica importante.
+- Preservar la integridad referencial en las migraciones y operaciones de datos.
+- Acompañar cada módulo importante con pruebas apropiadas.
+- Respetar las convenciones definidas en `docs/decisiones-arquitectura.md`.
+- Revisar el diseño funcional y técnico antes de implementar un módulo nuevo.
+- Evitar agregar abstracciones, tablas, índices o funcionalidades sin una necesidad concreta.
+- Utilizar baja lógica mediante `activo` cuando corresponda.
+- No ejecutar operaciones destructivas sobre bases con información que deba conservarse sin autorización explícita.
+
 ## Estados
 
 - [x] Completado
@@ -285,3 +302,42 @@ No se definen roles ni permisos hasta realizar el análisis funcional correspond
 8. Implementar el ABM de grupos.
 9. Agregar pruebas funcionales de este núcleo.
 10. Comenzar el relevamiento del módulo de alumnos.
+
+## Estado actual del proyecto
+
+### Arquitectura
+
+- Convenciones iniciales definidas.
+- Decisiones técnicas documentadas.
+- Integridad referencial del núcleo académico validada.
+- Roadmap técnico creado.
+
+### Base de datos
+
+- Migraciones académicas iniciales implementadas y ejecutadas.
+- Tablas `niveles`, `cursos`, `divisiones`, `turnos`, `planes_estudio` y `grupos` operativas.
+- Claves foráneas simples y compuestas verificadas.
+- Restricciones únicas e índices iniciales verificados.
+- Seeders iniciales ejecutados correctamente.
+
+### Backend
+
+- Laravel 13 configurado.
+- Modelos Eloquent del núcleo académico creados.
+- Relaciones básicas configuradas.
+- Autenticación inicial disponible.
+- Primeros ABM todavía pendientes.
+
+### Frontend
+
+- React e Inertia configurados.
+- Primer ABM académico pendiente de implementación.
+
+### Migración desde VB6
+
+- Relevamiento y perfilado de datos todavía pendientes.
+- No se iniciaron importaciones de datos históricos.
+
+### Estado general
+
+Se completó la etapa inicial de arquitectura, modelo de datos y documentación. El próximo objetivo funcional será implementar el ABM de cursos como primer circuito completo entre Laravel, React, Inertia y MariaDB.
