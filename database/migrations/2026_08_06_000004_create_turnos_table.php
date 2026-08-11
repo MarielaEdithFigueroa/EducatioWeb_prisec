@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('turnos', function (Blueprint $table) {
-            $table->bigIncrements('id_turno');
+            $table->bigIncrements('id');
             $table->boolean('activo')->default(true);
             $table->string('descripcion', 50);
             $table->unsignedSmallInteger('orden')->default(0);

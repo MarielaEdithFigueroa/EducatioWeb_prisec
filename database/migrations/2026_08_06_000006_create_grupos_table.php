@@ -9,48 +9,48 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('grupos', function (Blueprint $table) {
-            $table->bigIncrements('id_grupo');
+            $table->bigIncrements('id');
             $table->boolean('activo')->default(true);
-            $table->unsignedBigInteger('id_curso');
-            $table->unsignedBigInteger('id_turno');
-            $table->unsignedBigInteger('id_division');
-            $table->unsignedBigInteger('id_plan_estudio')->nullable();
-            $table->unsignedTinyInteger('id_nivel');
+            $table->unsignedBigInteger('curso_id');
+            $table->unsignedBigInteger('turno_id');
+            $table->unsignedBigInteger('division_id');
+            $table->unsignedBigInteger('plan_estudio_id')->nullable();
+            $table->unsignedTinyInteger('nivel_id');
             $table->unsignedSmallInteger('ciclo_lectivo');
             $table->timestamps();
 
             $table->unique(
-                ['ciclo_lectivo', 'id_nivel', 'id_curso', 'id_division', 'id_turno'],
+                ['ciclo_lectivo', 'nivel_id', 'curso_id', 'division_id', 'turno_id'],
                 'grupos_ciclo_composicion_unique'
             );
-            $table->index(['id_curso', 'id_nivel'], 'grupos_curso_nivel_idx');
-            $table->index('id_turno', 'grupos_turno_idx');
-            $table->index('id_division', 'grupos_division_idx');
-            $table->index(['id_plan_estudio', 'id_nivel'], 'grupos_plan_nivel_idx');
-            $table->index(['id_nivel', 'ciclo_lectivo', 'activo'], 'grupos_nivel_ciclo_activo_idx');
+            $table->index(['curso_id', 'nivel_id'], 'grupos_curso_nivel_idx');
+            $table->index('turno_id', 'grupos_turno_idx');
+            $table->index('division_id', 'grupos_division_idx');
+            $table->index(['plan_estudio_id', 'nivel_id'], 'grupos_plan_nivel_idx');
+            $table->index(['nivel_id', 'ciclo_lectivo', 'activo'], 'grupos_nivel_ciclo_activo_idx');
 
-            $table->foreign('id_nivel', 'grupos_nivel_fk')
-                ->references('id_nivel')
+            $table->foreign('nivel_id', 'grupos_nivel_fk')
+                ->references('id')
                 ->on('niveles')
                 ->onUpdate('restrict')
                 ->onDelete('restrict');
-            $table->foreign('id_turno', 'grupos_turno_fk')
-                ->references('id_turno')
+            $table->foreign('turno_id', 'grupos_turno_fk')
+                ->references('id')
                 ->on('turnos')
                 ->onUpdate('restrict')
                 ->onDelete('restrict');
-            $table->foreign('id_division', 'grupos_division_fk')
-                ->references('id_division')
+            $table->foreign('division_id', 'grupos_division_fk')
+                ->references('id')
                 ->on('divisiones')
                 ->onUpdate('restrict')
                 ->onDelete('restrict');
-            $table->foreign(['id_curso', 'id_nivel'], 'grupos_curso_nivel_fk')
-                ->references(['id_curso', 'id_nivel'])
+            $table->foreign(['curso_id', 'nivel_id'], 'grupos_curso_nivel_fk')
+                ->references(['id', 'nivel_id'])
                 ->on('cursos')
                 ->onUpdate('restrict')
                 ->onDelete('restrict');
-            $table->foreign(['id_plan_estudio', 'id_nivel'], 'grupos_plan_nivel_fk')
-                ->references(['id_plan_estudio', 'id_nivel'])
+            $table->foreign(['plan_estudio_id', 'nivel_id'], 'grupos_plan_nivel_fk')
+                ->references(['id', 'nivel_id'])
                 ->on('planes_estudio')
                 ->onUpdate('restrict')
                 ->onDelete('restrict');

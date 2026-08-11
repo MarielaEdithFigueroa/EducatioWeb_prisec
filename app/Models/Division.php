@@ -11,10 +11,6 @@ class Division extends Model
 {
     protected $table = 'divisiones';
 
-    protected $primaryKey = 'id_division';
-
-    protected $keyType = 'int';
-
     protected function casts(): array
     {
         return [
@@ -26,6 +22,6 @@ class Division extends Model
     /** @return HasMany<Grupo, $this> */
     public function grupos(): HasMany
     {
-        return $this->hasMany(Grupo::class, 'id_division', 'id_division');
+        return $this->hasMany(Grupo::class);
     }
 }

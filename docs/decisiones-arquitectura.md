@@ -8,9 +8,9 @@ EducatioWeb PriSec utiliza Laravel 13 en el backend, React en la interfaz, Inert
 
 El dominio se expresa en castellano. Las tablas usan nombres en español, en plural y con `snake_case`; los modelos usan el nombre de la entidad en singular y PascalCase. Las columnas y claves también usan `snake_case`.
 
-Las claves primarias incluyen el nombre de la entidad, por ejemplo `id_curso`, `id_nivel` e `id_grupo`. Las claves foráneas conservan exactamente el nombre y el tipo de la clave primaria referenciada.
+Las claves primarias usan el nombre convencional `id`. Las claves foráneas usan el nombre singular de la relación seguido por `_id`, por ejemplo `nivel_id`, `curso_id` y `plan_estudio_id`, y conservan el tipo de la clave primaria referenciada.
 
-En los modelos se declaran `$table` y `$primaryKey` explícitamente. Esto evita depender del pluralizador inglés y de la suposición de Eloquent de que la tabla tendrá una columna `id`. También hace visibles las convenciones del dominio y evita inferencias ambiguas en relaciones, factories, seeders y herramientas externas.
+En los modelos se declara `$table` explícitamente para no depender del pluralizador inglés con nombres de tablas en castellano. Las claves primarias y foráneas siguen las convenciones de Eloquent, por lo que no requieren configuración manual en los modelos ni en sus relaciones.
 
 ## Baja lógica y auditoría temporal
 
@@ -28,7 +28,7 @@ Todas las claves foráneas del dominio usan `RESTRICT` tanto al actualizar como 
 
 Las entidades de crecimiento normal usan `BIGINT UNSIGNED` autoincremental. Los identificadores de `niveles` y todas sus referencias usan `TINYINT UNSIGNED`, porque se trata de un catálogo interno pequeño con IDs fijos. Los campos `orden` y `ciclo_lectivo` usan `SMALLINT UNSIGNED`.
 
-No se usa `foreignId()` para `id_nivel`, ya que produciría un `BIGINT UNSIGNED` incompatible con la PK `TINYINT UNSIGNED` de `niveles`.
+No se usa `foreignId()` para `nivel_id`, ya que produciría un `BIGINT UNSIGNED` incompatible con la PK `TINYINT UNSIGNED` de `niveles`.
 
 ## Ciclo lectivo
 
@@ -36,18 +36,18 @@ No se usa `foreignId()` para `id_nivel`, ya que produciría un `BIGINT UNSIGNED`
 
 ## Nivel, curso, plan y grupo
 
-Un `Curso` pertenece a un `Nivel`. `id_nivel` se mantiene deliberadamente en `cursos`, `planes_estudio` y `grupos` porque el nivel es una dimensión central del dominio y de las consultas. En `grupos` también permite crear temporalmente un grupo sin plan de estudio.
+Un `Curso` pertenece a un `Nivel`. `nivel_id` se mantiene deliberadamente en `cursos`, `planes_estudio` y `grupos` porque el nivel es una dimensión central del dominio y de las consultas. En `grupos` también permite crear temporalmente un grupo sin plan de estudio.
 
 La consistencia redundante se garantiza en la base mediante claves foráneas compuestas:
 
-- `(grupos.id_curso, grupos.id_nivel)` referencia `(cursos.id_curso, cursos.id_nivel)`;
-- `(grupos.id_plan_estudio, grupos.id_nivel)` referencia `(planes_estudio.id_plan_estudio, planes_estudio.id_nivel)`.
+- `(grupos.curso_id, grupos.nivel_id)` referencia `(cursos.id, cursos.nivel_id)`;
+- `(grupos.plan_estudio_id, grupos.nivel_id)` referencia `(planes_estudio.id, planes_estudio.nivel_id)`.
 
-`grupos.id_plan_estudio` admite `NULL`. Cuando no hay plan, la segunda FK compuesta no exige una coincidencia; cuando existe un plan, MariaDB garantiza que pertenece al mismo nivel del grupo.
+`grupos.plan_estudio_id` admite `NULL`. Cuando no hay plan, la segunda FK compuesta no exige una coincidencia; cuando existe un plan, MariaDB garantiza que pertenece al mismo nivel del grupo.
 
 La identidad funcional de un grupo se define mediante la restricción única:
 
-`(ciclo_lectivo, id_nivel, id_curso, id_division, id_turno)`.
+`(ciclo_lectivo, nivel_id, curso_id, division_id, turno_id)`.
 
 El plan y el estado `activo` no forman parte de esa identidad: cambiar el plan o desactivar el registro no crea un grupo distinto.
 

@@ -53,3 +53,7 @@ Se inició la migración del sistema Educatio existente, desarrollado en VB6, ha
 ### Próximo objetivo
 
 Implementar el ABM de cursos como primer módulo funcional completo.
+
+## 2026-08-10  Normalización de identificadores
+
+Las claves primarias de las tablas académicas se normalizaron a `id` y las claves foráneas al formato `entidad_id` convencional de Laravel. Los tipos, las restricciones de integridad y las decisiones de dominio existentes se conservaron sin cambios.

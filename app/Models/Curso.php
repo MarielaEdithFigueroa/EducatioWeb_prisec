@@ -7,14 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['activo', 'descripcion', 'id_nivel', 'orden'])]
+#[Fillable(['activo', 'descripcion', 'nivel_id', 'orden'])]
 class Curso extends Model
 {
     protected $table = 'cursos';
-
-    protected $primaryKey = 'id_curso';
-
-    protected $keyType = 'int';
 
     protected function casts(): array
     {
@@ -27,12 +23,12 @@ class Curso extends Model
     /** @return BelongsTo<Nivel, $this> */
     public function nivel(): BelongsTo
     {
-        return $this->belongsTo(Nivel::class, 'id_nivel', 'id_nivel');
+        return $this->belongsTo(Nivel::class);
     }
 
     /** @return HasMany<Grupo, $this> */
     public function grupos(): HasMany
     {
-        return $this->hasMany(Grupo::class, 'id_curso', 'id_curso');
+        return $this->hasMany(Grupo::class);
     }
 }

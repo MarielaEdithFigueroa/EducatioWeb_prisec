@@ -9,17 +9,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('cursos', function (Blueprint $table) {
-            $table->bigIncrements('id_curso');
+            $table->bigIncrements('id');
             $table->boolean('activo')->default(true);
             $table->string('descripcion', 100);
-            $table->unsignedTinyInteger('id_nivel');
+            $table->unsignedTinyInteger('nivel_id');
             $table->unsignedSmallInteger('orden')->default(0);
             $table->timestamps();
 
-            $table->index(['id_nivel', 'activo', 'orden'], 'cursos_nivel_activo_orden_idx');
-            $table->unique(['id_curso', 'id_nivel'], 'cursos_id_nivel_unique');
-            $table->foreign('id_nivel', 'cursos_nivel_fk')
-                ->references('id_nivel')
+            $table->index(['nivel_id', 'activo', 'orden'], 'cursos_nivel_activo_orden_idx');
+            $table->unique(['id', 'nivel_id'], 'cursos_id_nivel_unique');
+            $table->foreign('nivel_id', 'cursos_nivel_fk')
+                ->references('id')
                 ->on('niveles')
                 ->onUpdate('restrict')
                 ->onDelete('restrict');

@@ -11,10 +11,6 @@ class Turno extends Model
 {
     protected $table = 'turnos';
 
-    protected $primaryKey = 'id_turno';
-
-    protected $keyType = 'int';
-
     protected function casts(): array
     {
         return [
@@ -26,6 +22,6 @@ class Turno extends Model
     /** @return HasMany<Grupo, $this> */
     public function grupos(): HasMany
     {
-        return $this->hasMany(Grupo::class, 'id_turno', 'id_turno');
+        return $this->hasMany(Grupo::class);
     }
 }
