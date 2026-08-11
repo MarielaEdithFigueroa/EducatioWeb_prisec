@@ -12,6 +12,8 @@ class PlanEstudio extends Model
 {
     protected $table = 'planes_estudio';
 
+    public $timestamps = false;
+
     protected function casts(): array
     {
         return [

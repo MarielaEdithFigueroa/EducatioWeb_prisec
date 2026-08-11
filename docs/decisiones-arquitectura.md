@@ -18,7 +18,6 @@ Los maestros del dominio no se eliminan durante la operación normal. Se dan de 
 
 No se utiliza `softDeletes` ni una columna `deleted_at`: una baja es una decisión explícita del dominio y se representa mediante `activo`. Esto permite distinguir claramente una desactivación de una eliminación física y se integra con la auditoría general de `logs`.
 
-Las tablas `cursos`, `divisiones`, `turnos`, `planes_estudio` y `grupos` tienen `created_at` y `updated_at`. En este conjunto inicial se conservarán como metadatos técnicos de creación y última modificación; no reemplazan el registro detallado de auditoría. `niveles` no tiene timestamps porque es un catálogo fijo, interno y cargado por seeder.
 
 ## Claves foráneas y eliminaciones
 

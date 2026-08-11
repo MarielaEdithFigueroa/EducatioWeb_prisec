@@ -1,5 +1,11 @@
 <?php
 
+use App\Models\Curso;
+use App\Models\Division;
+use App\Models\Grupo;
+use App\Models\Nivel;
+use App\Models\PlanEstudio;
+use App\Models\Turno;
 use Illuminate\Support\Facades\Schema;
 
 it('keeps activo immediately after id', function () {
@@ -42,5 +48,25 @@ it('uses conventional identifiers in academic tables', function () {
             expect(Schema::hasColumn($table, $column))
                 ->toBeFalse("La tabla '$table' no debe conservar la columna '$column'.");
         }
+    }
+});
+
+it('keeps domain tables free of eloquent timestamps', function () {
+    $domainModels = [
+        'niveles' => Nivel::class,
+        'cursos' => Curso::class,
+        'divisiones' => Division::class,
+        'turnos' => Turno::class,
+        'planes_estudio' => PlanEstudio::class,
+        'grupos' => Grupo::class,
+    ];
+
+    foreach ($domainModels as $table => $modelClass) {
+        expect(Schema::hasColumn($table, 'created_at'))
+            ->toBeFalse("La tabla de dominio '$table' no debe tener created_at.")
+            ->and(Schema::hasColumn($table, 'updated_at'))
+            ->toBeFalse("La tabla de dominio '$table' no debe tener updated_at.")
+            ->and((new $modelClass)->usesTimestamps())
+            ->toBeFalse("El modelo '$modelClass' no debe administrar timestamps.");
     }
 });

@@ -11,6 +11,8 @@ class Grupo extends Model
 {
     protected $table = 'grupos';
 
+    public $timestamps = false;
+
     protected function casts(): array
     {
         return [

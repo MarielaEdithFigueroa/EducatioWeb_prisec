@@ -11,6 +11,8 @@ class Turno extends Model
 {
     protected $table = 'turnos';
 
+    public $timestamps = false;
+
     protected function casts(): array
     {
         return [

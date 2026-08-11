@@ -17,7 +17,6 @@ return new class extends Migration
             $table->unsignedBigInteger('plan_estudio_id')->nullable();
             $table->unsignedTinyInteger('nivel_id');
             $table->unsignedSmallInteger('ciclo_lectivo');
-            $table->timestamps();
 
             $table->unique(
                 ['ciclo_lectivo', 'nivel_id', 'curso_id', 'division_id', 'turno_id'],

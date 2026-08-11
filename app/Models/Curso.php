@@ -12,6 +12,8 @@ class Curso extends Model
 {
     protected $table = 'cursos';
 
+    public $timestamps = false;
+
     protected function casts(): array
     {
         return [

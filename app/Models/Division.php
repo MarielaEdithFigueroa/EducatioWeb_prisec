@@ -11,6 +11,8 @@ class Division extends Model
 {
     protected $table = 'divisiones';
 
+    public $timestamps = false;
+
     protected function casts(): array
     {
         return [

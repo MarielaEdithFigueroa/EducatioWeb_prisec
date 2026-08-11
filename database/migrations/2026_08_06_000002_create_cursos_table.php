@@ -14,7 +14,6 @@ return new class extends Migration
             $table->string('descripcion', 100);
             $table->unsignedTinyInteger('nivel_id');
             $table->unsignedSmallInteger('orden')->default(0);
-            $table->timestamps();
 
             $table->index(['nivel_id', 'activo', 'orden'], 'cursos_nivel_activo_orden_idx');
             $table->unique(['id', 'nivel_id'], 'cursos_id_nivel_unique');

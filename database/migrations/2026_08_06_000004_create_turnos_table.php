@@ -13,7 +13,6 @@ return new class extends Migration
             $table->boolean('activo')->default(true);
             $table->string('descripcion', 50);
             $table->unsignedSmallInteger('orden')->default(0);
-            $table->timestamps();
         });
     }
 
