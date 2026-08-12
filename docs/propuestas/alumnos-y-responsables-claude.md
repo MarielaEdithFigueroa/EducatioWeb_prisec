@@ -311,3 +311,141 @@ return new class extends Migration
     }
 };
 ```
+
+## Seeders — provincias y ciudades
+
+> **No es un seeder de producción.** Cubre las 23 provincias + CABA, sus capitales, y una selección **no exhaustiva** de localidades de Neuquén y su zona de influencia (Alto Valle / Confluencia, ~200 km), armada a mano a partir de conocimiento general, **sin validar contra una fuente geográfica oficial**. Antes de usarlo en serio hay que contrastarlo contra algo como la [API Georef de datos.gob.ar](https://datos.gob.ar) (INDEC/IGN) y completar lo que falte — puede haber localidades cercanas a Neuquén que quedaron afuera, o algún error de encuadre provincial. Asume que existen `App\Models\Provincia` y `App\Models\Ciudad` (con `Provincia::ciudades()` como `hasMany`), acompañando a las migraciones de arriba.
+
+### `ProvinciasSeeder.php`
+
+```php
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\Provincia;
+use Illuminate\Database\Seeder;
+
+class ProvinciasSeeder extends Seeder
+{
+    public function run(): void
+    {
+        $provincias = [
+            'Buenos Aires',
+            'Catamarca',
+            'Chaco',
+            'Chubut',
+            'Ciudad Autónoma de Buenos Aires',
+            'Córdoba',
+            'Corrientes',
+            'Entre Ríos',
+            'Formosa',
+            'Jujuy',
+            'La Pampa',
+            'La Rioja',
+            'Mendoza',
+            'Misiones',
+            'Neuquén',
+            'Río Negro',
+            'Salta',
+            'San Juan',
+            'San Luis',
+            'Santa Cruz',
+            'Santa Fe',
+            'Santiago del Estero',
+            'Tierra del Fuego, Antártida e Islas del Atlántico Sur',
+            'Tucumán',
+        ];
+
+        foreach ($provincias as $descripcion) {
+            Provincia::query()->updateOrCreate(
+                ['descripcion' => $descripcion],
+                ['activo' => true],
+            );
+        }
+    }
+}
+```
+
+### `CiudadesSeeder.php`
+
+```php
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\Provincia;
+use Illuminate\Database\Seeder;
+
+class CiudadesSeeder extends Seeder
+{
+    public function run(): void
+    {
+        $ciudadesPorProvincia = [
+            // Capitales provinciales
+            'Buenos Aires' => ['La Plata'],
+            'Catamarca' => ['San Fernando del Valle de Catamarca'],
+            'Chaco' => ['Resistencia'],
+            'Chubut' => ['Rawson'],
+            'Ciudad Autónoma de Buenos Aires' => ['Ciudad Autónoma de Buenos Aires'],
+            'Córdoba' => ['Córdoba'],
+            'Corrientes' => ['Corrientes'],
+            'Entre Ríos' => ['Paraná'],
+            'Formosa' => ['Formosa'],
+            'Jujuy' => ['San Salvador de Jujuy'],
+            'La Pampa' => ['Santa Rosa'],
+            'La Rioja' => ['La Rioja'],
+            'Mendoza' => ['Mendoza'],
+            'Misiones' => ['Posadas'],
+            'Salta' => ['Salta'],
+            'San Juan' => ['San Juan'],
+            'San Luis' => ['San Luis'],
+            'Santa Cruz' => ['Río Gallegos'],
+            'Santa Fe' => ['Santa Fe'],
+            'Santiago del Estero' => ['Santiago del Estero'],
+            'Tierra del Fuego, Antártida e Islas del Atlántico Sur' => ['Ushuaia'],
+            'Tucumán' => ['San Miguel de Tucumán'],
+
+            // Neuquén y zona de influencia (~200 km) — no exhaustivo, a revisar
+            'Neuquén' => [
+                'Neuquén',
+                'Plottier',
+                'Centenario',
+                'Senillosa',
+                'Vista Alegre',
+                'San Patricio del Chañar',
+                'Añelo',
+                'Cutral Có',
+                'Plaza Huincul',
+                'Picún Leufú',
+                'Piedra del Águila',
+                'Zapala',
+                'Las Lajas',
+            ],
+            'Río Negro' => [
+                'Viedma',
+                'Cipolletti',
+                'General Roca',
+                'Cinco Saltos',
+                'Allen',
+                'Fernández Oro',
+                'Villa Regina',
+                'Catriel',
+            ],
+        ];
+
+        foreach ($ciudadesPorProvincia as $descripcionProvincia => $ciudades) {
+            $provincia = Provincia::query()
+                ->where('descripcion', $descripcionProvincia)
+                ->sole();
+
+            foreach ($ciudades as $descripcionCiudad) {
+                $provincia->ciudades()->updateOrCreate(
+                    ['descripcion' => $descripcionCiudad],
+                    ['activo' => true],
+                );
+            }
+        }
+    }
+}
+```
