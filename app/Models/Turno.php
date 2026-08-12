@@ -13,6 +13,11 @@ class Turno extends Model
 
     public $timestamps = false;
 
+    protected $attributes = [
+        'activo' => true,
+        'orden' => 0,
+    ];
+
     protected function casts(): array
     {
         return [

@@ -13,7 +13,7 @@ class LogFactory extends Factory
         return [
             'entidad' => fake()->word(),
             'entidad_id' => fake()->numberBetween(1, 1000),
-            'accion' => fake()->randomElement(['create', 'update', 'delete']),
+            'accion' => fake()->randomElement(['create', 'update', 'deactivate', 'reactivate']),
             'usuario_id' => null,
             'login' => fake()->userName(),
             'session_id' => fake()->uuid(),

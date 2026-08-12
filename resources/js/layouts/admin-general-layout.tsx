@@ -40,6 +40,11 @@ import {
 import type { DisplayBreadcrumb, RoleNavItem } from '@/layouts/role-shell';
 import { cn } from '@/lib/utils';
 import { dashboard } from '@/routes';
+import { index as cursosIndex } from '@/routes/academico/cursos';
+import { index as divisionesIndex } from '@/routes/academico/divisiones';
+import { index as nivelesIndex } from '@/routes/academico/niveles';
+import { index as planesEstudioIndex } from '@/routes/academico/planes_estudio';
+import { index as turnosIndex } from '@/routes/academico/turnos';
 import type { BreadcrumbItem } from '@/types';
 
 interface Props extends PropsWithChildren {
@@ -70,6 +75,36 @@ const APP_MENU_SECTIONS: AppMenuSection[] = [
         icon: GraduationCapIcon,
         items: [
             {
+                label: 'Niveles',
+                description: 'Inicial, primaria y secundaria',
+                icon: GraduationCapIcon,
+                href: nivelesIndex.url(),
+            },
+            {
+                label: 'Planes de estudio',
+                description: 'Planes por nivel educativo',
+                icon: NotebookTextIcon,
+                href: planesEstudioIndex.url(),
+            },
+            {
+                label: 'Turnos',
+                description: 'Organización horaria',
+                icon: CalendarCheckIcon,
+                href: turnosIndex.url(),
+            },
+            {
+                label: 'Cursos',
+                description: 'Salas, grados y años',
+                icon: ListTreeIcon,
+                href: cursosIndex.url(),
+            },
+            {
+                label: 'Divisiones',
+                description: 'Divisiones de los grupos',
+                icon: LayersIcon,
+                href: divisionesIndex.url(),
+            },
+            {
                 label: 'Alumnos',
                 description: 'Legajos y matrícula',
                 icon: UsersIcon,
@@ -83,13 +118,13 @@ const APP_MENU_SECTIONS: AppMenuSection[] = [
             },
             {
                 label: 'Grupos',
-                description: 'Cursos y divisiones',
+                description: 'Comisiones por ciclo lectivo',
                 icon: LayersIcon,
                 disabled: true,
             },
             {
-                label: 'Materias y planes',
-                description: 'Plan de estudios',
+                label: 'Materias',
+                description: 'Espacios curriculares',
                 icon: NotebookTextIcon,
                 disabled: true,
             },

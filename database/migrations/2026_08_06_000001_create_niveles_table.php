@@ -9,11 +9,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('niveles', function (Blueprint $table) {
-            $table->unsignedTinyInteger('id');
+            $table->tinyIncrements('id');
+            $table->boolean('activo')->default(true);
             $table->string('codigo', 20);
             $table->string('descripcion', 50);
 
-            $table->primary('id', 'niveles_pk');
             $table->unique('codigo', 'niveles_codigo_unique');
         });
     }

@@ -11,12 +11,13 @@ return new class extends Migration
         Schema::create('grupos', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->boolean('activo')->default(true);
-            $table->unsignedBigInteger('curso_id');
-            $table->unsignedBigInteger('turno_id');
-            $table->unsignedBigInteger('division_id');
-            $table->unsignedBigInteger('plan_estudio_id')->nullable();
             $table->unsignedTinyInteger('nivel_id');
+            $table->unsignedBigInteger('plan_estudio_id')->nullable();
+            $table->unsignedBigInteger('curso_id');
+            $table->unsignedBigInteger('division_id');
+            $table->unsignedBigInteger('turno_id');
             $table->unsignedSmallInteger('ciclo_lectivo');
+            $table->text('dh_descripcion');
 
             $table->unique(
                 ['ciclo_lectivo', 'nivel_id', 'curso_id', 'division_id', 'turno_id'],

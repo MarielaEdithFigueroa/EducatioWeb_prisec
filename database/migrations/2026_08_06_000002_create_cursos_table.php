@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedSmallInteger('orden')->default(0);
 
             $table->index(['nivel_id', 'activo', 'orden'], 'cursos_nivel_activo_orden_idx');
+            $table->unique(['nivel_id', 'descripcion'], 'cursos_nivel_descripcion_unique');
             $table->unique(['id', 'nivel_id'], 'cursos_id_nivel_unique');
             $table->foreign('nivel_id', 'cursos_nivel_fk')
                 ->references('id')

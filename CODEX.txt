@@ -1,4 +1,4 @@
-run codex resume 019faaa9-8ca5-7f83-a0dd-6276624585d4
+codex resume 019faaa9-8ca5-7f83-a0dd-6276624585d4
 
 
 

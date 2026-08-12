@@ -7,10 +7,16 @@ import { Label } from '@/components/ui/label';
 import { store } from '@/routes/login';
 
 type Props = {
+    defaultLogin: string;
+    defaultPassword: string;
     status?: string;
 };
 
-export default function Login({ status }: Props) {
+export default function Login({
+    defaultLogin,
+    defaultPassword,
+    status,
+}: Props) {
     return (
         <>
             <Head title="Iniciar sesión" />
@@ -31,6 +37,7 @@ export default function Login({ status }: Props) {
                             autoFocus
                             tabIndex={1}
                             autoComplete="username"
+                            defaultValue={defaultLogin}
                             placeholder="usuario"
                             error={!!errors.login}
                             errorMessage={errors.login}
@@ -44,6 +51,7 @@ export default function Login({ status }: Props) {
                                 required
                                 tabIndex={2}
                                 autoComplete="current-password"
+                                defaultValue={defaultPassword}
                                 placeholder="Contraseña"
                             />
                             <InputError message={errors.password} />

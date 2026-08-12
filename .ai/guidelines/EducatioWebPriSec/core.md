@@ -22,6 +22,8 @@
 
 Detalle completo: ver issue "Implementar baja lógica y tabla general de logs" en GitHub. Cuando se proponga una migration nueva, no agregar `timestamps()`/`softDeletes()` salvo que se discuta explícitamente una excepción.
 
+> ⚠️ **Precedencia sobre el skill `laravel-best-practices`**: el ejemplo `->constrained()->cascadeOnDelete()` de `rules/migrations.md` no aplica a tablas de dominio de este proyecto. Ese archivo lo regenera `boost:update` (viene de `vendor/laravel/boost`); no se edita a mano — la regla de este archivo domina.
+
 ### Orden de campos
 
 **`activo` va siempre inmediatamente después de `id`.** No al final, no entre los datos.
@@ -42,6 +44,8 @@ Se trabaja con `php artisan migrate:fresh --seed` ante cada cambio de diseño.
 
 - **No se escriben alters** (`Schema::table(...)`). El cambio va en la migration original.
 - **No se escriben backfills ni migraciones de datos.** Los datos salen del seeder.
+
+> ⚠️ **Precedencia sobre el skill `laravel-best-practices`**: "Never Modify Deployed Migrations" (`rules/migrations.md`) es la regla correcta a largo plazo, pero no aplica mientras dure esta fase — acá gana "no se escriben alters". Ídem arriba: ese archivo es generado, no se edita a mano.
 
 ### Nombres de índices y constraints
 
@@ -139,6 +143,7 @@ Educatio debe poder operarse eficientemente con teclado. Sus usuarios realizan c
 ### General
 
 - **Modo oscuro** soportado en toda pantalla nueva.
+- En los ABM, la acción de baja lógica se representa con el ícono clásico de papelera, manteniendo el texto y la confirmación como **Desactivar** para dejar claro que no es una eliminación física. La reactivación usa un ícono de restaurar.
 - Todo select (`EureSelect`, `EureSelectGroup`, `EureMultiSelect`) debe permitir **buscar**.
 - **Helpers y formatos unificados**: si una función de formato ya existe en `@/lib` (`date.ts`, `money.ts`), se reusa. **No escribir funciones de formato por pantalla** — es un patrón que la IA tiende a repetir; no aceptarlo en review.
 - Toda funcionalidad nueva debe tener **entrada en el menú** para poder probarla, aunque sea un menú "dev". Una pantalla a la que no se puede llegar no está terminada.

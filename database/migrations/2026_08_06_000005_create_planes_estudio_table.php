@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedSmallInteger('orden')->default(0);
 
             $table->index(['nivel_id', 'activo', 'orden'], 'planes_nivel_activo_orden_idx');
+            $table->unique(['nivel_id', 'descripcion'], 'planes_nivel_descripcion_unique');
             $table->unique(['id', 'nivel_id'], 'planes_id_nivel_unique');
             $table->foreign('nivel_id', 'planes_nivel_fk')
                 ->references('id')

@@ -5,24 +5,21 @@ namespace Database\Seeders;
 use App\Models\Nivel;
 use App\Models\PlanEstudio;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class PlanesEstudioSeeder extends Seeder
 {
     public function run(): void
     {
-        $nivelSecundario = Nivel::query()
-            ->where('codigo', 'SECUNDARIA')
-            ->sole();
-
-        PlanEstudio::query()->updateOrCreate(
-            [
-                'nivel_id' => $nivelSecundario->id,
-                'descripcion' => 'Plan de estudios secundario',
-            ],
-            [
-                'activo' => true,
-                'orden' => 1,
-            ],
-        );
+        foreach (Nivel::query()->orderBy('id')->get() as $nivel) {
+            PlanEstudio::query()->updateOrCreate(
+                ['nivel_id' => $nivel->id],
+                [
+                    'descripcion' => 'Plan de estudios '.Str::lower($nivel->descripcion),
+                    'activo' => true,
+                    'orden' => 1,
+                ],
+            );
+        }
     }
 }

@@ -44,10 +44,10 @@ export interface EureDataTableProps<T> {
 }
 
 const actionColorMap: Record<string, string> = {
-    blue: 'text-blue-500 hover:bg-blue-100',
-    red: 'text-red-500 hover:bg-red-100',
-    green: 'text-green-500 hover:bg-green-100',
-    yellow: 'text-yellow-500 hover:bg-yellow-100',
+    blue: 'text-primary hover:bg-primary/10',
+    red: 'text-eure-error hover:bg-eure-error/10',
+    green: 'text-eure-success hover:bg-eure-success/10',
+    yellow: 'text-eure-warning hover:bg-eure-warning/10',
 };
 
 export default function EureDataTable<T>({
@@ -256,7 +256,8 @@ export default function EureDataTable<T>({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [columnFilters, globalFilter, onVisibleRowsChange]);
 
-    const theadBg = 'color-mix(in oklch, var(--eure-primary) 15%, white)';
+    const theadBg =
+        'color-mix(in oklch, var(--eure-primary) 15%, var(--background))';
 
     return (
         <div className={className}>
@@ -278,7 +279,7 @@ export default function EureDataTable<T>({
                         <div className="flex flex-wrap items-center gap-2">
                             <button
                                 type="button"
-                                className="flex items-center gap-1.5 rounded-lg border px-3.5 py-2 text-xs font-medium transition-all duration-150 border-[var(--eure-border)] text-[var(--eure-text)] bg-white hover:border-[var(--eure-accent)] hover:text-[var(--eure-accent)] hover:bg-[var(--eure-bg)]"
+                                className="flex items-center gap-1.5 rounded-lg border px-3.5 py-2 text-xs font-medium transition-all duration-150 border-[var(--eure-border)] text-[var(--eure-text)] bg-background hover:border-[var(--eure-accent)] hover:text-[var(--eure-accent)] hover:bg-[var(--eure-bg)]"
                                 onClick={handleExportExcel}
                             >
                                 <TableIcon className="h-4 w-4" />
@@ -286,7 +287,7 @@ export default function EureDataTable<T>({
                             </button>
                             <button
                                 type="button"
-                                className="flex items-center gap-1.5 rounded-lg border px-3.5 py-2 text-xs font-medium transition-all duration-150 border-[var(--eure-border)] text-[var(--eure-text)] bg-white hover:border-[var(--eure-accent)] hover:text-[var(--eure-accent)] hover:bg-[var(--eure-bg)]"
+                                className="flex items-center gap-1.5 rounded-lg border px-3.5 py-2 text-xs font-medium transition-all duration-150 border-[var(--eure-border)] text-[var(--eure-text)] bg-background hover:border-[var(--eure-accent)] hover:text-[var(--eure-accent)] hover:bg-[var(--eure-bg)]"
                                 onClick={handleExportCsv}
                             >
                                 <DownloadIcon className="h-4 w-4" />
@@ -294,7 +295,7 @@ export default function EureDataTable<T>({
                             </button>
                             <button
                                 type="button"
-                                className="flex items-center gap-1.5 rounded-lg border px-3.5 py-2 text-xs font-medium transition-all duration-150 border-[var(--eure-border)] text-[var(--eure-text)] bg-white hover:border-[var(--eure-accent)] hover:text-[var(--eure-accent)] hover:bg-[var(--eure-bg)]"
+                                className="flex items-center gap-1.5 rounded-lg border px-3.5 py-2 text-xs font-medium transition-all duration-150 border-[var(--eure-border)] text-[var(--eure-text)] bg-background hover:border-[var(--eure-accent)] hover:text-[var(--eure-accent)] hover:bg-[var(--eure-bg)]"
                                 onClick={handleCopyToClipboard}
                             >
                                 <CopyIcon className="h-4 w-4" />
@@ -315,7 +316,7 @@ export default function EureDataTable<T>({
             <div
                 className={`overflow-x-auto rounded-lg shadow-md ${stickyHeader ? 'max-h-[70vh] overflow-y-auto' : 'overflow-y-clip'}`}
             >
-                <table className="w-full text-sm" style={{ backgroundColor: 'white', borderCollapse: 'collapse' }}>
+                <table className="w-full bg-background text-sm" style={{ borderCollapse: 'collapse' }}>
                     <thead
                         className="text-xs uppercase tracking-wider"
                         style={{ color: 'var(--eure-text)', backgroundColor: theadBg }}

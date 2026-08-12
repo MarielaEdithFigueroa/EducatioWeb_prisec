@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             NivelesSeeder::class,
+            CursosSeeder::class,
             TurnosSeeder::class,
             DivisionesSeeder::class,
             PlanesEstudioSeeder::class,

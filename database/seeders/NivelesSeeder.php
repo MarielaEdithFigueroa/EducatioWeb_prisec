@@ -10,14 +10,14 @@ class NivelesSeeder extends Seeder
     public function run(): void
     {
         $niveles = [
-            ['id' => 1, 'codigo' => 'INICIAL', 'descripcion' => 'Inicial'],
-            ['id' => 2, 'codigo' => 'PRIMARIA', 'descripcion' => 'Primaria'],
-            ['id' => 3, 'codigo' => 'SECUNDARIA', 'descripcion' => 'Secundaria'],
+            ['codigo' => 'INICIAL', 'descripcion' => 'Inicial', 'activo' => true],
+            ['codigo' => 'PRIMARIA', 'descripcion' => 'Primaria', 'activo' => true],
+            ['codigo' => 'SECUNDARIA', 'descripcion' => 'Secundaria', 'activo' => true],
         ];
 
         foreach ($niveles as $nivel) {
             Nivel::query()->updateOrCreate(
-                ['id' => $nivel['id']],
+                ['codigo' => $nivel['codigo']],
                 $nivel,
             );
         }
