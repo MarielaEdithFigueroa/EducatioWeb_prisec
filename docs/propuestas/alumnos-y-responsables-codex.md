@@ -6,9 +6,12 @@
 
 1. `create_provincias_table.php`
 2. `create_ciudades_table.php`
-3. `create_alumnos_table.php`
-4. `create_responsables_table.php`
-5. `create_alumnos_responsables_table.php`
+3. `create_nacionalidades_table.php`
+4. `create_grupos_sanguineos_table.php`
+5. `create_motivos_baja_table.php`
+6. `create_alumnos_table.php`
+7. `create_responsables_table.php`
+8. `create_alumnos_responsables_table.php`
 
 ## `create_provincias_table.php`
 
@@ -60,6 +63,7 @@ return new class extends Migration
             $table->unsignedTinyInteger('provincia_id');
             $table->string('codigo', 10);
             $table->string('nombre', 120);
+            $table->string('codigo_postal', 10)->nullable();
 
             $table->unique(
                 ['provincia_id', 'codigo'],
@@ -85,6 +89,98 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('ciudades');
+    }
+};
+```
+
+## `create_nacionalidades_table.php`
+
+```php
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('nacionalidades', function (Blueprint $table) {
+            $table->smallIncrements('id');
+            $table->boolean('activo')->default(true);
+            $table->char('codigo', 3);
+            $table->string('nombre', 100);
+
+            $table->unique('codigo', 'nacionalidades_codigo_unique');
+            $table->unique('nombre', 'nacionalidades_nombre_unique');
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('nacionalidades');
+    }
+};
+```
+
+## `create_grupos_sanguineos_table.php`
+
+```php
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('grupos_sanguineos', function (Blueprint $table) {
+            $table->tinyIncrements('id');
+            $table->boolean('activo')->default(true);
+            $table->string('codigo', 5);
+            $table->string('nombre', 30);
+
+            $table->unique('codigo', 'grupos_sanguineos_codigo_unique');
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('grupos_sanguineos');
+    }
+};
+```
+
+## `create_motivos_baja_table.php`
+
+```php
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('motivos_baja', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->boolean('activo')->default(true);
+            $table->string('codigo', 20);
+            $table->string('nombre', 100);
+
+            $table->unique('codigo', 'motivos_baja_codigo_unique');
+            $table->unique('nombre', 'motivos_baja_nombre_unique');
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('motivos_baja');
     }
 };
 ```
@@ -115,6 +211,9 @@ return new class extends Migration
             $table->string('numero_documento', 20)->nullable();
             $table->char('cuit_cuil', 11)->nullable();
             $table->date('fecha_nacimiento')->nullable();
+            $table->unsignedBigInteger('ciudad_nacimiento_id')->nullable();
+            $table->unsignedSmallInteger('nacionalidad_id')->nullable();
+            $table->unsignedTinyInteger('grupo_sanguineo_id')->nullable();
 
             // Sexo e identidad de género
             $table->char('sexo_registral', 1)->nullable();
@@ -123,19 +222,18 @@ return new class extends Migration
 
             // Contacto
             $table->string('email', 254)->nullable();
-            $table->string('telefono_e164', 20)->nullable();
-            $table->string('telefono_original', 50)->nullable();
 
             // Domicilio
             $table->string('domicilio', 200)->nullable();
             $table->unsignedBigInteger('ciudad_id')->nullable();
-            $table->string('codigo_postal', 10)->nullable();
 
             // Información académica general
             $table->date('fecha_ingreso')->nullable();
             $table->date('fecha_inicio_cursado')->nullable();
+            $table->string('libro', 30)->nullable();
+            $table->string('folio', 30)->nullable();
             $table->date('fecha_baja')->nullable();
-            $table->string('motivo_baja', 255)->nullable();
+            $table->unsignedBigInteger('motivo_baja_id')->nullable();
             $table->boolean('autoriza_uso_imagen')->nullable();
             $table->text('observaciones')->nullable();
 
@@ -150,10 +248,50 @@ return new class extends Migration
                 'alumnos_activo_nombre_idx'
             );
             $table->index('ciudad_id', 'alumnos_ciudad_idx');
+            $table->index(
+                'ciudad_nacimiento_id',
+                'alumnos_ciudad_nacimiento_idx'
+            );
+            $table->index('nacionalidad_id', 'alumnos_nacionalidad_idx');
+            $table->index(
+                'grupo_sanguineo_id',
+                'alumnos_grupo_sanguineo_idx'
+            );
+            $table->index('motivo_baja_id', 'alumnos_motivo_baja_idx');
 
             $table->foreign('ciudad_id', 'alumnos_ciudad_fk')
                 ->references('id')
                 ->on('ciudades')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
+
+            $table->foreign(
+                'ciudad_nacimiento_id',
+                'alumnos_ciudad_nacimiento_fk'
+            )
+                ->references('id')
+                ->on('ciudades')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
+
+            $table->foreign('nacionalidad_id', 'alumnos_nacionalidad_fk')
+                ->references('id')
+                ->on('nacionalidades')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
+
+            $table->foreign(
+                'grupo_sanguineo_id',
+                'alumnos_grupo_sanguineo_fk'
+            )
+                ->references('id')
+                ->on('grupos_sanguineos')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
+
+            $table->foreign('motivo_baja_id', 'alumnos_motivo_baja_fk')
+                ->references('id')
+                ->on('motivos_baja')
                 ->onUpdate('restrict')
                 ->onDelete('restrict');
         });
@@ -205,7 +343,6 @@ return new class extends Migration
             // Domicilio particular
             $table->string('domicilio', 200)->nullable();
             $table->unsignedBigInteger('ciudad_id')->nullable();
-            $table->string('codigo_postal', 10)->nullable();
 
             // Información laboral
             $table->string('profesion', 100)->nullable();
@@ -664,11 +801,15 @@ vinculo:
 - `alumnos` y `responsables` referencian solamente `ciudad_id`; la provincia se obtiene mediante la ciudad para evitar datos contradictorios.
 - `responsables.ciudad_laboral_id` representa la ciudad del domicilio laboral.
 - Las ciudades y provincias inactivas deben conservarse para mostrar datos históricos.
-- El código postal permanece en el domicilio porque una ciudad puede tener más de un código postal.
+- Se usa el código postal numérico de `ciudades`; no se almacena CPA ni se
+  duplica el código postal en alumnos o responsables.
 - Confirmar contra el legacy la unicidad de legajo, documento y CUIT/CUIL antes de importar datos.
 - `genero_autodescripcion` se completa cuando `genero = otro`.
 - `vinculo_descripcion` se completa cuando `vinculo = otro`.
 - `autoriza_uso_imagen = null` significa que el dato todavía no fue relevado.
 - Una relación alumno-responsable desactivada se reactiva en lugar de crear otra fila.
-- Documento, CUIT/CUIL y teléfonos deben normalizarse mediante validaciones del servidor.
+- Documento, CUIT/CUIL y teléfonos de responsables deben normalizarse mediante
+  validaciones del servidor.
+- No se almacena el teléfono privado del alumno. La consulta de teléfonos de
+  contacto se resolverá con una vista basada en sus responsables.
 - No se incluyen `timestamps`, `SoftDeletes`, enums ni eliminaciones en cascada.
