@@ -24,6 +24,13 @@ return new class extends Migration
             $table->timestamp('created_at')->useCurrent();
 
             $table->index(['entidad', 'entidad_id'], 'idx_logs_entidad_registro_id');
+            $table->index('usuario_id', 'logs_usuario_idx');
+
+            $table->foreign('usuario_id', 'logs_usuario_fk')
+                ->references('id')
+                ->on('users')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
         });
     }
 

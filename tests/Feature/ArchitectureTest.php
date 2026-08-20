@@ -1,10 +1,19 @@
 <?php
 
+use App\Models\Alumno;
+use App\Models\AlumnoCondicionEspecial;
+use App\Models\AlumnoResponsable;
+use App\Models\Ciudad;
 use App\Models\Curso;
 use App\Models\Division;
 use App\Models\Grupo;
+use App\Models\GrupoSanguineo;
+use App\Models\MotivoBaja;
+use App\Models\Nacionalidad;
 use App\Models\Nivel;
 use App\Models\PlanEstudio;
+use App\Models\Provincia;
+use App\Models\Responsable;
 use App\Models\Turno;
 use Illuminate\Support\Facades\Schema;
 
@@ -27,6 +36,14 @@ it('uses conventional identifiers in academic tables', function () {
         'turnos' => ['id'],
         'planes_estudio' => ['id', 'nivel_id'],
         'grupos' => ['id', 'curso_id', 'turno_id', 'division_id', 'plan_estudio_id', 'nivel_id'],
+        'provincias' => ['id'],
+        'ciudades' => ['id', 'provincia_id'],
+        'nacionalidades' => ['id'],
+        'grupos_sanguineos' => ['id'],
+        'motivos_baja' => ['id'],
+        'alumnos' => ['id', 'ciudad_nacimiento_id', 'nacionalidad_id', 'grupo_sanguineo_id', 'ciudad_id', 'motivo_baja_id'],
+        'responsables' => ['id', 'ciudad_id', 'ciudad_laboral_id'],
+        'alumnos_responsables' => ['id', 'alumno_id', 'responsable_id'],
     ];
 
     foreach ($expectedIdentifiers as $table => $columns) {
@@ -59,6 +76,15 @@ it('keeps domain tables free of eloquent timestamps', function () {
         'turnos' => Turno::class,
         'planes_estudio' => PlanEstudio::class,
         'grupos' => Grupo::class,
+        'provincias' => Provincia::class,
+        'ciudades' => Ciudad::class,
+        'nacionalidades' => Nacionalidad::class,
+        'grupos_sanguineos' => GrupoSanguineo::class,
+        'motivos_baja' => MotivoBaja::class,
+        'alumnos' => Alumno::class,
+        'alumnos_condiciones_especiales' => AlumnoCondicionEspecial::class,
+        'responsables' => Responsable::class,
+        'alumnos_responsables' => AlumnoResponsable::class,
     ];
 
     foreach ($domainModels as $table => $modelClass) {
@@ -69,4 +95,9 @@ it('keeps domain tables free of eloquent timestamps', function () {
             ->and((new $modelClass)->usesTimestamps())
             ->toBeFalse("El modelo '$modelClass' no debe administrar timestamps.");
     }
+});
+
+it('uses a semantic registration date for special conditions', function () {
+    expect(Schema::hasColumn('alumnos_condiciones_especiales', 'fecha_registro'))->toBeTrue()
+        ->and(Schema::hasColumn('alumnos_condiciones_especiales', 'created_at'))->toBeFalse();
 });

@@ -1,0 +1,1 @@
+Los archivos de propuestas que habia aca molestaban a las ias. buscarlos en los historicos de git
