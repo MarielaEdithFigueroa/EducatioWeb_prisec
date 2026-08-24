@@ -20,6 +20,7 @@
 - La solución de auditoría debe ser centralizada (trait/observer/servicio), no copiada por controlador.
 - **Sin cascades en tablas de dominio**: no usar `cascadeOnDelete()` ni cascades equivalentes en relaciones propias del dominio. Las bajas son lógicas con `activo`; si alguna eliminación física fuera necesaria, debe resolverse explícitamente en código/transacción y auditarse. Excepciones técnicas de paquetes/auth se evalúan caso por caso.
 - **Teléfonos**: guardar normalizados en formato E.164 siempre que sea posible (`+549...`). Si se conserva el texto original ingresado por el usuario, guardarlo en un campo separado explícito.
+- **CUILT**: cuando un campo admite indistintamente CUIL o CUIT, la columna y el nombre de dominio son `cuilt`. Es intencional: no renombrarlo a `cuil_cuit` ni a ninguna otra variante.
 
 Detalle completo: ver issue "Implementar baja lógica y tabla general de logs" en GitHub. Cuando se proponga una migration nueva, no agregar `timestamps()`/`softDeletes()` salvo que se discuta explícitamente una excepción.
 

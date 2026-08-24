@@ -5,6 +5,7 @@ use App\Http\Controllers\Academico\DivisionController;
 use App\Http\Controllers\Academico\NivelController;
 use App\Http\Controllers\Academico\PlanEstudioController;
 use App\Http\Controllers\Academico\TurnoController;
+use App\Http\Controllers\Sistema\LocalidadController;
 use Illuminate\Support\Facades\Route;
 
 Route::inertia('/', 'welcome')->name('home');
@@ -42,6 +43,14 @@ Route::middleware('auth')->group(function () {
         Route::patch('divisiones/{division}', [DivisionController::class, 'update'])->name('divisiones.update');
         Route::patch('divisiones/{division}/desactivar', [DivisionController::class, 'desactivar'])->name('divisiones.desactivar');
         Route::patch('divisiones/{division}/reactivar', [DivisionController::class, 'reactivar'])->name('divisiones.reactivar');
+    });
+
+    Route::prefix('sistema')->name('sistema.')->group(function () {
+        Route::get('localidades', [LocalidadController::class, 'index'])->name('localidades.index');
+        Route::post('localidades', [LocalidadController::class, 'store'])->name('localidades.store');
+        Route::patch('localidades/{localidad}', [LocalidadController::class, 'update'])->name('localidades.update');
+        Route::patch('localidades/{localidad}/desactivar', [LocalidadController::class, 'desactivar'])->name('localidades.desactivar');
+        Route::patch('localidades/{localidad}/reactivar', [LocalidadController::class, 'reactivar'])->name('localidades.reactivar');
     });
 });
 

@@ -34,6 +34,7 @@ class ProvinciasYCiudadesSeeder extends Seeder
             'SDE' => 'Santiago del Estero',
             'TUC' => 'Tucumán',
             'TDF' => 'Tierra del Fuego, Antártida e Islas del Atlántico Sur',
+            'EXT' => 'Otro país',
         ];
 
         $ciudadesPorProvincia = [
@@ -84,6 +85,7 @@ class ProvinciasYCiudadesSeeder extends Seeder
             'SDE' => ['Santiago del Estero'],
             'TUC' => ['San Miguel de Tucumán'],
             'TDF' => ['Ushuaia'],
+            'EXT' => ['Otra localidad del exterior'],
         ];
 
         foreach ($provincias as $codigo => $nombre) {

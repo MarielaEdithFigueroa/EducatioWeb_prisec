@@ -10,6 +10,7 @@ import {
     LayersIcon,
     LayoutDashboardIcon,
     ListTreeIcon,
+    MapPinIcon,
     NotebookTextIcon,
     ReceiptIcon,
     SettingsIcon,
@@ -45,6 +46,7 @@ import { index as divisionesIndex } from '@/routes/academico/divisiones';
 import { index as nivelesIndex } from '@/routes/academico/niveles';
 import { index as planesEstudioIndex } from '@/routes/academico/planes_estudio';
 import { index as turnosIndex } from '@/routes/academico/turnos';
+import { index as localidadesIndex } from '@/routes/sistema/localidades';
 import type { BreadcrumbItem } from '@/types';
 
 interface Props extends PropsWithChildren {
@@ -188,6 +190,12 @@ const APP_MENU_SECTIONS: AppMenuSection[] = [
         title: 'Sistema',
         icon: DatabaseIcon,
         items: [
+            {
+                label: 'Localidades',
+                description: 'Provincias y códigos postales',
+                icon: MapPinIcon,
+                href: localidadesIndex.url(),
+            },
             {
                 label: 'Usuarios',
                 description: 'Accesos',
