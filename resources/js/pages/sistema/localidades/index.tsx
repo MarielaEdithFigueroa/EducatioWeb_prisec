@@ -15,7 +15,6 @@ import {
 } from '@/components/ui/dialog';
 import EureButtonPrimary from '@/components/ui/eure/EureButtonPrimary';
 import EureButtonSecondary from '@/components/ui/eure/EureButtonSecondary';
-import EureCard from '@/components/ui/eure/EureCard';
 import EureConfirmSwal from '@/components/ui/eure/EureConfirmSwal';
 import EureDataTable from '@/components/ui/eure/EureDataTable';
 import EureInputGroup from '@/components/ui/eure/EureInputGroup';
@@ -228,45 +227,43 @@ export default function LocalidadesIndex({ localidades, provincias }: Props) {
                     </EureButtonPrimary>
                 </div>
 
-                <EureCard className="min-w-0">
-                    <EureDataTable
-                        columns={columnas}
-                        data={localidades}
-                        globalFilterPlaceholder="Buscar localidades..."
-                        showExportButtons={false}
-                        initialPageSize={10}
-                        getRowClassName={(localidad) =>
-                            localidad.activo ? '' : 'opacity-65'
-                        }
-                        acciones={[
-                            {
-                                label: 'Editar',
-                                icon: PencilIcon,
-                                onClick: abrirEdicion,
-                            },
-                            {
-                                label: 'Desactivar',
-                                icon: Trash2Icon,
-                                color: 'red',
-                                hidden: (localidad) =>
-                                    !localidad.activo ||
-                                    cambiandoEstado === localidad.id,
-                                onClick: (localidad) =>
-                                    void cambiarEstado(localidad),
-                            },
-                            {
-                                label: 'Reactivar',
-                                icon: RotateCcwIcon,
-                                color: 'green',
-                                hidden: (localidad) =>
-                                    localidad.activo ||
-                                    cambiandoEstado === localidad.id,
-                                onClick: (localidad) =>
-                                    void cambiarEstado(localidad),
-                            },
-                        ]}
-                    />
-                </EureCard>
+                <EureDataTable
+                    columns={columnas}
+                    data={localidades}
+                    globalFilterPlaceholder="Buscar localidades..."
+                    showExportButtons={false}
+                    initialPageSize={10}
+                    getRowClassName={(localidad) =>
+                        localidad.activo ? '' : 'opacity-65'
+                    }
+                    acciones={[
+                        {
+                            label: 'Editar',
+                            icon: PencilIcon,
+                            onClick: abrirEdicion,
+                        },
+                        {
+                            label: 'Desactivar',
+                            icon: Trash2Icon,
+                            color: 'red',
+                            hidden: (localidad) =>
+                                !localidad.activo ||
+                                cambiandoEstado === localidad.id,
+                            onClick: (localidad) =>
+                                void cambiarEstado(localidad),
+                        },
+                        {
+                            label: 'Reactivar',
+                            icon: RotateCcwIcon,
+                            color: 'green',
+                            hidden: (localidad) =>
+                                localidad.activo ||
+                                cambiandoEstado === localidad.id,
+                            onClick: (localidad) =>
+                                void cambiarEstado(localidad),
+                        },
+                    ]}
+                />
             </div>
 
             <Dialog
