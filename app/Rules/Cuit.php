@@ -36,7 +36,7 @@ class Cuit implements ValidationRule
         }
 
         if (! $exito) {
-            $fail('El :attribute debe ser un CUIT válido.');
+            $fail('El :attribute debe ser un CUIL/T válido.');
         }
 
     }

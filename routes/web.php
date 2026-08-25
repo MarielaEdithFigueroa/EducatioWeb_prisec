@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Academico\AlumnoController;
 use App\Http\Controllers\Academico\CursoController;
 use App\Http\Controllers\Academico\DivisionController;
 use App\Http\Controllers\Academico\NivelController;
@@ -14,6 +15,14 @@ Route::middleware('auth')->group(function () {
     Route::inertia('dashboard', 'dashboard')->name('dashboard');
 
     Route::prefix('academico')->name('academico.')->group(function () {
+        Route::get('alumnos', [AlumnoController::class, 'index'])->name('alumnos.index');
+        Route::get('alumnos/nuevo', [AlumnoController::class, 'create'])->name('alumnos.create');
+        Route::post('alumnos', [AlumnoController::class, 'store'])->name('alumnos.store');
+        Route::get('alumnos/{alumno}/editar', [AlumnoController::class, 'edit'])->name('alumnos.edit');
+        Route::patch('alumnos/{alumno}', [AlumnoController::class, 'update'])->name('alumnos.update');
+        Route::patch('alumnos/{alumno}/desactivar', [AlumnoController::class, 'desactivar'])->name('alumnos.desactivar');
+        Route::patch('alumnos/{alumno}/reactivar', [AlumnoController::class, 'reactivar'])->name('alumnos.reactivar');
+
         Route::get('niveles', [NivelController::class, 'index'])->name('niveles.index');
         Route::post('niveles', [NivelController::class, 'store'])->name('niveles.store');
         Route::patch('niveles/{nivel}', [NivelController::class, 'update'])->name('niveles.update');

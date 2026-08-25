@@ -1,4 +1,4 @@
-import { format, formatDistanceToNowStrict, isValid } from 'date-fns';
+import { format, formatDistanceToNowStrict, isValid, parse } from 'date-fns';
 import { es } from 'date-fns/locale';
 
 export function formatDateTime(
@@ -11,7 +11,7 @@ export function formatDateTime(
 
     const date = value instanceof Date ? value : new Date(value);
 
-    if (!isValid(date)) {
+    if (date === null || !isValid(date)) {
         return emptyText;
     }
 
@@ -25,13 +25,35 @@ export function formatDate(
         return emptyText;
     }
 
-    const date = value instanceof Date ? value : new Date(value);
+    const date = parseDateOnly(value);
 
-    if (!isValid(date)) {
+    if (date === null || !isValid(date)) {
         return emptyText;
     }
 
     return format(date, 'dd/MM/yyyy');
+}
+
+export function parseDateOnly(
+    value: string | Date | null | undefined,
+): Date | null {
+    if (!value) {
+        return null;
+    }
+
+    if (value instanceof Date) {
+        return isValid(value) ? value : null;
+    }
+
+    const date = /^\d{4}-\d{2}-\d{2}$/.test(value)
+        ? parse(value, 'yyyy-MM-dd', new Date())
+        : new Date(value);
+
+    return isValid(date) ? date : null;
+}
+
+export function toDateOnlyString(value: Date | null): string {
+    return value && isValid(value) ? format(value, 'yyyy-MM-dd') : '';
 }
 export function diffForHumans(
     value: string | Date | null | undefined,

@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             TiposDocumentoSeeder::class,
             TiposVinculoSeeder::class,
             CondicionesEspecialesSeeder::class,
+            AlumnosSeeder::class,
             NivelesSeeder::class,
             CursosSeeder::class,
             TurnosSeeder::class,

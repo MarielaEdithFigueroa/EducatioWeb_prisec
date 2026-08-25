@@ -35,7 +35,7 @@ return new class extends Migration
 
             $table->string('domicilio', 200)->nullable();
             $table->unsignedBigInteger('ciudad_id')->nullable();
-            $table->char('cpa', 8)->nullable();
+            $table->string('cpa', 10)->nullable();
 
             $table->date('fecha_ingreso')->nullable();
             $table->date('fecha_inicio_cursado')->nullable();

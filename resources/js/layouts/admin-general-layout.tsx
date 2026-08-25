@@ -41,6 +41,7 @@ import {
 import type { DisplayBreadcrumb, RoleNavItem } from '@/layouts/role-shell';
 import { cn } from '@/lib/utils';
 import { dashboard } from '@/routes';
+import { index as alumnosIndex } from '@/routes/academico/alumnos';
 import { index as cursosIndex } from '@/routes/academico/cursos';
 import { index as divisionesIndex } from '@/routes/academico/divisiones';
 import { index as nivelesIndex } from '@/routes/academico/niveles';
@@ -108,9 +109,9 @@ const APP_MENU_SECTIONS: AppMenuSection[] = [
             },
             {
                 label: 'Alumnos',
-                description: 'Legajos y matrícula',
+                description: 'Legajos y datos personales',
                 icon: UsersIcon,
-                disabled: true,
+                href: alumnosIndex.url(),
             },
             {
                 label: 'Responsables',

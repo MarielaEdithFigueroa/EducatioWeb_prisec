@@ -15,6 +15,7 @@ interface EureSelectGroupProps {
     helperText?: string;
     className?: string;
     isDisabled?: boolean;
+    isClearable?: boolean;
     required?: boolean;
 }
 
@@ -30,6 +31,7 @@ export default function EureSelectGroup({
     helperText = '',
     className = '',
     isDisabled = false,
+    isClearable = false,
     required = false,
 }: EureSelectGroupProps) {
     return (
@@ -49,6 +51,7 @@ export default function EureSelectGroup({
                 error={error}
                 className="w-full"
                 isDisabled={isDisabled}
+                isClearable={isClearable}
             />
 
             {errorMessage && error ? (

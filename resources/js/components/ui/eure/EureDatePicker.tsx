@@ -12,6 +12,8 @@ registerLocale('es', es);
 type ViewMode = 'calendar' | 'month' | 'year';
 
 export interface EureDatePickerProps {
+    id?: string;
+    name?: string;
     value: Date | null;
     onChange: (date: Date | null) => void;
     format?: string;
@@ -25,6 +27,8 @@ export interface EureDatePickerProps {
 }
 
 interface CustomInputProps {
+    id?: string;
+    name?: string;
     value?: string;
     onClick?: () => void;
     onChange?: React.ChangeEventHandler<HTMLInputElement>;
@@ -49,7 +53,7 @@ const applyDateMask = (value: string): string => {
 };
 
 const CustomInput = React.forwardRef<HTMLInputElement, CustomInputProps>(
-    ({ value, onClick, onChange, onKeyDown, placeholder, error = false, disabled = false }, ref) => {
+    ({ id, name, value, onClick, onChange, onKeyDown, placeholder, error = false, disabled = false }, ref) => {
         const [localValue, setLocalValue] = useState(value ?? '');
         const [syncedValue, setSyncedValue] = useState(value);
 
@@ -68,6 +72,8 @@ const CustomInput = React.forwardRef<HTMLInputElement, CustomInputProps>(
             <div className="relative w-full">
                 <input
                     ref={ref}
+                    id={id}
+                    name={name}
                     value={localValue}
                     onChange={handleChange}
                     onKeyDown={onKeyDown}
@@ -106,6 +112,8 @@ const CustomInput = React.forwardRef<HTMLInputElement, CustomInputProps>(
 CustomInput.displayName = 'CustomInput';
 
 export default function EureDatePicker({
+    id,
+    name,
     value,
     onChange,
     format: dateFormat = 'dd/MM/yyyy',
@@ -209,7 +217,13 @@ export default function EureDatePicker({
                 showYearPicker={viewMode === 'year'}
                 showMonthYearPicker={viewMode === 'month'}
                 customInput={
-                    <CustomInput error={error} disabled={disabled} onKeyDown={onKeyDown} />
+                    <CustomInput
+                        id={id}
+                        name={name}
+                        error={error}
+                        disabled={disabled}
+                        onKeyDown={onKeyDown}
+                    />
                 }
                 {...(viewMode === 'calendar' && {
                     renderCustomHeader: ({

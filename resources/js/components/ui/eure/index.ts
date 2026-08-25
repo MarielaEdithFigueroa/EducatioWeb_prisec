@@ -17,6 +17,7 @@ export { default as EureUploadProgress } from './EureUploadProgress';
 // Composition components
 export { default as EureDatePicker } from './EureDatePicker';
 export type { EureDatePickerProps } from './EureDatePicker';
+export { default as EureDatePickerGroup } from './EureDatePickerGroup';
 export { default as EureDataTable } from './EureDataTable';
 export type { EureDataTableAccion, EureDataTableProps } from './EureDataTable';
 export { default as EureInputGroup } from './EureInputGroup';

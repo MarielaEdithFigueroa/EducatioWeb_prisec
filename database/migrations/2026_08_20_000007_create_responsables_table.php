@@ -33,12 +33,12 @@ return new class extends Migration
 
             $table->string('domicilio', 200)->nullable();
             $table->unsignedBigInteger('ciudad_id')->nullable();
-            $table->char('cpa', 8)->nullable();
+            $table->string('cpa', 10)->nullable();
 
             $table->string('profesion', 100)->nullable();
             $table->string('domicilio_laboral', 200)->nullable();
             $table->unsignedBigInteger('ciudad_laboral_id')->nullable();
-            $table->char('cpa_laboral', 8)->nullable();
+            $table->string('cpa_laboral', 10)->nullable();
             $table->string('telefono_laboral_e164', 20)->nullable();
             $table->string('telefono_laboral_original', 50)->nullable();
 
