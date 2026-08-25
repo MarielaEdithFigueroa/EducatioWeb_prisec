@@ -24,6 +24,15 @@ npm run build
 
 El seeder crea el usuario indicado por `SEED_ADMIN_LOGIN`, `SEED_ADMIN_NOMBRE` y `SEED_ADMIN_APELLIDO`. La contraseña nunca se incluye en el repositorio.
 
+## Después de cada `pull`
+
+Estamos en `migrate:fresh`, así que después de traer cambios hay que rehacer la base y levantar el entorno de nuevo:
+
+```powershell
+php artisan migrate:fresh --seed
+composer run dev
+```
+
 ## Calidad
 
 ```powershell
