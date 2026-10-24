@@ -1,5 +1,9 @@
 
 
+24/10
+Claude ayuda con git
+claude --resume bb2dd27e-f1cc-4e88-b5b5-6997758ed4e3
+
 30/09
 para funcionalidad:
  codex resume 01a0f367-1090-76a0-b08e-75280d5c20a1
