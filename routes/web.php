@@ -1,16 +1,20 @@
 <?php
 
+use App\Http\Controllers\Academico\AdjuntoIntegranteController;
 use App\Http\Controllers\Academico\AlumnoController;
 use App\Http\Controllers\Academico\AlumnoResponsableController;
 use App\Http\Controllers\Academico\AulaController;
 use App\Http\Controllers\Academico\CursoController;
 use App\Http\Controllers\Academico\DivisionController;
 use App\Http\Controllers\Academico\DocumentoAlumnoController;
+use App\Http\Controllers\Academico\DocumentoIntegranteController;
 use App\Http\Controllers\Academico\FotoAulaController;
 use App\Http\Controllers\Academico\GrupoController;
+use App\Http\Controllers\Academico\IntegranteController;
 use App\Http\Controllers\Academico\NivelController;
 use App\Http\Controllers\Academico\PlanEstudioController;
 use App\Http\Controllers\Academico\ResponsableController;
+use App\Http\Controllers\Academico\TipoDocumentacionIntegranteController;
 use App\Http\Controllers\Academico\TurnoController;
 use App\Http\Controllers\Sistema\LocalidadController;
 use Illuminate\Support\Facades\Route;
@@ -21,6 +25,28 @@ Route::middleware('auth')->group(function () {
     Route::inertia('dashboard', 'dashboard')->name('dashboard');
 
     Route::prefix('academico')->name('academico.')->group(function () {
+        Route::get('integrantes', [IntegranteController::class, 'index'])->name('integrantes.index');
+        Route::get('integrantes/nuevo', [IntegranteController::class, 'create'])->name('integrantes.create');
+        Route::post('integrantes', [IntegranteController::class, 'store'])->name('integrantes.store');
+        Route::get('integrantes/{integrante}', [IntegranteController::class, 'show'])->name('integrantes.show');
+        Route::get('integrantes/{integrante}/editar', [IntegranteController::class, 'edit'])->name('integrantes.edit');
+        Route::patch('integrantes/{integrante}', [IntegranteController::class, 'update'])->name('integrantes.update');
+        Route::patch('integrantes/{integrante}/desactivar', [IntegranteController::class, 'desactivar'])->name('integrantes.desactivar');
+        Route::patch('integrantes/{integrante}/reactivar', [IntegranteController::class, 'reactivar'])->name('integrantes.reactivar');
+        Route::get('integrantes/{integrante}/foto', [IntegranteController::class, 'foto'])->name('integrantes.foto');
+        Route::get('integrantes/{integrante}/imprimir', [IntegranteController::class, 'imprimir'])->name('integrantes.imprimir');
+        Route::prefix('integrantes/{integrante}/documentacion/{tipoDocumentacionIntegrante}')->name('integrantes.documentacion.')->group(function () {
+            Route::post('/', [DocumentoIntegranteController::class, 'guardar'])->name('guardar');
+            Route::patch('/', [DocumentoIntegranteController::class, 'quitar'])->name('quitar');
+            Route::get('/', [DocumentoIntegranteController::class, 'ver'])->name('ver');
+        });
+
+        Route::get('tipos-documentacion-integrante', [TipoDocumentacionIntegranteController::class, 'index'])->name('tipos_documentacion_integrante.index');
+        Route::post('tipos-documentacion-integrante', [TipoDocumentacionIntegranteController::class, 'store'])->name('tipos_documentacion_integrante.store');
+        Route::patch('tipos-documentacion-integrante/{tipoDocumentacionIntegrante}', [TipoDocumentacionIntegranteController::class, 'update'])->name('tipos_documentacion_integrante.update');
+        Route::patch('tipos-documentacion-integrante/{tipoDocumentacionIntegrante}/desactivar', [TipoDocumentacionIntegranteController::class, 'desactivar'])->name('tipos_documentacion_integrante.desactivar');
+        Route::patch('tipos-documentacion-integrante/{tipoDocumentacionIntegrante}/reactivar', [TipoDocumentacionIntegranteController::class, 'reactivar'])->name('tipos_documentacion_integrante.reactivar');
+
         Route::get('aulas', [AulaController::class, 'index'])->name('aulas.index');
         Route::get('aulas/nueva', [AulaController::class, 'create'])->name('aulas.create');
         Route::post('aulas', [AulaController::class, 'store'])->name('aulas.store');
@@ -56,6 +82,15 @@ Route::middleware('auth')->group(function () {
         Route::get('alumnos', [AlumnoController::class, 'index'])->name('alumnos.index');
         Route::get('alumnos/nuevo', [AlumnoController::class, 'create'])->name('alumnos.create');
         Route::post('alumnos', [AlumnoController::class, 'store'])->name('alumnos.store');
+        Route::scopeBindings()->prefix('integrantes/{integrante}/adjuntos')->name('integrantes.adjuntos.')->group(function () {
+            Route::post('/', [AdjuntoIntegranteController::class, 'store'])->name('store');
+            Route::get('{adjunto}/descargar', [AdjuntoIntegranteController::class, 'descargar'])->name('descargar');
+            Route::get('{adjunto}/miniatura', [AdjuntoIntegranteController::class, 'miniatura'])->name('miniatura');
+            Route::patch('{adjunto}', [AdjuntoIntegranteController::class, 'update'])->name('update');
+            Route::patch('{adjunto}/desactivar', [AdjuntoIntegranteController::class, 'desactivar'])->name('desactivar');
+            Route::patch('{adjunto}/reactivar', [AdjuntoIntegranteController::class, 'reactivar'])->name('reactivar');
+        });
+
         Route::scopeBindings()->prefix('alumnos/{alumno}/documentacion')->name('alumnos.documentacion.')->group(function () {
             Route::post('/', [DocumentoAlumnoController::class, 'store'])->name('store');
             Route::get('{adjunto}/descargar', [DocumentoAlumnoController::class, 'descargar'])->name('descargar');

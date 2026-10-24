@@ -21,6 +21,7 @@ import EureDatePickerGroup from '@/components/ui/eure/EureDatePickerGroup';
 import EureInputGroup from '@/components/ui/eure/EureInputGroup';
 import EureSelectGroup from '@/components/ui/eure/EureSelectGroup';
 import type { EureSelectOption } from '@/components/ui/eure/EureSelectGroup';
+import EureTelefonoInputGroup from '@/components/ui/eure/EureTelefonoInputGroup';
 import EureTextareaGroup from '@/components/ui/eure/EureTextareaGroup';
 import { parseDateOnly, toDateOnlyString } from '@/lib/date';
 import FormularioVinculo from './formulario-vinculo';
@@ -49,6 +50,7 @@ type DatosResponsable = {
     genero_autodescripcion: string;
     email: string;
     telefono: string;
+    telefono_es_fijo: boolean;
     domicilio: string;
     ciudad_id: number | '';
     cpa: string;
@@ -57,6 +59,7 @@ type DatosResponsable = {
     ciudad_laboral_id: number | '';
     cpa_laboral: string;
     telefono_laboral: string;
+    telefono_laboral_es_fijo: boolean;
     observaciones: string;
 };
 
@@ -114,6 +117,7 @@ export default function FormularioResponsable({
             genero_autodescripcion: responsable?.genero_autodescripcion ?? '',
             email: responsable?.email ?? '',
             telefono: responsable?.telefono ?? '',
+            telefono_es_fijo: responsable?.telefono_es_fijo ?? false,
             domicilio: responsable?.domicilio ?? '',
             ciudad_id: responsable?.ciudad_id ?? '',
             cpa: responsable?.cpa ?? '',
@@ -122,6 +126,8 @@ export default function FormularioResponsable({
             ciudad_laboral_id: responsable?.ciudad_laboral_id ?? '',
             cpa_laboral: responsable?.cpa_laboral ?? '',
             telefono_laboral: responsable?.telefono_laboral ?? '',
+            telefono_laboral_es_fijo:
+                responsable?.telefono_laboral_es_fijo ?? false,
             observaciones: responsable?.observaciones ?? '',
         },
         vinculo: {
@@ -446,7 +452,7 @@ export default function FormularioResponsable({
                             errorMessage={errors['responsable.email']}
                             maxLength={254}
                         />
-                        <EureInputGroup
+                        <EureTelefonoInputGroup
                             label="Teléfono"
                             name="telefono"
                             value={form.data.responsable.telefono}
@@ -458,8 +464,10 @@ export default function FormularioResponsable({
                             }
                             error={Boolean(errors['responsable.telefono'])}
                             errorMessage={errors['responsable.telefono']}
-                            helperText="Formato internacional, por ejemplo +5492994123456"
-                            maxLength={20}
+                            esLineaFija={form.data.responsable.telefono_es_fijo}
+                            onEsLineaFijaChange={(fijo) =>
+                                cambiarResponsable('telefono_es_fijo', fijo)
+                            }
                         />
                         <EureInputGroup
                             label="Domicilio"
@@ -587,7 +595,7 @@ export default function FormularioResponsable({
                             errorMessage={errors['responsable.cpa_laboral']}
                             maxLength={10}
                         />
-                        <EureInputGroup
+                        <EureTelefonoInputGroup
                             label="Teléfono laboral"
                             name="telefono_laboral"
                             value={form.data.responsable.telefono_laboral}
@@ -603,8 +611,15 @@ export default function FormularioResponsable({
                             errorMessage={
                                 errors['responsable.telefono_laboral']
                             }
-                            helperText="Formato internacional"
-                            maxLength={20}
+                            esLineaFija={
+                                form.data.responsable.telefono_laboral_es_fijo
+                            }
+                            onEsLineaFijaChange={(fijo) =>
+                                cambiarResponsable(
+                                    'telefono_laboral_es_fijo',
+                                    fijo,
+                                )
+                            }
                         />
                     </div>
                 </EducatioCard>

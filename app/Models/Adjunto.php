@@ -49,4 +49,10 @@ class Adjunto extends Model
     {
         return $this->belongsToMany(Aula::class, 'aulas_adjuntos');
     }
+
+    /** @return BelongsToMany<Integrante, $this> */
+    public function integrantes(): BelongsToMany
+    {
+        return $this->belongsToMany(Integrante::class, 'integrantes_adjuntos', 'adjunto_id', 'integrante_id');
+    }
 }

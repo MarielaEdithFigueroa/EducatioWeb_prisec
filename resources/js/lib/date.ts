@@ -1,4 +1,10 @@
-import { format, formatDistanceToNowStrict, isValid, parse } from 'date-fns';
+import {
+    differenceInYears,
+    format,
+    formatDistanceToNowStrict,
+    isValid,
+    parse,
+} from 'date-fns';
 import { es } from 'date-fns/locale';
 
 export function formatDateTime(
@@ -54,6 +60,15 @@ export function parseDateOnly(
 
 export function toDateOnlyString(value: Date | null): string {
     return value && isValid(value) ? format(value, 'yyyy-MM-dd') : '';
+}
+export function yearsSince(
+    value: string | Date | null | undefined,
+    until: string | Date = new Date(),
+): number | null {
+    const start = parseDateOnly(value);
+    const end = parseDateOnly(until);
+
+    return start && end && start <= end ? differenceInYears(end, start) : null;
 }
 export function diffForHumans(
     value: string | Date | null | undefined,

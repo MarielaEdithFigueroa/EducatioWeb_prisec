@@ -6,16 +6,23 @@ use App\Models\AlumnoCondicionEspecial;
 use App\Models\AlumnoResponsable;
 use App\Models\Aula;
 use App\Models\Ciudad;
+use App\Models\ContactoIntegrante;
 use App\Models\Curso;
 use App\Models\Division;
+use App\Models\FuncionEquipo;
 use App\Models\Grupo;
 use App\Models\GrupoSanguineo;
+use App\Models\Integrante;
+use App\Models\IntegranteDocumentacion;
+use App\Models\IntegranteFuncion;
 use App\Models\MotivoBaja;
 use App\Models\Nacionalidad;
 use App\Models\Nivel;
 use App\Models\PlanEstudio;
 use App\Models\Provincia;
+use App\Models\ReferenciaLaboralIntegrante;
 use App\Models\Responsable;
+use App\Models\TipoDocumentacionIntegrante;
 use App\Models\Turno;
 use Illuminate\Support\Facades\Schema;
 
@@ -33,12 +40,21 @@ it('keeps activo immediately after id', function () {
 it('uses conventional identifiers in academic tables', function () {
     $expectedIdentifiers = [
         'adjuntos' => ['id', 'usuario_id'],
+        'integrantes_adjuntos' => ['id', 'integrante_id', 'adjunto_id'],
         'alumnos_adjuntos' => ['id', 'alumno_id', 'adjunto_id'],
         'aulas_adjuntos' => ['id', 'aula_id', 'adjunto_id'],
         'niveles' => ['id'],
         'cursos' => ['id', 'nivel_id'],
         'divisiones' => ['id'],
         'turnos' => ['id'],
+        'funciones_equipo' => ['id'],
+        'integrantes_funciones' => ['id', 'integrante_id', 'funcion_equipo_id'],
+        'integrantes_contactos' => ['id', 'integrante_id'],
+        'integrantes_referencias_laborales' => ['id', 'integrante_id'],
+        'tipos_documentacion_integrante' => ['id'],
+        'integrantes' => ['id', 'tipo_documento_id', 'ciudad_id', 'ciudad_nacimiento_id', 'nacionalidad_id'],
+        'integrantes_documentacion' => ['id', 'integrante_id', 'tipo_documentacion_integrante_id'],
+        'integrantes_documentacion_adjuntos' => ['id', 'integrante_documentacion_id', 'adjunto_id'],
         'planes_estudio' => ['id', 'nivel_id'],
         'grupos' => ['id', 'curso_id', 'turno_id', 'division_id', 'plan_estudio_id', 'nivel_id'],
         'provincias' => ['id'],
@@ -80,6 +96,13 @@ it('keeps domain tables free of eloquent timestamps', function () {
         'cursos' => Curso::class,
         'divisiones' => Division::class,
         'turnos' => Turno::class,
+        'funciones_equipo' => FuncionEquipo::class,
+        'integrantes_funciones' => IntegranteFuncion::class,
+        'integrantes_contactos' => ContactoIntegrante::class,
+        'integrantes_referencias_laborales' => ReferenciaLaboralIntegrante::class,
+        'tipos_documentacion_integrante' => TipoDocumentacionIntegrante::class,
+        'integrantes' => Integrante::class,
+        'integrantes_documentacion' => IntegranteDocumentacion::class,
         'planes_estudio' => PlanEstudio::class,
         'grupos' => Grupo::class,
         'aulas' => Aula::class,

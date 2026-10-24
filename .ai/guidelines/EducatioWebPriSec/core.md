@@ -19,7 +19,7 @@
 - **Auditoría**: tabla general `logs` (entidad, entidad_id, accion, usuario_id, login, anterior JSON, nuevo JSON, ip, user_agent, origen, created_at). Toda creación/actualización auditada debe loguear `create`/`update`/`deactivate`/`reactivate` dentro de la misma transacción que la operación principal.
 - La solución de auditoría debe ser centralizada (trait/observer/servicio), no copiada por controlador.
 - **Sin cascades en tablas de dominio**: no usar `cascadeOnDelete()` ni cascades equivalentes en relaciones propias del dominio. Las bajas son lógicas con `activo`; si alguna eliminación física fuera necesaria, debe resolverse explícitamente en código/transacción y auditarse. Excepciones técnicas de paquetes/auth se evalúan caso por caso.
-- **Teléfonos**: guardar normalizados en formato E.164 siempre que sea posible (`+549...`). Si se conserva el texto original ingresado por el usuario, guardarlo en un campo separado explícito.
+- **Teléfonos**: aplicar siempre el patrón compartido de la sección «Teléfonos» de este archivo. Guardar en E.164; si se conserva la entrada original, usar un campo separado explícito.
 - **CUILT**: cuando un campo admite indistintamente CUIL o CUIT, la columna y el nombre de dominio son `cuilt`. Es intencional: no renombrarlo a `cuil_cuit` ni a ninguna otra variante.
 
 Detalle completo: ver issue "Implementar baja lógica y tabla general de logs" en GitHub. Cuando se proponga una migration nueva, no agregar `timestamps()`/`softDeletes()` salvo que se discuta explícitamente una excepción.
@@ -168,8 +168,21 @@ Educatio debe poder operarse eficientemente con teclado. Sus usuarios realizan c
 - Usar `EureInputMoney` (formatea al perder el foco).
 - Al escribir, **coma y punto** valen ambos como separador decimal.
 
+### Teléfonos
+
+**Siempre que una funcionalidad incluya teléfonos, reutilizar este patrón**, tanto al crear pantallas como al modificar las existentes. Aplica a docentes, responsables, contactos laborales, referencias y cualquier otro dominio. Proviene de Pranzo; la implementación de referencia ya está en Educatio.
+
+- **Interfaz:** usar `resources/js/components/ui/eure/EureTelefonoInputGroup.tsx`. Permite ingresar el número con característica (ej. `299 5123456`) y elegir **Línea móvil / Línea fija** mediante «cambiar», con móvil como valor inicial para números nuevos. No exigir que el usuario escriba `+54` o `+549`. Para números extranjeros, indicar el prefijo internacional.
+- **Un campo por número:** no crear campos separados «Teléfono» y «Celular» solo para distinguir el tipo de línea. Conservar campos adicionales cuando representan contactos distintos, como teléfono laboral o de una referencia; cada uno usa el mismo componente con su label y estado independientes.
+- **Servidor:** usar `App\Services\TelefonoNormalizer` y `App\Rules\Telefono` desde los Form Requests. La dependencia es `giggsey/libphonenumber-for-php-lite` (`^9.0`), la misma que Pranzo. No reemplazarla por regex, concatenación manual de prefijos ni una normalización propia por pantalla.
+- **Normalización y validación:** seguir `IntegranteRequest` y `ResponsableRequest`: normalizar según el tipo elegido y validar con `Telefono`. Si la normalización de una entrada no vacía falla, conservar esa entrada para que la validación la rechace; nunca convertirla en `null` y aceptarla por `nullable`. Un número «posible» no equivale a un número válido.
+- **Guardado:** persistir el número normalizado en E.164. Los indicadores `*_es_fijo` son auxiliares del formulario: validarlos como booleanos y excluirlos de los datos enviados al modelo. Si el dominio conserva el texto original, guardarlo aparte, como hace Responsable con `telefono_original` y `telefono_e164`.
+- **Edición:** reconstruir el tipo de línea con `TelefonoNormalizer::esLineaFija()` a partir del E.164 guardado. No inicializar siempre como móvil: eso convertiría teléfonos fijos al guardar sin cambios. No inventar características faltantes ni modificar prefijos extranjeros.
+- **Verificación:** cubrir números nacionales móviles y fijos, números internacionales, entradas inválidas y edición sin cambio de tipo. Referencias: `tests/Unit/TelefonoNormalizerTest.php` y `tests/Feature/Academico/TelefonosTest.php`. Si falta el paquete, informar la dependencia pendiente y respetar las restricciones de instalación de la sesión; no presentar la integración como verificada.
+
 ### Formularios
 
+- **Alineación y orden visual (preferencia, no restricción funcional):** procurar formularios estéticamente ordenados, con campos y labels alineados en una grilla coherente, espaciados uniformes y agrupaciones claras. Evitar controles sueltos fuera de la grilla y huecos innecesarios; aprovechar el espacio disponible según el contenido. No forzar simetría, anchos iguales ni un número fijo de columnas si perjudican la funcionalidad, la legibilidad, la accesibilidad, el comportamiento responsive o el recorrido lógico con teclado. Ante un conflicto, esas necesidades tienen prioridad sobre la estética.
 - El ancho del campo acompaña al dato: un precio **no** ocupa el 100% del ancho; una descripción sí.
 - Los labels deben permanecer visibles. No usar placeholders como reemplazo del label.
 - Los formularios deben abrir listos para trabajar y respetar un recorrido de carga predecible.

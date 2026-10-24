@@ -47,9 +47,11 @@ import { index as aulasIndex } from '@/routes/academico/aulas';
 import { index as cursosIndex } from '@/routes/academico/cursos';
 import { index as divisionesIndex } from '@/routes/academico/divisiones';
 import { index as gruposIndex } from '@/routes/academico/grupos';
+import { index as integrantesIndex } from '@/routes/academico/integrantes';
 import { index as nivelesIndex } from '@/routes/academico/niveles';
 import { index as planesEstudioIndex } from '@/routes/academico/planes_estudio';
 import { index as responsablesIndex } from '@/routes/academico/responsables';
+import { index as tiposDocumentacionIntegranteIndex } from '@/routes/academico/tipos_documentacion_integrante';
 import { index as turnosIndex } from '@/routes/academico/turnos';
 import { index as localidadesIndex } from '@/routes/sistema/localidades';
 import type { BreadcrumbItem } from '@/types';
@@ -136,6 +138,18 @@ const APP_MENU_SECTIONS: AppMenuSection[] = [
                 description: 'Espacios curriculares',
                 icon: NotebookTextIcon,
                 disabled: true,
+            },
+            {
+                label: 'Equipo institucional',
+                description: 'Legajos y funciones del equipo',
+                icon: UserCogIcon,
+                href: integrantesIndex.url(),
+            },
+            {
+                label: 'Tipos de documentación del equipo',
+                description: 'Checklist del legajo de cada integrante',
+                icon: ClipboardListIcon,
+                href: tiposDocumentacionIntegranteIndex.url(),
             },
             {
                 label: 'Calificaciones',

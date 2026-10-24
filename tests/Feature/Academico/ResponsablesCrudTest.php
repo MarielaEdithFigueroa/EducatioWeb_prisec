@@ -362,7 +362,7 @@ it('rechaza duplicados, teléfonos inválidos y nuevas localidades inactivas al 
         ->patch(route('academico.responsables.update', $responsable), ['responsable' => [
             'apellido' => '', 'nombre' => 'Juan',
             'tipo_documento_id' => $dni->id, 'numero_documento' => '12345678', 'cuilt' => '20-12345678-6',
-            'telefono' => '2994123456', 'ciudad_id' => $ciudad->id, 'ciudad_laboral_id' => $ciudad->id,
+            'telefono' => '299412', 'ciudad_id' => $ciudad->id, 'ciudad_laboral_id' => $ciudad->id,
         ]])
         ->assertSessionHasErrors([
             'responsable.apellido', 'responsable.numero_documento', 'responsable.cuilt',
@@ -612,7 +612,7 @@ it('valida duplicados y todos los datos obligatorios del vínculo', function () 
                 'tipo_documento_id' => $dni->id,
                 'numero_documento' => '12345678',
                 'cuilt' => '20-12345678-6',
-                'telefono' => '2994123456',
+                'telefono' => '299412',
             ],
             'vinculo' => [],
         ])

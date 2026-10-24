@@ -290,3 +290,59 @@ Visit https://react.dev/link/error-boundaries to learn more about error boundari
 [2026-10-19 14:01:30] local.DEBUG: [vite] server connection lost. Polling for restart... {"url":"http://localhost:8002/dashboard","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36","timestamp":"2026-10-19T17:01:29.969Z"} 
 [2026-10-19 14:02:30] local.DEBUG: [vite] server connection lost. Polling for restart... {"url":"http://localhost:8002/dashboard","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36","timestamp":"2026-10-19T17:02:29.966Z"} 
 [2026-10-19 14:03:29] local.DEBUG: [vite] server connection lost. Polling for restart... {"url":"http://localhost:8002/dashboard","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36","timestamp":"2026-10-19T17:03:29.612Z"} 
+[2026-10-24 12:06:24] local.DEBUG: [vite] server connection lost. Polling for restart... {"url":"http://localhost:8002/login","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36","timestamp":"2026-10-24T15:06:24.393Z"} 
+[2026-10-24 14:01:48] local.ERROR: Uncaught TypeError: Cannot read properties of undefined (reading 'map') http://[::1]:5173/@id/D:/Eureka/EducatioWeb/EducatioWeb_PriSec-main/resources/js/pages/academico/docentes/formulario.tsx?t=1792861302960 164 40 TypeError Cannot read properties of undefined (reading 'map') TypeError: Cannot read properties of undefined (reading 'map')
+    at t13 (http://[::1]:5173/@id/D:/Eureka/EducatioWeb/EducatioWeb_PriSec-main/resources/js/pages/academico/docentes/formulario.tsx?t=1792861302960:164:40)
+    at t15 (http://[::1]:5173/@id/D:/Eureka/EducatioWeb/EducatioWeb_PriSec-main/resources/js/pages/academico/docentes/formulario.tsx?t=1792861302960:268:20)
+    at Array.map (<anonymous>)
+    at http://[::1]:5173/@id/D:/Eureka/EducatioWeb/EducatioWeb_PriSec-main/resources/js/pages/academico/docentes/formulario.tsx?t=1792861302960:549:33
+    at Array.map (<anonymous>)
+    at http://[::1]:5173/@id/D:/Eureka/EducatioWeb/EducatioWeb_PriSec-main/resources/js/pages/academico/docentes/formulario.tsx?t=1792861302960:523:74
+    at Array.map (<anonymous>)
+    at FormularioDocente (http://[::1]:5173/@id/D:/Eureka/EducatioWeb/EducatioWeb_PriSec-main/resources/js/pages/academico/docentes/formulario.tsx?t=1792861302960:499:18)
+    at Object.react_stack_bottom_frame (http://[::1]:5173/node_modules/.vite/deps/client-B05GRim-.js?v=f761f5f5:12867:12)
+    at renderWithHooks (http://[::1]:5173/node_modules/.vite/deps/client-B05GRim-.js?v=f761f5f5:4212:19) {"url":"http://localhost:8002/academico/docentes/nuevo?filtros%5Bbuscar%5D=&filtros%5Bestado%5D=activos&filtros%5Btipo%5D=&filtros%5Bsector_id%5D=","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36","timestamp":"2026-10-24T17:01:47.784Z"} 
+[2026-10-24 14:01:48] local.ERROR: Uncaught TypeError: Cannot read properties of undefined (reading 'map') http://[::1]:5173/@id/D:/Eureka/EducatioWeb/EducatioWeb_PriSec-main/resources/js/pages/academico/docentes/formulario.tsx?t=1792861302960 164 40 TypeError Cannot read properties of undefined (reading 'map') TypeError: Cannot read properties of undefined (reading 'map')
+    at t13 (http://[::1]:5173/@id/D:/Eureka/EducatioWeb/EducatioWeb_PriSec-main/resources/js/pages/academico/docentes/formulario.tsx?t=1792861302960:164:40)
+    at t15 (http://[::1]:5173/@id/D:/Eureka/EducatioWeb/EducatioWeb_PriSec-main/resources/js/pages/academico/docentes/formulario.tsx?t=1792861302960:268:20)
+    at Array.map (<anonymous>)
+    at http://[::1]:5173/@id/D:/Eureka/EducatioWeb/EducatioWeb_PriSec-main/resources/js/pages/academico/docentes/formulario.tsx?t=1792861302960:549:33
+    at Array.map (<anonymous>)
+    at http://[::1]:5173/@id/D:/Eureka/EducatioWeb/EducatioWeb_PriSec-main/resources/js/pages/academico/docentes/formulario.tsx?t=1792861302960:523:74
+    at Array.map (<anonymous>)
+    at FormularioDocente (http://[::1]:5173/@id/D:/Eureka/EducatioWeb/EducatioWeb_PriSec-main/resources/js/pages/academico/docentes/formulario.tsx?t=1792861302960:499:18)
+    at Object.react_stack_bottom_frame (http://[::1]:5173/node_modules/.vite/deps/client-B05GRim-.js?v=f761f5f5:12867:12)
+    at renderWithHooks (http://[::1]:5173/node_modules/.vite/deps/client-B05GRim-.js?v=f761f5f5:4212:19) {"url":"http://localhost:8002/academico/docentes/nuevo?filtros%5Bbuscar%5D=&filtros%5Bestado%5D=activos&filtros%5Btipo%5D=&filtros%5Bsector_id%5D=","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36","timestamp":"2026-10-24T17:01:47.784Z"} 
+[2026-10-24 14:01:48] local.WARNING: %s
+
+%s
+ An error occurred in the <FormularioDocente> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. {"url":"http://localhost:8002/academico/docentes/nuevo?filtros%5Bbuscar%5D=&filtros%5Bestado%5D=activos&filtros%5Btipo%5D=&filtros%5Bsector_id%5D=","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36","timestamp":"2026-10-24T17:01:47.785Z"} 
+[2026-10-24 14:01:48] local.ERROR: Uncaught TypeError: Cannot read properties of undefined (reading 'map') http://[::1]:5173/@id/D:/Eureka/EducatioWeb/EducatioWeb_PriSec-main/resources/js/pages/academico/docentes/formulario.tsx?t=1792861302960 164 40 TypeError Cannot read properties of undefined (reading 'map') TypeError: Cannot read properties of undefined (reading 'map')
+    at t13 (http://[::1]:5173/@id/D:/Eureka/EducatioWeb/EducatioWeb_PriSec-main/resources/js/pages/academico/docentes/formulario.tsx?t=1792861302960:164:40)
+    at t15 (http://[::1]:5173/@id/D:/Eureka/EducatioWeb/EducatioWeb_PriSec-main/resources/js/pages/academico/docentes/formulario.tsx?t=1792861302960:268:20)
+    at Array.map (<anonymous>)
+    at http://[::1]:5173/@id/D:/Eureka/EducatioWeb/EducatioWeb_PriSec-main/resources/js/pages/academico/docentes/formulario.tsx?t=1792861302960:549:33
+    at Array.map (<anonymous>)
+    at http://[::1]:5173/@id/D:/Eureka/EducatioWeb/EducatioWeb_PriSec-main/resources/js/pages/academico/docentes/formulario.tsx?t=1792861302960:523:74
+    at Array.map (<anonymous>)
+    at FormularioDocente (http://[::1]:5173/@id/D:/Eureka/EducatioWeb/EducatioWeb_PriSec-main/resources/js/pages/academico/docentes/formulario.tsx?t=1792861302960:499:18)
+    at Object.react_stack_bottom_frame (http://[::1]:5173/node_modules/.vite/deps/client-B05GRim-.js?v=f761f5f5:12867:12)
+    at renderWithHooks (http://[::1]:5173/node_modules/.vite/deps/client-B05GRim-.js?v=f761f5f5:4212:19) {"url":"http://localhost:8002/academico/docentes/nuevo?filtros%5Bbuscar%5D=&filtros%5Bestado%5D=activos&filtros%5Btipo%5D=&filtros%5Bsector_id%5D=","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36","timestamp":"2026-10-24T17:01:47.784Z"} 
+[2026-10-24 14:01:48] local.ERROR: Uncaught TypeError: Cannot read properties of undefined (reading 'map') http://[::1]:5173/@id/D:/Eureka/EducatioWeb/EducatioWeb_PriSec-main/resources/js/pages/academico/docentes/formulario.tsx?t=1792861302960 164 40 TypeError Cannot read properties of undefined (reading 'map') TypeError: Cannot read properties of undefined (reading 'map')
+    at t13 (http://[::1]:5173/@id/D:/Eureka/EducatioWeb/EducatioWeb_PriSec-main/resources/js/pages/academico/docentes/formulario.tsx?t=1792861302960:164:40)
+    at t15 (http://[::1]:5173/@id/D:/Eureka/EducatioWeb/EducatioWeb_PriSec-main/resources/js/pages/academico/docentes/formulario.tsx?t=1792861302960:268:20)
+    at Array.map (<anonymous>)
+    at http://[::1]:5173/@id/D:/Eureka/EducatioWeb/EducatioWeb_PriSec-main/resources/js/pages/academico/docentes/formulario.tsx?t=1792861302960:549:33
+    at Array.map (<anonymous>)
+    at http://[::1]:5173/@id/D:/Eureka/EducatioWeb/EducatioWeb_PriSec-main/resources/js/pages/academico/docentes/formulario.tsx?t=1792861302960:523:74
+    at Array.map (<anonymous>)
+    at FormularioDocente (http://[::1]:5173/@id/D:/Eureka/EducatioWeb/EducatioWeb_PriSec-main/resources/js/pages/academico/docentes/formulario.tsx?t=1792861302960:499:18)
+    at Object.react_stack_bottom_frame (http://[::1]:5173/node_modules/.vite/deps/client-B05GRim-.js?v=f761f5f5:12867:12)
+    at renderWithHooks (http://[::1]:5173/node_modules/.vite/deps/client-B05GRim-.js?v=f761f5f5:4212:19) {"url":"http://localhost:8002/academico/docentes/nuevo?filtros%5Bbuscar%5D=&filtros%5Bestado%5D=activos&filtros%5Btipo%5D=&filtros%5Bsector_id%5D=","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36","timestamp":"2026-10-24T17:01:47.784Z"} 
+[2026-10-24 14:01:48] local.WARNING: %s
+
+%s An error occurred in the <FormularioDocente> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. {"url":"http://localhost:8002/academico/docentes/nuevo?filtros%5Bbuscar%5D=&filtros%5Bestado%5D=activos&filtros%5Btipo%5D=&filtros%5Bsector_id%5D=","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36","timestamp":"2026-10-24T17:01:47.785Z"} 
+[2026-10-24 15:51:48] local.ERROR: [vite] Failed to reload /resources/js/layouts/admin-general-layout.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above) {"url":"http://localhost:8002/dashboard","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36","timestamp":"2026-10-24T18:51:46.036Z"} 
+[2026-10-24 17:21:41] local.ERROR: [vite] Failed to reload /@id/D:/Eureka/EducatioWeb/EducatioWeb_PriSec-main/resources/js/pages/academico/integrantes/relaciones.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above) {"url":"http://localhost:8002/academico/integrantes","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36","timestamp":"2026-10-24T20:21:41.164Z"} 

@@ -1,6 +1,12 @@
 
 
+
 24/10
+Codex para docentes
+  codex resume 01a16e7d-e0a8-7163-9151-722a7b4e4a37
+
+claude para visual docentes
+
 Claude ayuda con git
 claude --resume bb2dd27e-f1cc-4e88-b5b5-6997758ed4e3
 

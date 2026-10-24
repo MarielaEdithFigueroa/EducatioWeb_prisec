@@ -28,7 +28,11 @@ class DatabaseSeeder extends Seeder
             TurnosSeeder::class,
             DivisionesSeeder::class,
             PlanesEstudioSeeder::class,
+            GruposSeeder::class,
             AulaSeeder::class,
+            TipoDocumentacionIntegranteSeeder::class,
+            FuncionEquipoSeeder::class,
+            IntegranteSeeder::class,
             UsersSeeder::class,
         ]);
     }

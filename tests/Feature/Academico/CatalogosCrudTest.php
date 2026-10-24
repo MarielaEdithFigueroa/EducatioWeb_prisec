@@ -5,6 +5,7 @@ use App\Models\Division;
 use App\Models\Log;
 use App\Models\Nivel;
 use App\Models\PlanEstudio;
+use App\Models\TipoDocumentacionIntegrante;
 use App\Models\Turno;
 use App\Models\User;
 use Database\Seeders\NivelesSeeder;
@@ -13,6 +14,13 @@ use Illuminate\Support\Facades\Log as Logger;
 use Inertia\Testing\AssertableInertia as Assert;
 
 dataset('catalogos academicos', [
+    'tipos de documentación integrante' => [[
+        'clave' => 'tipos_documentacion_integrante',
+        'modelo' => TipoDocumentacionIntegrante::class,
+        'ruta' => 'academico.tipos_documentacion_integrante',
+        'datos' => ['descripcion' => 'Copia de DNI'],
+        'descripcion_actualizada' => 'DNI actualizado',
+    ]],
     'niveles' => [[
         'clave' => 'niveles',
         'modelo' => Nivel::class,

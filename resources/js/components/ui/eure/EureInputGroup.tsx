@@ -1,9 +1,10 @@
-import type { InputHTMLAttributes } from 'react';
+import type { InputHTMLAttributes, ReactNode } from 'react';
 
 import EureInput from './EureInput';
 
 interface EureInputGroupProps extends InputHTMLAttributes<HTMLInputElement> {
-    label: string;
+    label: ReactNode;
+    labelAction?: ReactNode;
     error?: boolean;
     errorMessage?: string;
     helperText?: string;
@@ -18,6 +19,7 @@ interface EureInputGroupProps extends InputHTMLAttributes<HTMLInputElement> {
 
 export default function EureInputGroup({
     label,
+    labelAction,
     error = false,
     errorMessage = '',
     helperText = '',
@@ -32,12 +34,15 @@ export default function EureInputGroup({
 }: EureInputGroupProps) {
     return (
         <div className={`${className} ${classNameWrapper}`}>
-            <label
-                htmlFor={name}
-                className={`block text-sm font-semibold tracking-wide mb-1.5 text-(--eure-text) ${classNameLabel}`}
-            >
-                {label}
-            </label>
+            <div className="mb-1.5 flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+                <label
+                    htmlFor={name}
+                    className={`block text-sm font-semibold tracking-wide text-(--eure-text) ${classNameLabel}`}
+                >
+                    {label}
+                </label>
+                {labelAction}
+            </div>
 
             <EureInput
                 id={name}
@@ -50,9 +55,13 @@ export default function EureInputGroup({
             />
 
             {errorMessage && error ? (
-                <p className="mt-1 text-xs font-medium text-(--eure-error)">{errorMessage}</p>
+                <p className="mt-1 text-xs font-medium text-(--eure-error)">
+                    {errorMessage}
+                </p>
             ) : helperText ? (
-                <p className="mt-1 text-xs italic text-(--eure-sub)">{helperText}</p>
+                <p className="mt-1 text-xs text-(--eure-sub) italic">
+                    {helperText}
+                </p>
             ) : null}
         </div>
     );

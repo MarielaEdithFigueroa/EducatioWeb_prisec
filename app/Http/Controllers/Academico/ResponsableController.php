@@ -13,6 +13,7 @@ use App\Models\Provincia;
 use App\Models\Responsable;
 use App\Models\TipoDocumento;
 use App\Models\TipoVinculo;
+use App\Services\TelefonoNormalizer;
 use App\Support\Auditoria\RegistraAuditoria;
 use App\Support\Database\LikePattern;
 use Illuminate\Database\Eloquent\Builder;
@@ -183,6 +184,8 @@ class ResponsableController extends Controller
                 'fecha_nacimiento' => $responsable->fecha_nacimiento?->format('Y-m-d'),
                 'telefono' => $responsable->telefono_original ?? $responsable->telefono_e164,
                 'telefono_laboral' => $responsable->telefono_laboral_original ?? $responsable->telefono_laboral_e164,
+                'telefono_es_fijo' => TelefonoNormalizer::esLineaFija($responsable->telefono_e164),
+                'telefono_laboral_es_fijo' => TelefonoNormalizer::esLineaFija($responsable->telefono_laboral_e164),
             ],
             'tiposDocumento' => TipoDocumento::query()->select(['id', 'nombre'])->orderBy('nombre')->get(),
             'ciudades' => Ciudad::query()

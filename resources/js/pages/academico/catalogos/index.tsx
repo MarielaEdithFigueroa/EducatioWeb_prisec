@@ -3,6 +3,7 @@ import { Head, router, useForm } from '@inertiajs/react';
 import type { ColumnDef } from '@tanstack/react-table';
 import {
     CalendarCheckIcon,
+    FileCheckIcon,
     GraduationCapIcon,
     LayersIcon,
     ListTreeIcon,
@@ -18,6 +19,7 @@ import CursoController from '@/actions/App/Http/Controllers/Academico/CursoContr
 import DivisionController from '@/actions/App/Http/Controllers/Academico/DivisionController';
 import NivelController from '@/actions/App/Http/Controllers/Academico/NivelController';
 import PlanEstudioController from '@/actions/App/Http/Controllers/Academico/PlanEstudioController';
+import TipoDocumentacionIntegranteController from '@/actions/App/Http/Controllers/Academico/TipoDocumentacionIntegranteController';
 import TurnoController from '@/actions/App/Http/Controllers/Academico/TurnoController';
 import EducatioCard from '@/components/educatio-card';
 import { Badge } from '@/components/ui/badge';
@@ -42,7 +44,8 @@ type CatalogoClave =
     | 'planes_estudio'
     | 'turnos'
     | 'cursos'
-    | 'divisiones';
+    | 'divisiones'
+    | 'tipos_documentacion_integrante';
 
 type Catalogo = {
     clave: CatalogoClave;
@@ -52,6 +55,7 @@ type Catalogo = {
     usa_codigo: boolean;
     usa_nivel: boolean;
     usa_orden: boolean;
+    longitud_descripcion?: number;
 };
 
 type Nivel = {
@@ -93,6 +97,13 @@ type Props = {
 };
 
 const ACCIONES: Record<CatalogoClave, AccionesCatalogo> = {
+    tipos_documentacion_integrante: {
+        index: TipoDocumentacionIntegranteController.index,
+        store: TipoDocumentacionIntegranteController.store,
+        update: TipoDocumentacionIntegranteController.update,
+        desactivar: TipoDocumentacionIntegranteController.desactivar,
+        reactivar: TipoDocumentacionIntegranteController.reactivar,
+    },
     niveles: {
         index: NivelController.index,
         store: NivelController.store,
@@ -131,6 +142,7 @@ const ACCIONES: Record<CatalogoClave, AccionesCatalogo> = {
 };
 
 const ICONOS_CATALOGO = {
+    tipos_documentacion_integrante: FileCheckIcon,
     niveles: GraduationCapIcon,
     planes_estudio: NotebookTextIcon,
     turnos: CalendarCheckIcon,
@@ -449,11 +461,12 @@ export default function CatalogosIndex({
                                 error={Boolean(form.errors.descripcion)}
                                 errorMessage={form.errors.descripcion}
                                 maxLength={
-                                    catalogo.clave === 'planes_estudio'
+                                    catalogo.longitud_descripcion ??
+                                    (catalogo.clave === 'planes_estudio'
                                         ? 150
                                         : catalogo.clave === 'cursos'
                                           ? 100
-                                          : 50
+                                          : 50)
                                 }
                                 autoFocus={!catalogo.usa_codigo}
                                 required

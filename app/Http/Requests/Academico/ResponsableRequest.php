@@ -4,6 +4,8 @@ namespace App\Http\Requests\Academico;
 
 use App\Models\Responsable;
 use App\Rules\Cuit;
+use App\Rules\Telefono;
+use App\Services\TelefonoNormalizer;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
@@ -65,7 +67,8 @@ class ResponsableRequest extends FormRequest
                 'nullable', 'required_if:responsable.genero,Otra identidad', 'string', 'max:100',
             ],
             'responsable.email' => ['nullable', 'email', 'max:254'],
-            'responsable.telefono' => ['nullable', 'string', 'regex:/^\+[1-9]\d{7,14}$/'],
+            'responsable.telefono' => ['nullable', 'string', 'max:40', new Telefono($this->esLineaFija('telefono'))],
+            'responsable.telefono_es_fijo' => ['sometimes', 'boolean'],
             'responsable.domicilio' => ['nullable', 'string', 'max:200'],
             'responsable.ciudad_id' => ['nullable', 'integer', $this->existeActivo('ciudades', $actual?->ciudad_id)],
             'responsable.cpa' => ['nullable', 'string', 'max:10'],
@@ -73,7 +76,8 @@ class ResponsableRequest extends FormRequest
             'responsable.domicilio_laboral' => ['nullable', 'string', 'max:200'],
             'responsable.ciudad_laboral_id' => ['nullable', 'integer', $this->existeActivo('ciudades', $actual?->ciudad_laboral_id)],
             'responsable.cpa_laboral' => ['nullable', 'string', 'max:10'],
-            'responsable.telefono_laboral' => ['nullable', 'string', 'regex:/^\+[1-9]\d{7,14}$/'],
+            'responsable.telefono_laboral' => ['nullable', 'string', 'max:40', new Telefono($this->esLineaFija('telefono_laboral'))],
+            'responsable.telefono_laboral_es_fijo' => ['sometimes', 'boolean'],
             'responsable.observaciones' => ['nullable', 'string', 'max:5000'],
         ];
     }
@@ -82,8 +86,8 @@ class ResponsableRequest extends FormRequest
     {
         $responsable = (array) $this->input('responsable', []);
         $genero = $this->texto($responsable['genero'] ?? null);
-        $this->telefonoOriginal = $this->texto($responsable['telefono'] ?? null);
-        $this->telefonoLaboralOriginal = $this->texto($responsable['telefono_laboral'] ?? null);
+        $this->telefonoOriginal = is_string($responsable['telefono'] ?? null) ? $this->texto($responsable['telefono']) : null;
+        $this->telefonoLaboralOriginal = is_string($responsable['telefono_laboral'] ?? null) ? $this->texto($responsable['telefono_laboral']) : null;
 
         $this->merge([
             'responsable' => [
@@ -99,16 +103,27 @@ class ResponsableRequest extends FormRequest
                     ? $this->texto($responsable['genero_autodescripcion'] ?? null)
                     : null,
                 'email' => $this->minusculas($responsable['email'] ?? null),
-                'telefono' => $this->telefono($responsable['telefono'] ?? null),
+                'telefono' => $this->telefono($responsable['telefono'] ?? null, $this->esLineaFija('telefono')),
                 'domicilio' => $this->texto($responsable['domicilio'] ?? null),
                 'cpa' => $this->mayusculas($responsable['cpa'] ?? null),
                 'profesion' => $this->texto($responsable['profesion'] ?? null),
                 'domicilio_laboral' => $this->texto($responsable['domicilio_laboral'] ?? null),
                 'cpa_laboral' => $this->mayusculas($responsable['cpa_laboral'] ?? null),
-                'telefono_laboral' => $this->telefono($responsable['telefono_laboral'] ?? null),
+                'telefono_laboral' => $this->telefono($responsable['telefono_laboral'] ?? null, $this->esLineaFija('telefono_laboral')),
                 'observaciones' => $this->multilinea($responsable['observaciones'] ?? null),
             ],
         ]);
+    }
+
+    /** @return array<string, string> */
+    public function attributes(): array
+    {
+        return [
+            'responsable.telefono' => 'teléfono',
+            'responsable.telefono_laboral' => 'teléfono laboral',
+            'responsable.telefono_es_fijo' => 'tipo de línea',
+            'responsable.telefono_laboral_es_fijo' => 'tipo de línea laboral',
+        ];
     }
 
     /** @return array<string, mixed> */
@@ -117,7 +132,7 @@ class ResponsableRequest extends FormRequest
         $datos = $this->safe()->array('responsable');
         $telefono = $datos['telefono'] ?? null;
         $telefonoLaboral = $datos['telefono_laboral'] ?? null;
-        unset($datos['telefono'], $datos['telefono_laboral']);
+        unset($datos['telefono'], $datos['telefono_laboral'], $datos['telefono_es_fijo'], $datos['telefono_laboral_es_fijo']);
 
         return [
             ...$datos,
@@ -167,11 +182,24 @@ class ResponsableRequest extends FormRequest
         return $texto !== '' ? $texto : null;
     }
 
-    private function telefono(mixed $valor): ?string
+    private function telefono(mixed $valor, bool $esLineaFija): mixed
     {
-        $texto = preg_replace('/[\s().-]+/', '', (string) $valor) ?? '';
+        if (! is_string($valor)) {
+            return $valor;
+        }
+        $texto = trim($valor);
 
-        return $texto !== '' ? $texto : null;
+        return $texto !== '' ? (TelefonoNormalizer::normalizarArgentina($texto, $esLineaFija) ?? $texto) : null;
+    }
+
+    private function esLineaFija(string $campo): bool
+    {
+        if ($this->has('responsable.'.$campo.'_es_fijo')) {
+            return $this->boolean('responsable.'.$campo.'_es_fijo');
+        }
+        $responsable = $this->route('responsable');
+
+        return $responsable instanceof Responsable && TelefonoNormalizer::esLineaFija($responsable->{$campo.'_e164'});
     }
 
     private function multilinea(mixed $valor): ?string
