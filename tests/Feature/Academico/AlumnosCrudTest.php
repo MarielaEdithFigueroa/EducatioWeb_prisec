@@ -1,12 +1,15 @@
 <?php
 
 use App\Models\Alumno;
+use App\Models\AlumnoResponsable;
 use App\Models\Ciudad;
 use App\Models\GrupoSanguineo;
 use App\Models\Log;
 use App\Models\MotivoBaja;
 use App\Models\Nacionalidad;
+use App\Models\Responsable;
 use App\Models\TipoDocumento;
+use App\Models\TipoVinculo;
 use App\Models\User;
 use Database\Seeders\GruposSanguineosSeeder;
 use Database\Seeders\MotivosBajaSeeder;
@@ -27,11 +30,123 @@ function seedCatalogosAlumnos(): void
 }
 
 it('protege las pantallas de alumnos', function () {
+    $alumno = Alumno::query()->create([
+        'legajo' => 'PROTEGIDO',
+        'apellido' => 'Alumno',
+        'nombre' => 'Protegido',
+    ]);
+
     $this->get(route('academico.alumnos.index'))
         ->assertRedirect(route('login'));
 
     $this->get(route('academico.alumnos.create'))
         ->assertRedirect(route('login'));
+
+    $this->get(route('academico.alumnos.show', $alumno))
+        ->assertRedirect(route('login'));
+});
+
+it('muestra la ficha del alumno y sus responsables activos e históricos', function () {
+    seedCatalogosAlumnos();
+    $usuario = User::factory()->create();
+    $dni = TipoDocumento::query()->where('nombre', 'DNI')->sole();
+    $neuquen = Ciudad::query()->where('nombre', 'Neuquén')->sole();
+    $nacionalidad = Nacionalidad::query()->where('codigo', 'ARG')->sole();
+    $grupoSanguineo = GrupoSanguineo::query()->where('codigo', 'O+')->sole();
+    $vinculoMadre = TipoVinculo::query()->create(['nombre' => 'Madre']);
+    $vinculoTutor = TipoVinculo::query()->create(['nombre' => 'Tutor']);
+
+    $alumno = Alumno::query()->create([
+        'legajo' => 'SEC-2026/018',
+        'apellido' => 'Pérez',
+        'nombre' => 'Ana',
+        'nombre_elegido' => 'Ani',
+        'tipo_documento_id' => $dni->id,
+        'numero_documento' => '48123456',
+        'cuilt' => '27481234569',
+        'fecha_nacimiento' => '2012-05-20',
+        'ciudad_nacimiento_id' => $neuquen->id,
+        'nacionalidad_id' => $nacionalidad->id,
+        'grupo_sanguineo_id' => $grupoSanguineo->id,
+        'sexo_registral' => 'F',
+        'genero' => 'Mujer',
+        'email' => 'ana@example.com',
+        'domicilio' => 'Belgrano 123',
+        'ciudad_id' => $neuquen->id,
+        'cpa' => 'Q8300XYZ',
+        'fecha_ingreso' => '2026-02-10',
+        'autoriza_uso_imagen' => true,
+    ]);
+
+    $responsableActivo = Responsable::query()->create([
+        'apellido' => 'Pérez',
+        'nombre' => 'María',
+        'tipo_documento_id' => $dni->id,
+        'numero_documento' => '25111222',
+        'email' => 'maria@example.com',
+        'telefono_e164' => '+5492994123456',
+    ]);
+    $responsableHistorico = Responsable::query()->create([
+        'activo' => false,
+        'apellido' => 'Gómez',
+        'nombre' => 'Carlos',
+    ]);
+
+    AlumnoResponsable::query()->create([
+        'alumno_id' => $alumno->id,
+        'responsable_id' => $responsableActivo->id,
+        'vinculo_id' => $vinculoMadre->id,
+        'orden_contacto' => 2,
+        'fecha_desde' => '2026-02-01',
+        'es_responsable_legal' => true,
+        'recibe_comunicaciones' => true,
+        'es_contacto_principal' => true,
+    ]);
+    AlumnoResponsable::query()->create([
+        'activo' => false,
+        'alumno_id' => $alumno->id,
+        'responsable_id' => $responsableHistorico->id,
+        'vinculo_id' => $vinculoTutor->id,
+        'orden_contacto' => 1,
+        'fecha_hasta' => '2025-12-15',
+    ]);
+
+    $this->actingAs($usuario)
+        ->get(route('academico.alumnos.show', [
+            'alumno' => $alumno,
+            'seccion' => 'responsables',
+        ]))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('academico/alumnos/show')
+            ->where('seccion', 'responsables')
+            ->where('alumno.id', $alumno->id)
+            ->where('alumno.legajo', 'SEC-2026/018')
+            ->where('alumno.fecha_nacimiento', '2012-05-20')
+            ->where('alumno.ciudad', 'Neuquén')
+            ->where('alumno.provincia', 'Neuquén')
+            ->where('alumno.responsables.0.id', $responsableActivo->id)
+            ->where('alumno.responsables.0.tipo_vinculo', 'Madre')
+            ->where('alumno.responsables.0.vinculo_activo', true)
+            ->where('alumno.responsables.0.funciones', [
+                'Responsable legal',
+                'Recibe comunicaciones',
+                'Contacto principal',
+            ])
+            ->where('alumno.responsables.1.id', $responsableHistorico->id)
+            ->where('alumno.responsables.1.vinculo_activo', false)
+            ->has('motivosBaja')
+        );
+
+    $this->actingAs($usuario)
+        ->get(route('academico.alumnos.show', [
+            'alumno' => $alumno,
+            'seccion' => 'inexistente',
+        ]))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->where('seccion', 'personal')
+        );
 });
 
 it('administra la ficha del alumno con baja lógica y auditoría', function () {

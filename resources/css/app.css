@@ -92,6 +92,9 @@
 }
 
 @theme inline {
+    /* Acentos de contenido: conservar contraste en ambos modos. */
+    --color-educatio-icon: var(--educatio-icon);
+    --color-educatio-warning: var(--educatio-warning);
     /* Application shell */
     --color-shell-frame: var(--shell-frame);
     --color-shell-sidebar: var(--shell-sidebar);
@@ -121,6 +124,8 @@
 }
 
 :root {
+    --educatio-icon: var(--brand-blue);
+    --educatio-warning: #92400e;
     --background: #f5f7f9;
     --foreground: #263845;
     --card: var(--color-white);
@@ -214,11 +219,35 @@
     --eure-info: oklch(0.62 0.08 220);
     --eure-info-bg: oklch(0.97 0.015 220);
     --eure-error-bg: oklch(0.97 0.02 27);
-    --eure-table-row-alt: color-mix(in oklch, var(--eure-primary) 8%, white);
-    --eure-table-row-hover: color-mix(in oklch, var(--eure-primary) 12%, white);
+    --eure-table-row-alt: color-mix(
+        in oklch,
+        var(--eure-primary) 8%,
+        var(--card)
+    );
+    --eure-table-row-hover: color-mix(
+        in oklch,
+        var(--eure-primary) 12%,
+        var(--card)
+    );
 }
 
 .dark {
+    --educatio-icon: #7caac1;
+    --educatio-warning: #fcd34d;
+    --eure-success: oklch(0.75 0.11 150);
+    --eure-success-bg: oklch(0.28 0.05 150);
+    --eure-error: oklch(0.75 0.13 27);
+    --eure-error-bg: oklch(0.28 0.06 27);
+    --eure-table-row-alt: color-mix(
+        in oklch,
+        var(--eure-primary) 8%,
+        var(--card)
+    );
+    --eure-table-row-hover: color-mix(
+        in oklch,
+        var(--eure-primary) 12%,
+        var(--card)
+    );
     --background: #0b1821;
     --foreground: #f1f5f7;
     --card: #12242f;

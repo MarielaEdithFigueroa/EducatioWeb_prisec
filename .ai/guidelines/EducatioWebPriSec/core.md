@@ -95,6 +95,38 @@ Educatio es una herramienta interna de trabajo diario para personal administrati
 - La interfaz puede ser densa cuando el trabajo lo requiera, pero nunca confusa.
 - Una acción frecuente debe requerir la menor cantidad posible de pasos sin sacrificar claridad, validación o seguridad.
 
+### Estilo de pantallas y tarjetas
+
+**Toda pantalla nueva debe respetar este estándar desde su creación.** Para pantallas existentes, aplicarlo al renovar su interfaz.
+
+El estilo toma como antecedente los rediseños de Clientes, Talonarios y Preventas de Pranzo, adaptados a la identidad de Educatio. La referencia vigente es el código de Educatio indicado abajo; no es necesario acceder a Pranzo ni copiar pantallas antiguas que todavía no fueron migradas.
+
+- Antes de construir una pantalla, revisar la referencia local más cercana y reutilizar componentes y helpers de EureFramework. Adaptar la distribución al contenido, sin copiar rígidamente una pantalla de otro dominio.
+- Usar `EducatioCard` (`resources/js/components/educatio-card.tsx`), construido sobre la variante `plain` de `EureCard`: sin sombra, borde discreto, redondeado leve y títulos sin banda de fondo. Los ajustes propios de Educatio se centralizan en este componente.
+- Elegir una tarjeta principal o encabezado y tarjetas por sección según el contenido. Evitar tarjetas anidadas sin utilidad y no duplicar el padding que ya aporta el layout.
+- Encabezados con título, ícono Lucide de la entidad (`aria-hidden="true"`) y descripción breve cuando aporte. Usar títulos de sección `h2` y tamaños acordes al espacio disponible.
+- Mantener espaciado compacto, anchos de campos proporcionales al dato y acciones junto a la tarea. Guardar/Volver pueden permanecer visibles al pie de formularios extensos.
+- Usar `variant="plain"` de `EureDataTable` en las pantallas nuevas y migradas: borde discreto, sin sombra y acciones compactas con foco visible.
+- En formularios modales, separar encabezado, contenido y pie de acciones. Limitar la altura al viewport y permitir scroll en el contenido, conservando visibles las acciones y el cierre. Usar tokens del tema también en los fondos y separadores del diálogo.
+
+### Referencias locales del estándar
+
+- **Listado con filtros:** `resources/js/pages/academico/alumnos/index.tsx`.
+- **Alta/edición por secciones:** `resources/js/pages/academico/responsables/formulario.tsx`.
+- **Detalle:** `resources/js/pages/academico/alumnos/show.tsx` y sus componentes en `partials/`.
+- **ABM con formulario modal:** `resources/js/pages/academico/catalogos/index.tsx` y `resources/js/pages/sistema/localidades/index.tsx`.
+- **Configuración personal:** `resources/js/layouts/settings/layout.tsx` y `resources/js/pages/settings/`.
+- **Base visual reutilizable:** `resources/js/components/educatio-card.tsx`, `resources/js/components/ui/eure/` y `resources/css/app.css`.
+
+Al revisar una pantalla nueva, comprobar consistencia con estas referencias, uso exclusivo de colores del tema, modo claro/oscuro, operación a 1366×768 y navegación con teclado según las reglas siguientes.
+
+### Colores del tema
+
+- Todo color se define en `resources/css/app.css` mediante tokens con soporte claro/oscuro. No introducir hex, RGB ni paletas fijas (`slate-*`, `amber-*`, etc.) en pantallas o componentes de Educatio.
+- Reutilizar `card`, `card-foreground`, `foreground`, `muted-foreground`, `border`, `primary` y `ring`. Para íconos de contenido usar `educatio-icon`; para avisos textuales, `educatio-warning`; para estados, `eure-success` y `eure-error`.
+- Conservar la identidad azul y naranja. Crear un token semántico solo cuando los existentes no expresen su función; definir sus valores de ambos modos en el tema.
+- Los fondos derivados deben mezclarse con la superficie del tema, no con blanco fijo. Redefinir en `.dark` las mezclas que dependan de variables para que se resuelvan con la paleta oscura.
+
 ## Navegación con teclado
 
 Educatio debe poder operarse eficientemente con teclado. Sus usuarios realizan carga intensiva de datos durante gran parte de la jornada.
@@ -110,9 +142,11 @@ Educatio debe poder operarse eficientemente con teclado. Sus usuarios realizan c
 
 ### Tablas (`EureDataTable`)
 
-- Ordenable por **todas** las columnas: definir `accessorFn` (no alcanza con `cell`, que solo renderiza — sin `accessorFn` la columna no ordena por el valor real).
-- Alineación: **precios a la derecha** (`text-right tabular-nums`); **logins, cantidades y fechas centrados**.
-- Los IDs se muestran centrados con `#` como título de columna. Según el caso (evaluar) formatear con 0s a la izquierda (ej: `000123`) con longitud que tenga que ver con la entidad.
+- Ordenable por **todas** las columnas de datos: definir `accessorKey` para campos directos o `accessorFn` para valores calculados. No alcanza con `cell`, que solo renderiza.
+- **Alineación**: declarar siempre `meta.className` explícito por columna; no confiar en el default automático de `EureDataTable`, que alinea a la derecha cualquier valor numérico. Descripciones a la izquierda; IDs, códigos, logins, cantidades y fechas centrados (`text-center tabular-nums` cuando corresponda); importes a la derecha (`text-right tabular-nums`). El encabezado hereda la misma clase que la celda.
+- **Columna `#` (ID)**: toda grilla nueva la incluye por defecto, salvo excepción justificada. Mostrar el ID centrado y con ceros a la izquierda mediante un campo calculado `idF` en el tipo de la fila, junto al `id: number` original, usando el helper único `formatId(id, digits)` de `@/lib/utils`. Elegir los dígitos según el volumen esperado de la entidad (ej. provincias 2, localidades 3, grupos 4, alumnos/responsables 5); la longitud queda explícita al calcular `idF` en cada pantalla. La columna ordena por `id` (`accessorKey: 'id'`) para mantener el orden numérico real; `cell` renderiza `row.original.idF`.
+- **ID como enlace a “Ver”**: cuando la grilla tiene acción “Ver”, mostrar `idF` como enlace a esa misma acción, en negrita y subrayado, conservando el contexto de filtros. Si la acción no existe o está oculta para esa fila, mostrar el ID como texto plano, sin apariencia de enlace.
+- **Orden inicial**: las grillas operativas (altas o movimientos, como Alumnos, Responsables y Grupos) comienzan por `id` descendente. Los catálogos paramétricos (como Localidades y Provincias) comienzan por su descripción o nombre. Si el modelo tiene un campo de orden explícito, este tiene prioridad.
 - Las pantallas deben ser operativas en 1366x768. Se puede aprovechar ancho completo en monitores grandes, pero la información principal, filtros y acciones frecuentes no deben depender de tener más espacio.
 - Las grillas deben degradar bien en tamaños chicos. Evaluar columnas prescindibles que desaparezcan en monitores chicos; para entidades con `codigo` + `descripcion`, evaluar un componente tipo `ResponsiveText` que muestre descripción en ancho cómodo y código en ancho reducido.
 

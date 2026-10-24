@@ -1,9 +1,17 @@
 import type { UrlMethodPair } from '@inertiajs/core';
 import { Head, router, useForm } from '@inertiajs/react';
 import type { ColumnDef } from '@tanstack/react-table';
-import { PencilIcon, PlusIcon, RotateCcwIcon, Trash2Icon } from 'lucide-react';
+import {
+    MapPinIcon,
+    PencilIcon,
+    PlusIcon,
+    RotateCcwIcon,
+    SaveIcon,
+    Trash2Icon,
+} from 'lucide-react';
 import { useMemo, useState } from 'react';
 import LocalidadController from '@/actions/App/Http/Controllers/Sistema/LocalidadController';
+import EducatioCard from '@/components/educatio-card';
 import { Badge } from '@/components/ui/badge';
 import {
     Dialog,
@@ -209,61 +217,70 @@ export default function LocalidadesIndex({ localidades, provincias }: Props) {
         <>
             <Head title="Localidades" />
 
-            <div className="flex flex-1 flex-col gap-5 p-4 md:p-6">
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                    <div>
-                        <h1 className="text-2xl font-semibold tracking-tight text-foreground">
-                            Localidades
-                        </h1>
-                        <p className="mt-1 text-sm text-muted-foreground">
-                            Localidades y códigos postales organizados por
-                            provincia o país.
-                        </p>
-                    </div>
+            <div className="flex min-w-0 flex-1 flex-col gap-4">
+                <EducatioCard className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <header className="flex items-center gap-3">
+                        <MapPinIcon
+                            className="size-8 shrink-0 text-educatio-icon"
+                            aria-hidden="true"
+                        />
+                        <div>
+                            <h1 className="text-2xl font-semibold tracking-tight text-foreground">
+                                Localidades
+                            </h1>
+                            <p className="mt-1 text-sm text-muted-foreground">
+                                Localidades y códigos postales organizados por
+                                provincia o país.
+                            </p>
+                        </div>
+                    </header>
 
                     <EureButtonPrimary onClick={abrirAlta} className="shrink-0">
                         <PlusIcon className="size-4" />
                         Nueva localidad
                     </EureButtonPrimary>
-                </div>
+                </EducatioCard>
 
-                <EureDataTable
-                    columns={columnas}
-                    data={localidades}
-                    globalFilterPlaceholder="Buscar localidades..."
-                    showExportButtons={false}
-                    initialPageSize={10}
-                    getRowClassName={(localidad) =>
-                        localidad.activo ? '' : 'opacity-65'
-                    }
-                    acciones={[
-                        {
-                            label: 'Editar',
-                            icon: PencilIcon,
-                            onClick: abrirEdicion,
-                        },
-                        {
-                            label: 'Desactivar',
-                            icon: Trash2Icon,
-                            color: 'red',
-                            hidden: (localidad) =>
-                                !localidad.activo ||
-                                cambiandoEstado === localidad.id,
-                            onClick: (localidad) =>
-                                void cambiarEstado(localidad),
-                        },
-                        {
-                            label: 'Reactivar',
-                            icon: RotateCcwIcon,
-                            color: 'green',
-                            hidden: (localidad) =>
-                                localidad.activo ||
-                                cambiandoEstado === localidad.id,
-                            onClick: (localidad) =>
-                                void cambiarEstado(localidad),
-                        },
-                    ]}
-                />
+                <EducatioCard className="min-w-0">
+                    <EureDataTable
+                        variant="plain"
+                        columns={columnas}
+                        data={localidades}
+                        globalFilterPlaceholder="Buscar localidades..."
+                        showExportButtons={false}
+                        initialPageSize={10}
+                        getRowClassName={(localidad) =>
+                            localidad.activo ? '' : 'opacity-65'
+                        }
+                        acciones={[
+                            {
+                                label: 'Editar',
+                                icon: PencilIcon,
+                                onClick: abrirEdicion,
+                            },
+                            {
+                                label: 'Desactivar',
+                                icon: Trash2Icon,
+                                color: 'red',
+                                hidden: (localidad) =>
+                                    !localidad.activo ||
+                                    cambiandoEstado === localidad.id,
+                                onClick: (localidad) =>
+                                    void cambiarEstado(localidad),
+                            },
+                            {
+                                label: 'Reactivar',
+                                icon: RotateCcwIcon,
+                                color: 'green',
+                                hidden: (localidad) =>
+                                    localidad.activo ||
+                                    cambiandoEstado === localidad.id,
+                                onClick: (localidad) =>
+                                    void cambiarEstado(localidad),
+                            },
+                        ]}
+                    />
+                </EducatioCard>
             </div>
 
             <Dialog
@@ -274,9 +291,13 @@ export default function LocalidadesIndex({ localidades, provincias }: Props) {
                     }
                 }}
             >
-                <DialogContent className="sm:max-w-xl">
-                    <DialogHeader>
-                        <DialogTitle>
+                <DialogContent className="flex max-h-[90dvh] flex-col gap-0 overflow-hidden rounded-sm p-0 sm:max-w-xl">
+                    <DialogHeader className="shrink-0 border-b border-border bg-muted/40 py-4 pr-12 pl-5 text-left">
+                        <DialogTitle className="flex items-center gap-2 text-foreground">
+                            <MapPinIcon
+                                className="size-5 shrink-0 text-educatio-icon"
+                                aria-hidden="true"
+                            />
                             {editando ? 'Editar' : 'Nueva'} localidad
                         </DialogTitle>
                         <DialogDescription>
@@ -284,57 +305,60 @@ export default function LocalidadesIndex({ localidades, provincias }: Props) {
                         </DialogDescription>
                     </DialogHeader>
 
-                    <form onSubmit={guardar} className="space-y-4">
-                        <EureInputGroup
-                            label="Nombre"
-                            name="nombre"
-                            value={form.data.nombre}
-                            onChange={(event) =>
-                                form.setData('nombre', event.target.value)
-                            }
-                            error={Boolean(form.errors.nombre)}
-                            errorMessage={form.errors.nombre}
-                            maxLength={120}
-                            autoFocus
-                            required
-                        />
+                    <form onSubmit={guardar} className="flex min-h-0 flex-col">
+                        <div className="space-y-3 overflow-y-auto p-5">
+                            <EureInputGroup
+                                label="Nombre"
+                                name="nombre"
+                                value={form.data.nombre}
+                                onChange={(event) =>
+                                    form.setData('nombre', event.target.value)
+                                }
+                                error={Boolean(form.errors.nombre)}
+                                errorMessage={form.errors.nombre}
+                                maxLength={120}
+                                autoFocus
+                                required
+                            />
 
-                        <EureSelectGroup
-                            label="Provincia / país"
-                            name="provincia_id"
-                            value={provinciaSeleccionada}
-                            onChange={(opcion) =>
-                                form.setData(
-                                    'provincia_id',
-                                    opcion === null ? '' : Number(opcion.value),
-                                )
-                            }
-                            options={opcionesProvincia}
-                            placeholder="Buscar y seleccionar una provincia"
-                            error={Boolean(form.errors.provincia_id)}
-                            errorMessage={form.errors.provincia_id}
-                            required
-                        />
+                            <EureSelectGroup
+                                label="Provincia / país"
+                                name="provincia_id"
+                                value={provinciaSeleccionada}
+                                onChange={(opcion) =>
+                                    form.setData(
+                                        'provincia_id',
+                                        opcion === null
+                                            ? ''
+                                            : Number(opcion.value),
+                                    )
+                                }
+                                options={opcionesProvincia}
+                                placeholder="Buscar y seleccionar una provincia"
+                                error={Boolean(form.errors.provincia_id)}
+                                errorMessage={form.errors.provincia_id}
+                                required
+                            />
 
-                        <EureInputGroup
-                            label="Código postal"
-                            name="codigo_postal"
-                            value={form.data.codigo_postal}
-                            onChange={(event) =>
-                                form.setData(
-                                    'codigo_postal',
-                                    event.target.value.toLocaleUpperCase(
-                                        'es-AR',
-                                    ),
-                                )
-                            }
-                            error={Boolean(form.errors.codigo_postal)}
-                            errorMessage={form.errors.codigo_postal}
-                            maxLength={10}
-                            classNameWrapper="max-w-52"
-                        />
-
-                        <DialogFooter className="pt-2">
+                            <EureInputGroup
+                                label="Código postal"
+                                name="codigo_postal"
+                                value={form.data.codigo_postal}
+                                onChange={(event) =>
+                                    form.setData(
+                                        'codigo_postal',
+                                        event.target.value.toLocaleUpperCase(
+                                            'es-AR',
+                                        ),
+                                    )
+                                }
+                                error={Boolean(form.errors.codigo_postal)}
+                                errorMessage={form.errors.codigo_postal}
+                                maxLength={10}
+                                classNameWrapper="max-w-52"
+                            />
+                        </div>
+                        <DialogFooter className="shrink-0 border-t border-border px-5 py-3">
                             <EureButtonSecondary
                                 onClick={cerrarDialogo}
                                 disabled={form.processing}
@@ -345,6 +369,10 @@ export default function LocalidadesIndex({ localidades, provincias }: Props) {
                                 type="submit"
                                 loading={form.processing}
                             >
+                                <SaveIcon
+                                    className="size-4"
+                                    aria-hidden="true"
+                                />
                                 Guardar
                             </EureButtonPrimary>
                         </DialogFooter>

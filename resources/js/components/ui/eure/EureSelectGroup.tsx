@@ -17,6 +17,7 @@ interface EureSelectGroupProps {
     isDisabled?: boolean;
     isClearable?: boolean;
     required?: boolean;
+    autoFocus?: boolean;
 }
 
 export default function EureSelectGroup({
@@ -33,6 +34,7 @@ export default function EureSelectGroup({
     isDisabled = false,
     isClearable = false,
     required = false,
+    autoFocus = false,
 }: EureSelectGroupProps) {
     return (
         <div className={className}>
@@ -44,6 +46,10 @@ export default function EureSelectGroup({
             </label>
 
             <EureSelect
+                inputId={name}
+                name={name}
+                autoFocus={autoFocus}
+                required={required}
                 value={value}
                 onChange={onChange}
                 options={options}

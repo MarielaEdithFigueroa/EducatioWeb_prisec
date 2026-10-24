@@ -1,8 +1,10 @@
 <?php
 
+use App\Models\Adjunto;
 use App\Models\Alumno;
 use App\Models\AlumnoCondicionEspecial;
 use App\Models\AlumnoResponsable;
+use App\Models\Aula;
 use App\Models\Ciudad;
 use App\Models\Curso;
 use App\Models\Division;
@@ -30,6 +32,9 @@ it('keeps activo immediately after id', function () {
 
 it('uses conventional identifiers in academic tables', function () {
     $expectedIdentifiers = [
+        'adjuntos' => ['id', 'usuario_id'],
+        'alumnos_adjuntos' => ['id', 'alumno_id', 'adjunto_id'],
+        'aulas_adjuntos' => ['id', 'aula_id', 'adjunto_id'],
         'niveles' => ['id'],
         'cursos' => ['id', 'nivel_id'],
         'divisiones' => ['id'],
@@ -70,12 +75,14 @@ it('uses conventional identifiers in academic tables', function () {
 
 it('keeps domain tables free of eloquent timestamps', function () {
     $domainModels = [
+        'adjuntos' => Adjunto::class,
         'niveles' => Nivel::class,
         'cursos' => Curso::class,
         'divisiones' => Division::class,
         'turnos' => Turno::class,
         'planes_estudio' => PlanEstudio::class,
         'grupos' => Grupo::class,
+        'aulas' => Aula::class,
         'provincias' => Provincia::class,
         'ciudades' => Ciudad::class,
         'nacionalidades' => Nacionalidad::class,

@@ -28,6 +28,7 @@ class DatabaseSeeder extends Seeder
             TurnosSeeder::class,
             DivisionesSeeder::class,
             PlanesEstudioSeeder::class,
+            AulaSeeder::class,
             UsersSeeder::class,
         ]);
     }

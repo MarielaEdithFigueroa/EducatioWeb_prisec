@@ -10,6 +10,10 @@ export interface EureSelectOption {
 }
 
 interface EureSelectProps {
+    inputId?: string;
+    name?: string;
+    autoFocus?: boolean;
+    required?: boolean;
     options: EureSelectOption[];
     value: EureSelectOption | null;
     onChange: (selected: EureSelectOption | null) => void;
@@ -21,6 +25,10 @@ interface EureSelectProps {
 }
 
 export default function EureSelect({
+    inputId,
+    name,
+    autoFocus,
+    required,
     options,
     value,
     onChange,
@@ -40,6 +48,11 @@ export default function EureSelect({
     return (
         <div className={className}>
             <Select<EureSelectOption, false>
+                inputId={inputId}
+                name={name}
+                autoFocus={autoFocus}
+                required={required}
+                aria-invalid={error || undefined}
                 instanceId={instanceId}
                 value={value}
                 onChange={(newValue: SingleValue<EureSelectOption>) => onChange(newValue)}

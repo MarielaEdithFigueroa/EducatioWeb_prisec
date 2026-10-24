@@ -1,10 +1,11 @@
 import { Form, Head } from '@inertiajs/react';
+import { SaveIcon, ShieldCheckIcon } from 'lucide-react';
 import { useRef } from 'react';
 import SecurityController from '@/actions/App/Http/Controllers/Settings/SecurityController';
-import Heading from '@/components/heading';
+import EducatioCard from '@/components/educatio-card';
 import InputError from '@/components/input-error';
 import PasswordInput from '@/components/password-input';
-import { Button } from '@/components/ui/button';
+import EureButtonPrimary from '@/components/ui/eure/EureButtonPrimary';
 import { Label } from '@/components/ui/label';
 import { edit } from '@/routes/security';
 
@@ -18,15 +19,11 @@ export default function Security(props: Props) {
         <>
             <Head title="Seguridad" />
 
-            <h1 className="sr-only">Seguridad</h1>
-
-            <div className="space-y-6">
-                <Heading
-                    variant="small"
-                    title="Cambiar contraseña"
-                    description="Usá una contraseña larga y aleatoria para mantener tu cuenta segura"
-                />
-
+            <EducatioCard
+                title="Cambiar contraseña"
+                icon={ShieldCheckIcon}
+                description="Usá una contraseña larga y aleatoria para mantener tu cuenta segura."
+            >
                 <Form
                     action={SecurityController.update.url()}
                     method="put"
@@ -48,7 +45,7 @@ export default function Security(props: Props) {
                             currentPasswordInput.current?.focus();
                         }
                     }}
-                    className="space-y-6"
+                    className="space-y-4"
                 >
                     {({ errors, processing }) => (
                         <>
@@ -59,9 +56,10 @@ export default function Security(props: Props) {
 
                                 <PasswordInput
                                     id="current_password"
+                                    autoFocus
                                     ref={currentPasswordInput}
                                     name="current_password"
-                                    className="mt-1 block w-full"
+                                    className="block w-full"
                                     autoComplete="current-password"
                                     placeholder="Contraseña actual"
                                 />
@@ -78,7 +76,7 @@ export default function Security(props: Props) {
                                     id="password"
                                     ref={passwordInput}
                                     name="password"
-                                    className="mt-1 block w-full"
+                                    className="block w-full"
                                     autoComplete="new-password"
                                     placeholder="Nueva contraseña"
                                     passwordrules={props.passwordRules}
@@ -95,7 +93,7 @@ export default function Security(props: Props) {
                                 <PasswordInput
                                     id="password_confirmation"
                                     name="password_confirmation"
-                                    className="mt-1 block w-full"
+                                    className="block w-full"
                                     autoComplete="new-password"
                                     placeholder="Confirmar contraseña"
                                     passwordrules={props.passwordRules}
@@ -106,18 +104,25 @@ export default function Security(props: Props) {
                                 />
                             </div>
 
-                            <div className="flex items-center gap-4">
-                                <Button
+                            <div className="flex flex-wrap items-center justify-end gap-3 border-t border-border pt-4">
+                                <EureButtonPrimary
+                                    type="submit"
+                                    loading={processing}
+                                    className="text-primary-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none"
                                     disabled={processing}
                                     data-test="update-password-button"
                                 >
+                                    <SaveIcon
+                                        className="size-4"
+                                        aria-hidden="true"
+                                    />
                                     Guardar
-                                </Button>
+                                </EureButtonPrimary>
                             </div>
                         </>
                     )}
                 </Form>
-            </div>
+            </EducatioCard>
         </>
     );
 }

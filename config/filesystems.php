@@ -30,6 +30,14 @@ return [
 
     'disks' => [
 
+        'adjuntos' => [
+            'driver' => 'local',
+            'root' => storage_path('app/private/adjuntos'),
+            'visibility' => 'private',
+            'throw' => true,
+            'report' => false,
+        ],
+
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app/private'),

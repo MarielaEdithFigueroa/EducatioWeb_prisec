@@ -12,6 +12,11 @@ class AlumnoPolicy
         return true;
     }
 
+    public function view(User $user, Alumno $alumno): bool
+    {
+        return true;
+    }
+
     public function create(User $user): bool
     {
         return true;

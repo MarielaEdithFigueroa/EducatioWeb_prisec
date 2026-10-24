@@ -1,10 +1,16 @@
 <?php
 
 use App\Http\Controllers\Academico\AlumnoController;
+use App\Http\Controllers\Academico\AlumnoResponsableController;
+use App\Http\Controllers\Academico\AulaController;
 use App\Http\Controllers\Academico\CursoController;
 use App\Http\Controllers\Academico\DivisionController;
+use App\Http\Controllers\Academico\DocumentoAlumnoController;
+use App\Http\Controllers\Academico\FotoAulaController;
+use App\Http\Controllers\Academico\GrupoController;
 use App\Http\Controllers\Academico\NivelController;
 use App\Http\Controllers\Academico\PlanEstudioController;
+use App\Http\Controllers\Academico\ResponsableController;
 use App\Http\Controllers\Academico\TurnoController;
 use App\Http\Controllers\Sistema\LocalidadController;
 use Illuminate\Support\Facades\Route;
@@ -15,9 +21,58 @@ Route::middleware('auth')->group(function () {
     Route::inertia('dashboard', 'dashboard')->name('dashboard');
 
     Route::prefix('academico')->name('academico.')->group(function () {
+        Route::get('aulas', [AulaController::class, 'index'])->name('aulas.index');
+        Route::get('aulas/nueva', [AulaController::class, 'create'])->name('aulas.create');
+        Route::post('aulas', [AulaController::class, 'store'])->name('aulas.store');
+        Route::get('aulas/{aula}', [AulaController::class, 'show'])->name('aulas.show');
+        Route::get('aulas/{aula}/editar', [AulaController::class, 'edit'])->name('aulas.edit');
+        Route::patch('aulas/{aula}', [AulaController::class, 'update'])->name('aulas.update');
+        Route::patch('aulas/{aula}/desactivar', [AulaController::class, 'desactivar'])->name('aulas.desactivar');
+        Route::patch('aulas/{aula}/reactivar', [AulaController::class, 'reactivar'])->name('aulas.reactivar');
+
+        Route::scopeBindings()->prefix('aulas/{aula}/fotos')->name('aulas.fotos.')->group(function () {
+            Route::post('/', [FotoAulaController::class, 'store'])->name('store');
+            Route::get('{adjunto}/descargar', [FotoAulaController::class, 'descargar'])->name('descargar');
+            Route::get('{adjunto}/miniatura', [FotoAulaController::class, 'miniatura'])->name('miniatura');
+            Route::patch('{adjunto}', [FotoAulaController::class, 'update'])->name('update');
+            Route::patch('{adjunto}/desactivar', [FotoAulaController::class, 'desactivar'])->name('desactivar');
+            Route::patch('{adjunto}/reactivar', [FotoAulaController::class, 'reactivar'])->name('reactivar');
+        });
+
+        Route::get('grupos', [GrupoController::class, 'index'])->name('grupos.index');
+        Route::get('grupos/nuevo', [GrupoController::class, 'create'])->name('grupos.create');
+        Route::post('grupos', [GrupoController::class, 'store'])->name('grupos.store');
+        Route::get('grupos/{grupo}', [GrupoController::class, 'show'])->name('grupos.show');
+        Route::get('grupos/{grupo}/editar', [GrupoController::class, 'edit'])->name('grupos.edit');
+        Route::patch('grupos/{grupo}', [GrupoController::class, 'update'])->name('grupos.update');
+        Route::patch('grupos/{grupo}/desactivar', [GrupoController::class, 'desactivar'])->name('grupos.desactivar');
+        Route::patch('grupos/{grupo}/reactivar', [GrupoController::class, 'reactivar'])->name('grupos.reactivar');
+
+        Route::get('responsables', [ResponsableController::class, 'index'])->name('responsables.index');
+        Route::get('responsables/{responsable}', [ResponsableController::class, 'show'])->name('responsables.show');
+        Route::get('responsables/{responsable}/editar', [ResponsableController::class, 'edit'])->name('responsables.edit');
+        Route::patch('responsables/{responsable}', [ResponsableController::class, 'update'])->name('responsables.update');
+
         Route::get('alumnos', [AlumnoController::class, 'index'])->name('alumnos.index');
         Route::get('alumnos/nuevo', [AlumnoController::class, 'create'])->name('alumnos.create');
         Route::post('alumnos', [AlumnoController::class, 'store'])->name('alumnos.store');
+        Route::scopeBindings()->prefix('alumnos/{alumno}/documentacion')->name('alumnos.documentacion.')->group(function () {
+            Route::post('/', [DocumentoAlumnoController::class, 'store'])->name('store');
+            Route::get('{adjunto}/descargar', [DocumentoAlumnoController::class, 'descargar'])->name('descargar');
+            Route::get('{adjunto}/miniatura', [DocumentoAlumnoController::class, 'miniatura'])->name('miniatura');
+            Route::patch('{adjunto}', [DocumentoAlumnoController::class, 'update'])->name('update');
+            Route::patch('{adjunto}/desactivar', [DocumentoAlumnoController::class, 'desactivar'])->name('desactivar');
+            Route::patch('{adjunto}/reactivar', [DocumentoAlumnoController::class, 'reactivar'])->name('reactivar');
+        });
+        Route::get('alumnos/{alumno}/responsables/buscar', [AlumnoResponsableController::class, 'buscar'])
+            ->name('alumnos.responsables.buscar');
+        Route::post('alumnos/{alumno}/responsables/vincular', [AlumnoResponsableController::class, 'store'])
+            ->name('alumnos.responsables.vincular');
+        Route::get('alumnos/{alumno}/responsables/nuevo', [ResponsableController::class, 'create'])
+            ->name('alumnos.responsables.create');
+        Route::post('alumnos/{alumno}/responsables/nuevo', [ResponsableController::class, 'store'])
+            ->name('alumnos.responsables.store');
+        Route::get('alumnos/{alumno}', [AlumnoController::class, 'show'])->name('alumnos.show');
         Route::get('alumnos/{alumno}/editar', [AlumnoController::class, 'edit'])->name('alumnos.edit');
         Route::patch('alumnos/{alumno}', [AlumnoController::class, 'update'])->name('alumnos.update');
         Route::patch('alumnos/{alumno}/desactivar', [AlumnoController::class, 'desactivar'])->name('alumnos.desactivar');

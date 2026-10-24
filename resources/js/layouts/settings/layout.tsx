@@ -1,8 +1,13 @@
 import { Link } from '@inertiajs/react';
+import {
+    PaletteIcon,
+    SettingsIcon,
+    ShieldCheckIcon,
+    UserRoundIcon,
+} from 'lucide-react';
 import type { PropsWithChildren } from 'react';
-import Heading from '@/components/heading';
+import EducatioCard from '@/components/educatio-card';
 import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
 import { useCurrentUrl } from '@/hooks/use-current-url';
 import { cn, toUrl } from '@/lib/utils';
 import { edit as editAppearance } from '@/routes/appearance';
@@ -14,17 +19,17 @@ const sidebarNavItems: NavItem[] = [
     {
         title: 'Perfil',
         href: edit(),
-        icon: null,
+        icon: UserRoundIcon,
     },
     {
         title: 'Seguridad',
         href: editSecurity(),
-        icon: null,
+        icon: ShieldCheckIcon,
     },
     {
         title: 'Apariencia',
         href: editAppearance(),
-        icon: null,
+        icon: PaletteIcon,
     },
 ];
 
@@ -32,46 +37,65 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
     const { isCurrentOrParentUrl } = useCurrentUrl();
 
     return (
-        <div className="px-4 py-6">
-            <Heading
-                title="Configuración"
-                description="Administrá tu perfil y las opciones de tu cuenta"
-            />
+        <div className="mx-auto flex w-full max-w-5xl flex-col gap-4">
+            <EducatioCard>
+                <header className="flex items-center gap-3">
+                    <SettingsIcon
+                        className="size-8 shrink-0 text-educatio-icon"
+                        aria-hidden="true"
+                    />
+                    <div>
+                        <h1 className="text-2xl font-semibold tracking-tight text-foreground">
+                            Configuración
+                        </h1>
+                        <p className="mt-1 text-sm text-muted-foreground">
+                            Administrá tu perfil y las opciones de tu cuenta.
+                        </p>
+                    </div>
+                </header>
+            </EducatioCard>
 
-            <div className="flex flex-col lg:flex-row lg:space-x-12">
-                <aside className="w-full max-w-xl lg:w-48">
-                    <nav
-                        className="flex flex-col space-y-1 space-x-0"
-                        aria-label="Settings"
-                    >
-                        {sidebarNavItems.map((item, index) => (
-                            <Button
-                                key={`${toUrl(item.href)}-${index}`}
-                                size="sm"
-                                variant="ghost"
-                                asChild
-                                className={cn('w-full justify-start', {
-                                    'bg-muted': isCurrentOrParentUrl(item.href),
-                                })}
-                            >
-                                <Link href={item.href}>
-                                    {item.icon && (
-                                        <item.icon className="h-4 w-4" />
-                                    )}
-                                    {item.title}
-                                </Link>
-                            </Button>
-                        ))}
-                    </nav>
+            <div className="grid gap-4 lg:grid-cols-[12rem_minmax(0,1fr)] lg:items-start">
+                <aside className="min-w-0">
+                    <EducatioCard className="p-2">
+                        <nav
+                            className="grid gap-1 sm:grid-cols-3 lg:grid-cols-1"
+                            aria-label="Configuración personal"
+                        >
+                            {sidebarNavItems.map((item, index) => (
+                                <Button
+                                    key={`${toUrl(item.href)}-${index}`}
+                                    size="sm"
+                                    variant="ghost"
+                                    asChild
+                                    className={cn('w-full justify-start', {
+                                        'bg-muted text-foreground':
+                                            isCurrentOrParentUrl(item.href),
+                                    })}
+                                >
+                                    <Link
+                                        href={item.href}
+                                        aria-current={
+                                            isCurrentOrParentUrl(item.href)
+                                                ? 'page'
+                                                : undefined
+                                        }
+                                    >
+                                        {item.icon && (
+                                            <item.icon
+                                                className="size-4 text-educatio-icon"
+                                                aria-hidden="true"
+                                            />
+                                        )}
+                                        {item.title}
+                                    </Link>
+                                </Button>
+                            ))}
+                        </nav>
+                    </EducatioCard>
                 </aside>
 
-                <Separator className="my-6 lg:hidden" />
-
-                <div className="flex-1 md:max-w-2xl">
-                    <section className="max-w-xl space-y-12">
-                        {children}
-                    </section>
-                </div>
+                <div className="min-w-0 space-y-4">{children}</div>
             </div>
         </div>
     );

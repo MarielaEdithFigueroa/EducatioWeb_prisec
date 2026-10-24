@@ -1,8 +1,4 @@
-import type {
-    ColumnDef,
-    Row,
-    SortingState,
-} from '@tanstack/react-table';
+import type { ColumnDef, Row, SortingState } from '@tanstack/react-table';
 import {
     flexRender,
     getCoreRowModel,
@@ -30,11 +26,13 @@ export interface EureDataTableProps<T> {
     data: T[];
     acciones?: EureDataTableAccion<T>[];
     className?: string;
+    variant?: 'default' | 'plain';
     onVisibleRowsChange?: (rows: T[]) => void;
     showExportButtons?: boolean;
     showGlobalFilter?: boolean;
     globalFilterPlaceholder?: string;
     initialPageSize?: number;
+    initialSorting?: SortingState;
     toolbarActions?: ReactNode;
     disablePagination?: boolean;
     stickyHeader?: boolean;
@@ -55,11 +53,13 @@ export default function EureDataTable<T>({
     data,
     acciones = [],
     className,
+    variant = 'default',
     onVisibleRowsChange,
     showExportButtons = true,
     showGlobalFilter = true,
     globalFilterPlaceholder = 'Buscar...',
     initialPageSize = 10,
+    initialSorting = [],
     toolbarActions,
     disablePagination = false,
     stickyHeader = false,
@@ -68,7 +68,7 @@ export default function EureDataTable<T>({
     getColumnClassName,
 }: EureDataTableProps<T>) {
     const [globalFilter, setGlobalFilter] = useState('');
-    const [sorting, setSorting] = useState<SortingState>([]);
+    const [sorting, setSorting] = useState<SortingState>(initialSorting);
 
     const columnasFinales = useMemo<ColumnDef<T>[]>(() => {
         if (!acciones.length) {
@@ -80,26 +80,48 @@ export default function EureDataTable<T>({
             {
                 header: ' ',
                 cell: ({ row }: { row: Row<T> }) => (
-                    <div className="flex gap-2">
-                        {acciones.filter(({ hidden }) => !hidden || !hidden(row.original)).map(({ label, icon: Icon, onClick, color = 'blue' }) => (
-                            <button
-                                key={label}
-                                onClick={() => onClick(row.original)}
-                                className={`cursor-pointer rounded p-1 ${actionColorMap[color] ?? actionColorMap.blue} transition`}
-                                title={label}
-                            >
-                                {Icon ? (
-                                    <Icon className="h-5 w-5" />
-                                ) : (
-                                    <span className="text-xs font-medium">{label}</span>
-                                )}
-                            </button>
-                        ))}
+                    <div
+                        className={
+                            variant === 'plain'
+                                ? 'flex items-center justify-end gap-1'
+                                : 'flex gap-2'
+                        }
+                    >
+                        {acciones
+                            .filter(
+                                ({ hidden }) =>
+                                    !hidden || !hidden(row.original),
+                            )
+                            .map(
+                                ({
+                                    label,
+                                    icon: Icon,
+                                    onClick,
+                                    color = 'blue',
+                                }) => (
+                                    <button
+                                        key={label}
+                                        type="button"
+                                        aria-label={label}
+                                        onClick={() => onClick(row.original)}
+                                        className={`cursor-pointer rounded p-1 ${actionColorMap[color] ?? actionColorMap.blue} transition ${variant === 'plain' ? 'inline-flex size-8 shrink-0 items-center justify-center rounded-sm focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none' : ''}`}
+                                        title={label}
+                                    >
+                                        {Icon ? (
+                                            <Icon className="h-5 w-5" />
+                                        ) : (
+                                            <span className="text-xs font-medium">
+                                                {label}
+                                            </span>
+                                        )}
+                                    </button>
+                                ),
+                            )}
                     </div>
                 ),
             },
         ];
-    }, [columns, acciones]);
+    }, [columns, acciones, variant]);
 
     const table = useReactTable({
         data,
@@ -109,7 +131,12 @@ export default function EureDataTable<T>({
             sorting,
         },
         initialState: {
-            pagination: { pageSize: disablePagination ? Number.MAX_SAFE_INTEGER : initialPageSize },
+            sorting: initialSorting,
+            pagination: {
+                pageSize: disablePagination
+                    ? Number.MAX_SAFE_INTEGER
+                    : initialPageSize,
+            },
         },
         onGlobalFilterChange: setGlobalFilter,
         onSortingChange: setSorting,
@@ -139,7 +166,9 @@ export default function EureDataTable<T>({
     }, [data]);
 
     const getDefaultAlign = (columnId: string): string =>
-        numericColumnIds.has(columnId) ? 'text-right tabular-nums' : 'text-left';
+        numericColumnIds.has(columnId)
+            ? 'text-right tabular-nums'
+            : 'text-left';
 
     const getMetaClassName = (meta: unknown): string => {
         if (!meta || typeof meta !== 'object') {
@@ -152,8 +181,9 @@ export default function EureDataTable<T>({
     const getColumnExportHeader = (
         col: ReturnType<typeof table.getAllLeafColumns>[number],
     ): string | undefined => {
-        const exportHeader = (col.columnDef.meta as { exportHeader?: string } | undefined)
-            ?.exportHeader;
+        const exportHeader = (
+            col.columnDef.meta as { exportHeader?: string } | undefined
+        )?.exportHeader;
 
         if (exportHeader !== undefined) {
             return exportHeader;
@@ -161,11 +191,15 @@ export default function EureDataTable<T>({
 
         const header = col.columnDef.header;
 
-        return typeof header === 'string' && header.trim() !== '' ? header : undefined;
+        return typeof header === 'string' && header.trim() !== ''
+            ? header
+            : undefined;
     };
 
     const getExportableColumns = () =>
-        table.getAllLeafColumns().filter((col) => getColumnExportHeader(col) !== undefined);
+        table
+            .getAllLeafColumns()
+            .filter((col) => getColumnExportHeader(col) !== undefined);
 
     const toText = (value: unknown): string => {
         if (value === null || value === undefined) {
@@ -185,10 +219,14 @@ export default function EureDataTable<T>({
 
     const buildMatrix = (): string[][] => {
         const exportableCols = getExportableColumns();
-        const headers = exportableCols.map((col) => getColumnExportHeader(col) as string);
+        const headers = exportableCols.map(
+            (col) => getColumnExportHeader(col) as string,
+        );
         const rows = table
             .getSortedRowModel()
-            .rows.map((row) => exportableCols.map((col) => toText(row.getValue(col.id))));
+            .rows.map((row) =>
+                exportableCols.map((col) => toText(row.getValue(col.id))),
+            );
 
         return [headers, ...rows];
     };
@@ -250,7 +288,9 @@ export default function EureDataTable<T>({
             return;
         }
 
-        const visibles = table.getFilteredRowModel().rows.map((r) => r.original);
+        const visibles = table
+            .getFilteredRowModel()
+            .rows.map((r) => r.original);
         onVisibleRowsChange(visibles);
         // table is omitted intentionally — useReactTable returns a new reference on every render
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -270,7 +310,9 @@ export default function EureDataTable<T>({
                                 type="text"
                                 placeholder={globalFilterPlaceholder}
                                 value={globalFilter}
-                                onChange={(e) => setGlobalFilter(e.target.value)}
+                                onChange={(e) =>
+                                    setGlobalFilter(e.target.value)
+                                }
                             />
                         </div>
                     )}
@@ -279,7 +321,7 @@ export default function EureDataTable<T>({
                         <div className="flex flex-wrap items-center gap-2">
                             <button
                                 type="button"
-                                className="flex items-center gap-1.5 rounded-lg border px-3.5 py-2 text-xs font-medium transition-all duration-150 border-[var(--eure-border)] text-[var(--eure-text)] bg-background hover:border-[var(--eure-accent)] hover:text-[var(--eure-accent)] hover:bg-[var(--eure-bg)]"
+                                className="flex items-center gap-1.5 rounded-lg border border-[var(--eure-border)] bg-background px-3.5 py-2 text-xs font-medium text-[var(--eure-text)] transition-all duration-150 hover:border-[var(--eure-accent)] hover:bg-[var(--eure-bg)] hover:text-[var(--eure-accent)]"
                                 onClick={handleExportExcel}
                             >
                                 <TableIcon className="h-4 w-4" />
@@ -287,7 +329,7 @@ export default function EureDataTable<T>({
                             </button>
                             <button
                                 type="button"
-                                className="flex items-center gap-1.5 rounded-lg border px-3.5 py-2 text-xs font-medium transition-all duration-150 border-[var(--eure-border)] text-[var(--eure-text)] bg-background hover:border-[var(--eure-accent)] hover:text-[var(--eure-accent)] hover:bg-[var(--eure-bg)]"
+                                className="flex items-center gap-1.5 rounded-lg border border-[var(--eure-border)] bg-background px-3.5 py-2 text-xs font-medium text-[var(--eure-text)] transition-all duration-150 hover:border-[var(--eure-accent)] hover:bg-[var(--eure-bg)] hover:text-[var(--eure-accent)]"
                                 onClick={handleExportCsv}
                             >
                                 <DownloadIcon className="h-4 w-4" />
@@ -295,7 +337,7 @@ export default function EureDataTable<T>({
                             </button>
                             <button
                                 type="button"
-                                className="flex items-center gap-1.5 rounded-lg border px-3.5 py-2 text-xs font-medium transition-all duration-150 border-[var(--eure-border)] text-[var(--eure-text)] bg-background hover:border-[var(--eure-accent)] hover:text-[var(--eure-accent)] hover:bg-[var(--eure-bg)]"
+                                className="flex items-center gap-1.5 rounded-lg border border-[var(--eure-border)] bg-background px-3.5 py-2 text-xs font-medium text-[var(--eure-text)] transition-all duration-150 hover:border-[var(--eure-accent)] hover:bg-[var(--eure-bg)] hover:text-[var(--eure-accent)]"
                                 onClick={handleCopyToClipboard}
                             >
                                 <CopyIcon className="h-4 w-4" />
@@ -314,19 +356,25 @@ export default function EureDataTable<T>({
 
             {/* Table */}
             <div
-                className={`overflow-x-auto rounded-lg shadow-md ${stickyHeader ? 'max-h-[70vh] overflow-y-auto' : 'overflow-y-clip'}`}
+                className={`overflow-x-auto ${variant === 'plain' ? 'rounded-sm border border-eure-border shadow-none' : 'rounded-lg shadow-md'} ${stickyHeader ? 'max-h-[70vh] overflow-y-auto' : 'overflow-y-clip'}`}
             >
-                <table className="w-full bg-background text-sm" style={{ borderCollapse: 'collapse' }}>
+                <table
+                    className={`w-full text-sm ${variant === 'plain' ? 'bg-card' : 'bg-background'}`}
+                    style={{ borderCollapse: 'collapse' }}
+                >
                     <thead
-                        className="text-xs uppercase tracking-wider"
-                        style={{ color: 'var(--eure-text)', backgroundColor: theadBg }}
+                        className="text-xs tracking-wider uppercase"
+                        style={{
+                            color: 'var(--eure-text)',
+                            backgroundColor: theadBg,
+                        }}
                     >
                         {table.getHeaderGroups().map((headerGroup) => (
                             <tr key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => (
                                     <th
                                         key={header.id}
-                                        className={`p-3 font-bold border-b cursor-pointer select-none ${stickyHeader ? 'sticky top-0 z-10' : ''} ${getMetaClassName(header.column.columnDef.meta) || getDefaultAlign(header.column.id)} ${getColumnClassName?.(header.id) ?? ''}`}
+                                        className={`cursor-pointer border-b p-3 font-bold select-none ${stickyHeader ? 'sticky top-0 z-10' : ''} ${getMetaClassName(header.column.columnDef.meta) || getDefaultAlign(header.column.id)} ${getColumnClassName?.(header.id) ?? ''}`}
                                         style={{
                                             borderColor: 'var(--eure-border)',
                                             backgroundColor: theadBg,
@@ -337,12 +385,12 @@ export default function EureDataTable<T>({
                                             header.column.columnDef.header,
                                             header.getContext(),
                                         )}
-                                        {
-                                            {
-                                                asc: ' 🔼',
-                                                desc: ' 🔽',
-                                            }[header.column.getIsSorted() as string] ?? null
-                                        }
+                                        {{
+                                            asc: ' 🔼',
+                                            desc: ' 🔽',
+                                        }[
+                                            header.column.getIsSorted() as string
+                                        ] ?? null}
                                     </th>
                                 ))}
                             </tr>
@@ -364,7 +412,10 @@ export default function EureDataTable<T>({
                                         className={`p-3 ${getMetaClassName(cell.column.columnDef.meta) || getDefaultAlign(cell.column.id)} ${getColumnClassName?.(cell.column.id, row.original) ?? ''}`}
                                         style={{ color: 'var(--eure-text)' }}
                                     >
-                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                        {flexRender(
+                                            cell.column.columnDef.cell,
+                                            cell.getContext(),
+                                        )}
                                     </td>
                                 ))}
                             </tr>
@@ -376,10 +427,13 @@ export default function EureDataTable<T>({
             {/* Pagination */}
             {!disablePagination && (
                 <div className="mt-4 flex items-center justify-between">
-                    <div className="text-sm" style={{ color: 'var(--eure-text)' }}>
+                    <div
+                        className="text-sm"
+                        style={{ color: 'var(--eure-text)' }}
+                    >
                         <label>Mostrar:</label>
                         <select
-                            className="ml-2 rounded-lg border p-2 text-sm shadow-sm transition duration-200 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-primary/80"
+                            className="ml-2 rounded-lg border p-2 text-sm shadow-sm transition duration-200 focus:border-transparent focus:ring-2 focus:ring-primary/80 focus:outline-none"
                             style={{ borderColor: 'var(--eure-border)' }}
                             value={table.getState().pagination.pageSize}
                             onChange={(e) => {
@@ -402,18 +456,25 @@ export default function EureDataTable<T>({
                         <select
                             id="selectorPagina"
                             value={table.getState().pagination.pageIndex}
-                            onChange={(e) => table.setPageIndex(Number(e.target.value))}
-                            className="rounded-lg border p-2 text-sm shadow-sm transition duration-200 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-primary/80"
+                            onChange={(e) =>
+                                table.setPageIndex(Number(e.target.value))
+                            }
+                            className="rounded-lg border p-2 text-sm shadow-sm transition duration-200 focus:border-transparent focus:ring-2 focus:ring-primary/80 focus:outline-none"
                             style={{ borderColor: 'var(--eure-border)' }}
                         >
-                            {Array.from({ length: table.getPageCount() }, (_, i) => (
-                                <option key={i} value={i}>
-                                    {i + 1}
-                                </option>
-                            ))}
+                            {Array.from(
+                                { length: table.getPageCount() },
+                                (_, i) => (
+                                    <option key={i} value={i}>
+                                        {i + 1}
+                                    </option>
+                                ),
+                            )}
                         </select>
 
-                        <span style={{ color: 'var(--eure-sub)' }}>de {table.getPageCount()}</span>
+                        <span style={{ color: 'var(--eure-sub)' }}>
+                            de {table.getPageCount()}
+                        </span>
                     </div>
 
                     <div className="flex gap-2 text-sm">

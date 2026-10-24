@@ -1,13 +1,25 @@
 import type { UrlMethodPair } from '@inertiajs/core';
 import { Head, router, useForm } from '@inertiajs/react';
 import type { ColumnDef } from '@tanstack/react-table';
-import { PencilIcon, PlusIcon, RotateCcwIcon, Trash2Icon } from 'lucide-react';
+import {
+    CalendarCheckIcon,
+    GraduationCapIcon,
+    LayersIcon,
+    ListTreeIcon,
+    NotebookTextIcon,
+    PencilIcon,
+    PlusIcon,
+    RotateCcwIcon,
+    SaveIcon,
+    Trash2Icon,
+} from 'lucide-react';
 import { useMemo, useState } from 'react';
 import CursoController from '@/actions/App/Http/Controllers/Academico/CursoController';
 import DivisionController from '@/actions/App/Http/Controllers/Academico/DivisionController';
 import NivelController from '@/actions/App/Http/Controllers/Academico/NivelController';
 import PlanEstudioController from '@/actions/App/Http/Controllers/Academico/PlanEstudioController';
 import TurnoController from '@/actions/App/Http/Controllers/Academico/TurnoController';
+import EducatioCard from '@/components/educatio-card';
 import { Badge } from '@/components/ui/badge';
 import {
     Dialog,
@@ -19,7 +31,6 @@ import {
 } from '@/components/ui/dialog';
 import EureButtonPrimary from '@/components/ui/eure/EureButtonPrimary';
 import EureButtonSecondary from '@/components/ui/eure/EureButtonSecondary';
-import EureCard from '@/components/ui/eure/EureCard';
 import EureConfirmSwal from '@/components/ui/eure/EureConfirmSwal';
 import EureDataTable from '@/components/ui/eure/EureDataTable';
 import EureInputGroup from '@/components/ui/eure/EureInputGroup';
@@ -119,6 +130,14 @@ const ACCIONES: Record<CatalogoClave, AccionesCatalogo> = {
     },
 };
 
+const ICONOS_CATALOGO = {
+    niveles: GraduationCapIcon,
+    planes_estudio: NotebookTextIcon,
+    turnos: CalendarCheckIcon,
+    cursos: ListTreeIcon,
+    divisiones: LayersIcon,
+} satisfies Record<CatalogoClave, typeof GraduationCapIcon>;
+
 const FORMULARIO_VACIO: FormularioCatalogo = {
     codigo: '',
     descripcion: '',
@@ -136,6 +155,7 @@ export default function CatalogosIndex({
     const [cambiandoEstado, setCambiandoEstado] = useState<number | null>(null);
     const form = useForm<FormularioCatalogo>(FORMULARIO_VACIO);
     const acciones = ACCIONES[catalogo.clave];
+    const IconoCatalogo = ICONOS_CATALOGO[catalogo.clave];
 
     const opcionesNivel = useMemo<EureSelectOption[]>(() => {
         return niveles
@@ -305,25 +325,32 @@ export default function CatalogosIndex({
         <>
             <Head title={catalogo.titulo} />
 
-            <div className="flex flex-1 flex-col gap-5 p-4 md:p-6">
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                    <div>
-                        <h1 className="text-2xl font-semibold tracking-tight text-foreground">
-                            {catalogo.titulo}
-                        </h1>
-                        <p className="mt-1 text-sm text-muted-foreground">
-                            {catalogo.descripcion}
-                        </p>
-                    </div>
+            <div className="flex min-w-0 flex-1 flex-col gap-4">
+                <EducatioCard className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <header className="flex items-center gap-3">
+                        <IconoCatalogo
+                            className="size-8 shrink-0 text-educatio-icon"
+                            aria-hidden="true"
+                        />
+                        <div>
+                            <h1 className="text-2xl font-semibold tracking-tight text-foreground">
+                                {catalogo.titulo}
+                            </h1>
+                            <p className="mt-1 text-sm text-muted-foreground">
+                                {catalogo.descripcion}
+                            </p>
+                        </div>
+                    </header>
 
                     <EureButtonPrimary onClick={abrirAlta} className="shrink-0">
                         <PlusIcon className="size-4" />
                         Nuevo {catalogo.singular}
                     </EureButtonPrimary>
-                </div>
+                </EducatioCard>
 
-                <EureCard className="min-w-0">
+                <EducatioCard className="min-w-0">
                     <EureDataTable
+                        variant="plain"
                         columns={columnas}
                         data={registros}
                         globalFilterPlaceholder={`Buscar ${catalogo.titulo.toLocaleLowerCase('es-AR')}...`}
@@ -360,7 +387,7 @@ export default function CatalogosIndex({
                             },
                         ]}
                     />
-                </EureCard>
+                </EducatioCard>
             </div>
 
             <Dialog
@@ -371,9 +398,13 @@ export default function CatalogosIndex({
                     }
                 }}
             >
-                <DialogContent className="sm:max-w-xl">
-                    <DialogHeader>
-                        <DialogTitle>
+                <DialogContent className="flex max-h-[90dvh] flex-col gap-0 overflow-hidden rounded-sm p-0 sm:max-w-xl">
+                    <DialogHeader className="shrink-0 border-b border-border bg-muted/40 py-4 pr-12 pl-5 text-left">
+                        <DialogTitle className="flex items-center gap-2 text-foreground">
+                            <IconoCatalogo
+                                className="size-5 shrink-0 text-educatio-icon"
+                                aria-hidden="true"
+                            />
                             {editando ? 'Editar' : 'Nuevo'} {catalogo.singular}
                         </DialogTitle>
                         <DialogDescription>
@@ -381,94 +412,98 @@ export default function CatalogosIndex({
                         </DialogDescription>
                     </DialogHeader>
 
-                    <form onSubmit={guardar} className="space-y-4">
-                        {catalogo.usa_codigo && (
+                    <form onSubmit={guardar} className="flex min-h-0 flex-col">
+                        <div className="space-y-3 overflow-y-auto p-5">
+                            {catalogo.usa_codigo && (
+                                <EureInputGroup
+                                    label="Código"
+                                    name="codigo"
+                                    value={form.data.codigo}
+                                    onChange={(event) =>
+                                        form.setData(
+                                            'codigo',
+                                            event.target.value.toLocaleUpperCase(
+                                                'es-AR',
+                                            ),
+                                        )
+                                    }
+                                    error={Boolean(form.errors.codigo)}
+                                    errorMessage={form.errors.codigo}
+                                    maxLength={20}
+                                    autoFocus
+                                    required
+                                    classNameWrapper="max-w-52"
+                                />
+                            )}
+
                             <EureInputGroup
-                                label="Código"
-                                name="codigo"
-                                value={form.data.codigo}
+                                label="Descripción"
+                                name="descripcion"
+                                value={form.data.descripcion}
                                 onChange={(event) =>
                                     form.setData(
-                                        'codigo',
-                                        event.target.value.toLocaleUpperCase(
-                                            'es-AR',
-                                        ),
+                                        'descripcion',
+                                        event.target.value,
                                     )
                                 }
-                                error={Boolean(form.errors.codigo)}
-                                errorMessage={form.errors.codigo}
-                                maxLength={20}
-                                autoFocus
-                                required
-                                classNameWrapper="max-w-52"
-                            />
-                        )}
-
-                        <EureInputGroup
-                            label="Descripción"
-                            name="descripcion"
-                            value={form.data.descripcion}
-                            onChange={(event) =>
-                                form.setData('descripcion', event.target.value)
-                            }
-                            error={Boolean(form.errors.descripcion)}
-                            errorMessage={form.errors.descripcion}
-                            maxLength={
-                                catalogo.clave === 'planes_estudio'
-                                    ? 150
-                                    : catalogo.clave === 'cursos'
-                                      ? 100
-                                      : 50
-                            }
-                            autoFocus={!catalogo.usa_codigo}
-                            required
-                        />
-
-                        {catalogo.usa_nivel && (
-                            <EureSelectGroup
-                                label="Nivel"
-                                name="nivel_id"
-                                value={nivelSeleccionado}
-                                onChange={(opcion) =>
-                                    form.setData(
-                                        'nivel_id',
-                                        opcion === null
-                                            ? ''
-                                            : Number(opcion.value),
-                                    )
+                                error={Boolean(form.errors.descripcion)}
+                                errorMessage={form.errors.descripcion}
+                                maxLength={
+                                    catalogo.clave === 'planes_estudio'
+                                        ? 150
+                                        : catalogo.clave === 'cursos'
+                                          ? 100
+                                          : 50
                                 }
-                                options={opcionesNivel}
-                                placeholder="Buscar y seleccionar un nivel"
-                                error={Boolean(form.errors.nivel_id)}
-                                errorMessage={form.errors.nivel_id}
+                                autoFocus={!catalogo.usa_codigo}
                                 required
                             />
-                        )}
 
-                        {catalogo.usa_orden && (
-                            <EureInputGroup
-                                label="Orden"
-                                name="orden"
-                                type="number"
-                                value={form.data.orden}
-                                onChange={(event) =>
-                                    form.setData(
-                                        'orden',
-                                        event.target.value === ''
-                                            ? ''
-                                            : Number(event.target.value),
-                                    )
-                                }
-                                error={Boolean(form.errors.orden)}
-                                errorMessage={form.errors.orden}
-                                min={0}
-                                max={65535}
-                                required
-                                classNameWrapper="max-w-32"
-                            />
-                        )}
+                            {catalogo.usa_nivel && (
+                                <EureSelectGroup
+                                    label="Nivel"
+                                    name="nivel_id"
+                                    value={nivelSeleccionado}
+                                    onChange={(opcion) =>
+                                        form.setData(
+                                            'nivel_id',
+                                            opcion === null
+                                                ? ''
+                                                : Number(opcion.value),
+                                        )
+                                    }
+                                    options={opcionesNivel}
+                                    placeholder="Buscar y seleccionar un nivel"
+                                    error={Boolean(form.errors.nivel_id)}
+                                    errorMessage={form.errors.nivel_id}
+                                    required
+                                />
+                            )}
 
-                        <DialogFooter className="pt-2">
+                            {catalogo.usa_orden && (
+                                <EureInputGroup
+                                    label="Orden"
+                                    name="orden"
+                                    type="number"
+                                    value={form.data.orden}
+                                    onChange={(event) =>
+                                        form.setData(
+                                            'orden',
+                                            event.target.value === ''
+                                                ? ''
+                                                : Number(event.target.value),
+                                        )
+                                    }
+                                    error={Boolean(form.errors.orden)}
+                                    errorMessage={form.errors.orden}
+                                    min={0}
+                                    max={65535}
+                                    required
+                                    classNameWrapper="max-w-32"
+                                />
+                            )}
+                        </div>
+                        <DialogFooter className="shrink-0 border-t border-border px-5 py-3">
                             <EureButtonSecondary
                                 onClick={cerrarDialogo}
                                 disabled={form.processing}
@@ -479,6 +514,10 @@ export default function CatalogosIndex({
                                 type="submit"
                                 loading={form.processing}
                             >
+                                <SaveIcon
+                                    className="size-4"
+                                    aria-hidden="true"
+                                />
                                 Guardar
                             </EureButtonPrimary>
                         </DialogFooter>

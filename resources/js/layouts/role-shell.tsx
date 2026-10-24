@@ -8,6 +8,11 @@ import {
 } from 'lucide-react';
 import type { ComponentType, ReactNode } from 'react';
 import {
+    Collapsible,
+    CollapsibleContent,
+    CollapsibleTrigger,
+} from '@/components/ui/collapsible';
+import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuTrigger,
@@ -24,13 +29,28 @@ export type RoleNavItem = {
     href: string;
     icon: ComponentType<{ className?: string }>;
     visible?: (user: User) => boolean;
+    children?: RoleNavItem[];
+    disabled?: boolean;
+    description?: string;
 };
 
 export function visibleNavItems(
     items: RoleNavItem[],
     user: User,
 ): RoleNavItem[] {
-    return items.filter((item) => !item.visible || item.visible(user));
+    return items.flatMap((item) => {
+        if (item.visible && !item.visible(user)) {
+            return [];
+        }
+
+        if (!item.children) {
+            return [item];
+        }
+
+        const children = visibleNavItems(item.children, user);
+
+        return children.length ? [{ ...item, children }] : [];
+    });
 }
 
 export type DisplayBreadcrumb = {
@@ -43,6 +63,7 @@ export function isActiveNavItem(url: string, item: RoleNavItem) {
     const itemPath = getUrlPath(item.href);
 
     return (
+        !item.disabled &&
         item.href !== '#' &&
         (currentPath === itemPath || currentPath.startsWith(`${itemPath}/`))
     );
@@ -65,6 +86,8 @@ export function SidebarNavLink({
         active
             ? 'border-shell-active-border bg-shell-active text-shell-active-foreground'
             : 'border-transparent text-shell-sidebar-muted/90 hover:border-shell-sidebar-foreground/20 hover:bg-shell-sidebar-foreground/8 hover:text-shell-sidebar-foreground',
+        'focus-visible:ring-2 focus-visible:ring-shell-active-border focus-visible:outline-none',
+        item.disabled && 'pointer-events-none opacity-45',
     );
 
     const content = (
@@ -74,18 +97,99 @@ export function SidebarNavLink({
         </>
     );
 
+    if (item.disabled) {
+        return (
+            <span
+                className={className}
+                aria-disabled="true"
+                title="Próximamente"
+            >
+                {content}
+                <span className="sr-only"> (próximamente)</span>
+            </span>
+        );
+    }
+
     if (real) {
         return (
-            <Link href={item.href} className={className} onClick={onNavigate}>
+            <Link
+                href={item.href}
+                className={className}
+                onClick={onNavigate}
+                aria-current={active ? 'page' : undefined}
+                title={item.description}
+            >
                 {content}
             </Link>
         );
     }
 
     return (
-        <a href={item.href} className={className} onClick={onNavigate}>
+        <a
+            href={item.href}
+            className={className}
+            onClick={onNavigate}
+            aria-current={active ? 'page' : undefined}
+            title={item.description}
+        >
             {content}
         </a>
+    );
+}
+
+function SidebarNavGroup({
+    item,
+    url,
+    onNavigate,
+    real,
+}: {
+    item: RoleNavItem;
+    url: string;
+    onNavigate: () => void;
+    real: boolean;
+}) {
+    const Icon = item.icon;
+    const active =
+        item.children?.some((child) => isActiveNavItem(url, child)) ?? false;
+
+    return (
+        <Collapsible
+            key={String(active)}
+            defaultOpen={active}
+            className="group/nav"
+        >
+            <CollapsibleTrigger asChild>
+                <button
+                    type="button"
+                    className={cn(
+                        'flex min-h-11 w-full items-center gap-3 rounded-sm px-3 py-2 text-left text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-shell-active-border focus-visible:outline-none',
+                        active
+                            ? 'bg-shell-sidebar-foreground/10 text-shell-active-foreground'
+                            : 'text-shell-sidebar-muted/90 hover:bg-shell-sidebar-foreground/8 hover:text-shell-sidebar-foreground',
+                    )}
+                >
+                    <Icon className="size-5 shrink-0" />
+                    <span className="flex-1">{item.label}</span>
+                    <ChevronRightIcon
+                        className="size-4 shrink-0 transition-transform duration-200 group-data-[state=open]/nav:rotate-90 motion-reduce:transition-none"
+                        aria-hidden="true"
+                    />
+                </button>
+            </CollapsibleTrigger>
+            <CollapsibleContent>
+                <div className="mt-1 ml-5 space-y-1 rounded-r-sm border-l-2 border-shell-active-border/60 bg-shell-sidebar-foreground/5 py-1 pl-2">
+                    {item.children?.map((child) => (
+                        <SidebarNavLink
+                            key={child.label}
+                            item={child}
+                            active={isActiveNavItem(url, child)}
+                            onNavigate={onNavigate}
+                            real={real}
+                        />
+                    ))}
+                </div>
+            </CollapsibleContent>
+        </Collapsible>
     );
 }
 
@@ -171,7 +275,7 @@ export function RoleSidebar({
                     open ? 'translate-x-0' : '-translate-x-full',
                 )}
             >
-                <div className="flex min-h-32 flex-col items-center justify-center gap-2 border-b border-shell-sidebar-foreground/12 px-6">
+                <div className="flex min-h-32 shrink-0 flex-col items-center justify-center gap-2 border-b border-shell-sidebar-foreground/12 px-6">
                     <Link href={dashboard.url()} onClick={onClose}>
                         <div className="flex size-16 items-center justify-center rounded-full bg-shell-brand text-2xl font-extrabold text-shell-brand-foreground shadow-sm">
                             E
@@ -182,21 +286,31 @@ export function RoleSidebar({
                     </span>
                 </div>
 
-                <div className="flex-1 px-4 py-5">
+                <div className="min-h-0 flex-1 overflow-y-auto px-4 py-5">
                     <nav className="space-y-1" aria-label={navAriaLabel}>
-                        {navItems.map((item) => (
-                            <SidebarNavLink
-                                key={item.label}
-                                item={item}
-                                active={isActiveNavItem(url, item)}
-                                onNavigate={onClose}
-                                real={useRealLinks}
-                            />
-                        ))}
+                        {navItems.map((item) =>
+                            item.children?.length ? (
+                                <SidebarNavGroup
+                                    key={item.label}
+                                    item={item}
+                                    url={url}
+                                    onNavigate={onClose}
+                                    real={useRealLinks}
+                                />
+                            ) : (
+                                <SidebarNavLink
+                                    key={item.label}
+                                    item={item}
+                                    active={isActiveNavItem(url, item)}
+                                    onNavigate={onClose}
+                                    real={useRealLinks}
+                                />
+                            ),
+                        )}
                     </nav>
                 </div>
 
-                <div className="border-t border-shell-sidebar-foreground/20 bg-shell-overlay/10 px-4 py-5">
+                <div className="shrink-0 border-t border-shell-sidebar-foreground/20 bg-shell-overlay/10 px-4 py-5">
                     <div className="px-1">{footer}</div>
                     <Link
                         href={logout()}

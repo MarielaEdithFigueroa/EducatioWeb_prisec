@@ -24,3 +24,18 @@ export function isValidCuit(value: string): boolean {
 
     return exito;
 }
+
+export function formatCuilt(
+    value: string | null | undefined,
+    emptyText = '—',
+): string {
+    if (!value) {
+        return emptyText;
+    }
+
+    const digits = value.replace(/\D/g, '');
+
+    return digits.length === 11
+        ? `${digits.slice(0, 2)}-${digits.slice(2, 10)}-${digits.slice(10)}`
+        : value;
+}

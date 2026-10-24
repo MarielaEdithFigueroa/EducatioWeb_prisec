@@ -1,8 +1,18 @@
 import type { UrlMethodPair } from '@inertiajs/core';
 import { Head, Link, useForm } from '@inertiajs/react';
-import { ArrowLeftIcon, SaveIcon } from 'lucide-react';
+import {
+    ArrowLeftIcon,
+    SaveIcon,
+    UsersIcon,
+    IdCardIcon,
+    CalendarDaysIcon,
+    MapPinIcon,
+    SchoolIcon,
+    NotebookPenIcon,
+} from 'lucide-react';
 import { useMemo } from 'react';
 import AlumnoController from '@/actions/App/Http/Controllers/Academico/AlumnoController';
+import EducatioCard from '@/components/educatio-card';
 import EureButtonPrimary from '@/components/ui/eure/EureButtonPrimary';
 import EureButtonSecondary from '@/components/ui/eure/EureButtonSecondary';
 import EureDatePickerGroup from '@/components/ui/eure/EureDatePickerGroup';
@@ -251,35 +261,38 @@ export default function FormularioAlumno({
 
             <form
                 onSubmit={guardar}
-                className="flex flex-1 flex-col gap-6 p-4 pb-0 md:p-6 md:pb-0"
+                className="mx-auto flex w-full max-w-6xl flex-col gap-4"
             >
-                <div>
-                    <h1 className="text-2xl font-semibold tracking-tight text-foreground">
-                        {alumno ? 'Editar alumno' : 'Nuevo alumno'}
-                    </h1>
-                    <p className="mt-1 text-sm text-muted-foreground">
-                        Ficha personal y datos del legajo.
-                    </p>
-                </div>
+                <EducatioCard>
+                    <header className="flex items-center gap-3">
+                        <UsersIcon
+                            className="size-8 shrink-0 text-educatio-icon"
+                            aria-hidden="true"
+                        />
+                        <div>
+                            <h1 className="text-2xl font-semibold tracking-tight text-foreground">
+                                {alumno ? 'Editar alumno' : 'Nuevo alumno'}
+                            </h1>
+                            <p className="mt-1 text-sm text-muted-foreground">
+                                Ficha personal y datos del legajo.
+                            </p>
+                        </div>
+                    </header>
+                </EducatioCard>
 
-                {!alumno?.activo && (
+                {alumno && !alumno.activo && (
                     <div className="rounded-md border border-eure-error/30 bg-eure-error/10 px-4 py-3 text-sm text-eure-error">
                         Este alumno está inactivo. Podés actualizar sus datos o
                         reactivarlo desde el listado.
                     </div>
                 )}
 
-                <section className="space-y-4 border-b border-border pb-6">
-                    <div>
-                        <h2 className="text-lg font-semibold text-foreground">
-                            Identificación
-                        </h2>
-                        <p className="text-sm text-muted-foreground">
-                            Legajo, nombres y documentación personal.
-                        </p>
-                    </div>
-
-                    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+                <EducatioCard
+                    title="Identificación"
+                    icon={IdCardIcon}
+                    description="Legajo, nombres y documentación personal."
+                >
+                    <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
                         <EureInputGroup
                             label="Legajo"
                             name="legajo"
@@ -392,19 +405,14 @@ export default function FormularioAlumno({
                             maxLength={254}
                         />
                     </div>
-                </section>
+                </EducatioCard>
 
-                <section className="space-y-4 border-b border-border pb-6">
-                    <div>
-                        <h2 className="text-lg font-semibold text-foreground">
-                            Nacimiento e identidad
-                        </h2>
-                        <p className="text-sm text-muted-foreground">
-                            Datos registrales y personales informados.
-                        </p>
-                    </div>
-
-                    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+                <EducatioCard
+                    title="Nacimiento e identidad"
+                    icon={CalendarDaysIcon}
+                    description="Datos registrales y personales informados."
+                >
+                    <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
                         <EureDatePickerGroup
                             label="Fecha de nacimiento"
                             name="fecha_nacimiento"
@@ -539,19 +547,14 @@ export default function FormularioAlumno({
                             />
                         )}
                     </div>
-                </section>
+                </EducatioCard>
 
-                <section className="space-y-4 border-b border-border pb-6">
-                    <div>
-                        <h2 className="text-lg font-semibold text-foreground">
-                            Domicilio
-                        </h2>
-                        <p className="text-sm text-muted-foreground">
-                            Dirección declarada y localidad de residencia.
-                        </p>
-                    </div>
-
-                    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+                <EducatioCard
+                    title="Domicilio"
+                    icon={MapPinIcon}
+                    description="Dirección declarada y localidad de residencia."
+                >
+                    <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
                         <EureInputGroup
                             label="Domicilio"
                             name="domicilio"
@@ -595,19 +598,14 @@ export default function FormularioAlumno({
                             maxLength={10}
                         />
                     </div>
-                </section>
+                </EducatioCard>
 
-                <section className="space-y-4 border-b border-border pb-6">
-                    <div>
-                        <h2 className="text-lg font-semibold text-foreground">
-                            Datos institucionales
-                        </h2>
-                        <p className="text-sm text-muted-foreground">
-                            Fechas y referencias internas del legajo.
-                        </p>
-                    </div>
-
-                    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
+                <EducatioCard
+                    title="Datos institucionales"
+                    icon={SchoolIcon}
+                    description="Fechas y referencias internas del legajo."
+                >
+                    <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
                         <EureDatePickerGroup
                             label="Fecha de ingreso"
                             name="fecha_ingreso"
@@ -679,15 +677,9 @@ export default function FormularioAlumno({
                             errorMessage={form.errors.autoriza_uso_imagen}
                         />
                     </div>
-                </section>
+                </EducatioCard>
 
-                <section className="space-y-4 pb-2">
-                    <div>
-                        <h2 className="text-lg font-semibold text-foreground">
-                            Observaciones
-                        </h2>
-                    </div>
-
+                <EducatioCard title="Observaciones" icon={NotebookPenIcon}>
                     <EureTextareaGroup
                         label="Observaciones del legajo"
                         name="observaciones"
@@ -700,9 +692,9 @@ export default function FormularioAlumno({
                         maxLength={5000}
                         rows={4}
                     />
-                </section>
+                </EducatioCard>
 
-                <div className="sticky bottom-0 z-10 -mx-4 flex justify-end gap-3 border-t border-border bg-background/95 px-4 py-4 backdrop-blur md:-mx-6 md:px-6">
+                <div className="sticky bottom-0 z-10 flex flex-wrap justify-end gap-3 rounded-sm border border-border bg-card/95 px-4 py-3 backdrop-blur">
                     <EureButtonSecondary asChild disabled={form.processing}>
                         <Link href={AlumnoController.index()}>
                             <ArrowLeftIcon className="size-4" />

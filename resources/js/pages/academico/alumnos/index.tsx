@@ -2,6 +2,7 @@ import { Head, Link, router, useForm } from '@inertiajs/react';
 import type { ColumnDef } from '@tanstack/react-table';
 import {
     EyeIcon,
+    UsersIcon,
     ListFilterIcon,
     PencilIcon,
     PlusIcon,
@@ -11,6 +12,7 @@ import {
 import type { FormEvent } from 'react';
 import { useMemo, useState } from 'react';
 import AlumnoController from '@/actions/App/Http/Controllers/Academico/AlumnoController';
+import EducatioCard from '@/components/educatio-card';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
@@ -390,16 +392,22 @@ export default function AlumnosIndex({
         <>
             <Head title="Alumnos" />
 
-            <div className="flex flex-1 flex-col gap-5 p-4 md:p-6">
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                    <div>
-                        <h1 className="text-2xl font-semibold tracking-tight text-foreground">
-                            Alumnos
-                        </h1>
-                        <p className="mt-1 text-sm text-muted-foreground">
-                            Legajos y datos personales de los alumnos.
-                        </p>
-                    </div>
+            <div className="flex min-w-0 flex-1 flex-col gap-4">
+                <EducatioCard className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <header className="flex items-center gap-3">
+                        <UsersIcon
+                            className="size-8 shrink-0 text-educatio-icon"
+                            aria-hidden="true"
+                        />
+                        <div>
+                            <h1 className="text-2xl font-semibold tracking-tight text-foreground">
+                                Alumnos
+                            </h1>
+                            <p className="mt-1 text-sm text-muted-foreground">
+                                Legajos y datos personales de los alumnos.
+                            </p>
+                        </div>
+                    </header>
 
                     <EureButtonPrimary
                         onClick={() => router.visit(AlumnoController.create())}
@@ -408,121 +416,124 @@ export default function AlumnosIndex({
                         <PlusIcon className="size-4" />
                         Nuevo alumno
                     </EureButtonPrimary>
-                </div>
+                </EducatioCard>
 
                 <div className="grid gap-4 2xl:grid-cols-[17rem_minmax(0,1fr)] 2xl:items-start">
-                    <form
-                        onSubmit={buscar}
-                        className="grid grid-cols-1 gap-4 rounded-lg border border-border bg-card p-4 shadow-sm md:grid-cols-12 2xl:sticky 2xl:top-24 2xl:grid-cols-1 2xl:gap-3"
-                    >
-                        <EureInputGroup
-                            label="Buscar (que contenga)"
-                            name="buscar"
-                            value={filtros.buscar}
-                            onChange={(event) =>
-                                setFiltros((actuales) => ({
-                                    ...actuales,
-                                    buscar: event.target.value,
-                                }))
-                            }
-                            placeholder="Legajo, alumno, documento o CUIL/T"
-                            className="md:col-span-4 2xl:col-span-1"
-                        />
+                    <EducatioCard className="2xl:sticky 2xl:top-24">
+                        <form
+                            onSubmit={buscar}
+                            className="grid grid-cols-1 gap-3 md:grid-cols-12 2xl:grid-cols-1"
+                        >
+                            <EureInputGroup
+                                label="Buscar (que contenga)"
+                                name="buscar"
+                                value={filtros.buscar}
+                                onChange={(event) =>
+                                    setFiltros((actuales) => ({
+                                        ...actuales,
+                                        buscar: event.target.value,
+                                    }))
+                                }
+                                placeholder="Legajo, alumno, documento o CUIL/T"
+                                className="md:col-span-4 2xl:col-span-1"
+                            />
 
-                        <EureSelectGroup
-                            label="Provincia"
-                            name="provincia_id"
-                            value={provinciaSeleccionada}
-                            options={opcionesProvincia}
-                            onChange={(opcion) =>
-                                setFiltros((actuales) => ({
-                                    ...actuales,
-                                    provincia_id: opcion?.value
-                                        ? String(opcion.value)
-                                        : '',
-                                    ciudad_id: '',
-                                }))
-                            }
-                            className="md:col-span-3 2xl:col-span-1"
-                        />
+                            <EureSelectGroup
+                                label="Provincia"
+                                name="provincia_id"
+                                value={provinciaSeleccionada}
+                                options={opcionesProvincia}
+                                onChange={(opcion) =>
+                                    setFiltros((actuales) => ({
+                                        ...actuales,
+                                        provincia_id: opcion?.value
+                                            ? String(opcion.value)
+                                            : '',
+                                        ciudad_id: '',
+                                    }))
+                                }
+                                className="md:col-span-3 2xl:col-span-1"
+                            />
 
-                        <EureSelectGroup
-                            label="Localidad"
-                            name="ciudad_id"
-                            value={ciudadSeleccionada}
-                            options={opcionesCiudad}
-                            onChange={(opcion) =>
-                                setFiltros((actuales) => ({
-                                    ...actuales,
-                                    ciudad_id: opcion?.value
-                                        ? String(opcion.value)
-                                        : '',
-                                }))
-                            }
-                            className="md:col-span-3 2xl:col-span-1"
-                        />
+                            <EureSelectGroup
+                                label="Localidad"
+                                name="ciudad_id"
+                                value={ciudadSeleccionada}
+                                options={opcionesCiudad}
+                                onChange={(opcion) =>
+                                    setFiltros((actuales) => ({
+                                        ...actuales,
+                                        ciudad_id: opcion?.value
+                                            ? String(opcion.value)
+                                            : '',
+                                    }))
+                                }
+                                className="md:col-span-3 2xl:col-span-1"
+                            />
 
-                        <div className="flex items-end md:col-span-2 2xl:col-span-1">
-                            <label
-                                htmlFor="solo_activos"
-                                className="flex cursor-pointer items-center gap-2 pb-2 text-sm font-semibold text-foreground"
-                            >
-                                <Checkbox
-                                    id="solo_activos"
-                                    checked={filtros.solo_activos}
-                                    onCheckedChange={(checked) =>
-                                        setFiltros((actuales) => ({
-                                            ...actuales,
-                                            solo_activos: checked === true,
-                                        }))
-                                    }
-                                />
-                                Solo activos
-                            </label>
-                        </div>
-
-                        <div className="flex flex-col gap-3 md:col-span-12 md:flex-row md:items-end 2xl:col-span-1 2xl:flex-col 2xl:items-stretch">
-                            <p className="min-w-0 flex-1 text-sm text-muted-foreground italic 2xl:w-full 2xl:flex-none">
-                                {resumenFiltros}
-                                {filtrosPendientes && (
-                                    <>
-                                        <span className="text-amber-700 not-italic dark:text-amber-300">
-                                            {' '}
-                                            · Cambios sin aplicar ·{' '}
-                                        </span>
-                                        <button
-                                            type="submit"
-                                            className="font-medium text-primary not-italic underline underline-offset-4"
-                                        >
-                                            Actualizar
-                                        </button>
-                                    </>
-                                )}
-                            </p>
-
-                            <div className="flex flex-wrap items-end gap-2 md:justify-end 2xl:w-full 2xl:flex-col 2xl:items-stretch">
-                                <Link
-                                    href={AlumnoController.index().url}
-                                    className="text-sm font-medium text-primary underline underline-offset-4 2xl:block 2xl:w-full 2xl:text-right"
+                            <div className="flex items-end md:col-span-2 2xl:col-span-1">
+                                <label
+                                    htmlFor="solo_activos"
+                                    className="flex cursor-pointer items-center gap-2 pb-2 text-sm font-semibold text-foreground"
                                 >
-                                    Limpiar filtros
-                                </Link>
-
-                                <EureButtonPrimary
-                                    type="submit"
-                                    loading={isFiltering}
-                                    loadingPosition="right"
-                                    className="2xl:w-full 2xl:justify-center 2xl:self-stretch"
-                                >
-                                    <ListFilterIcon className="size-4" />
-                                    Filtrar
-                                </EureButtonPrimary>
+                                    <Checkbox
+                                        id="solo_activos"
+                                        checked={filtros.solo_activos}
+                                        onCheckedChange={(checked) =>
+                                            setFiltros((actuales) => ({
+                                                ...actuales,
+                                                solo_activos: checked === true,
+                                            }))
+                                        }
+                                    />
+                                    Solo activos
+                                </label>
                             </div>
-                        </div>
-                    </form>
 
-                    <div className="min-w-0">
+                            <div className="flex flex-col gap-3 md:col-span-12 md:flex-row md:items-end 2xl:col-span-1 2xl:flex-col 2xl:items-stretch">
+                                <p className="min-w-0 flex-1 text-sm text-muted-foreground italic 2xl:w-full 2xl:flex-none">
+                                    {resumenFiltros}
+                                    {filtrosPendientes && (
+                                        <>
+                                            <span className="text-educatio-warning not-italic">
+                                                {' '}
+                                                · Cambios sin aplicar ·{' '}
+                                            </span>
+                                            <button
+                                                type="submit"
+                                                className="font-medium text-primary not-italic underline underline-offset-4"
+                                            >
+                                                Actualizar
+                                            </button>
+                                        </>
+                                    )}
+                                </p>
+
+                                <div className="flex flex-wrap items-end gap-2 md:justify-end 2xl:w-full 2xl:flex-col 2xl:items-stretch">
+                                    <Link
+                                        href={AlumnoController.index().url}
+                                        className="text-sm font-medium text-primary underline underline-offset-4 2xl:block 2xl:w-full 2xl:text-right"
+                                    >
+                                        Limpiar filtros
+                                    </Link>
+
+                                    <EureButtonPrimary
+                                        type="submit"
+                                        loading={isFiltering}
+                                        loadingPosition="right"
+                                        className="2xl:w-full 2xl:justify-center 2xl:self-stretch"
+                                    >
+                                        <ListFilterIcon className="size-4" />
+                                        Filtrar
+                                    </EureButtonPrimary>
+                                </div>
+                            </div>
+                        </form>
+                    </EducatioCard>
+
+                    <EducatioCard className="min-w-0">
                         <EureDataTable
+                            variant="plain"
                             columns={columnas}
                             data={alumnos}
                             globalFilterPlaceholder={
@@ -540,7 +551,10 @@ export default function AlumnosIndex({
                                     label: 'Ver',
                                     icon: EyeIcon,
                                     color: 'blue',
-                                    onClick: () => undefined,
+                                    onClick: (alumno) =>
+                                        router.visit(
+                                            AlumnoController.show(alumno.id),
+                                        ),
                                 },
                                 {
                                     label: 'Editar',
@@ -570,7 +584,7 @@ export default function AlumnosIndex({
                                 },
                             ]}
                         />
-                    </div>
+                    </EducatioCard>
                 </div>
             </div>
 

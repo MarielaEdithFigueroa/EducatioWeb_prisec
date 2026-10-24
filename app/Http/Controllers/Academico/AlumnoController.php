@@ -7,16 +7,22 @@ use App\Http\Requests\Academico\AlumnoRequest;
 use App\Http\Requests\Academico\CambiarEstadoAlumnoRequest;
 use App\Http\Requests\Academico\DarBajaAlumnoRequest;
 use App\Http\Requests\Academico\IndexAlumnoRequest;
+use App\Http\Requests\Academico\VerAlumnoRequest;
+use App\Models\Adjunto;
 use App\Models\Alumno;
+use App\Models\AlumnoResponsable;
 use App\Models\Ciudad;
 use App\Models\GrupoSanguineo;
 use App\Models\MotivoBaja;
 use App\Models\Nacionalidad;
 use App\Models\Provincia;
 use App\Models\TipoDocumento;
+use App\Models\TipoVinculo;
 use App\Support\Auditoria\RegistraAuditoria;
 use App\Support\Database\LikePattern;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -144,6 +150,95 @@ class AlumnoController extends Controller
         Gate::authorize('create', Alumno::class);
 
         return $this->formulario();
+    }
+
+    public function show(VerAlumnoRequest $request, Alumno $alumno): Response
+    {
+        Gate::authorize('view', $alumno);
+
+        $alumno->load([
+            'tipoDocumento:id,nombre',
+            'ciudad:id,activo,provincia_id,nombre,codigo_postal',
+            'ciudad.provincia:id,activo,nombre',
+            'ciudadNacimiento:id,activo,provincia_id,nombre',
+            'ciudadNacimiento.provincia:id,activo,nombre',
+            'nacionalidad:id,activo,nombre',
+            'grupoSanguineo:id,codigo,nombre',
+            'motivoBaja:id,nombre',
+            'alumnosResponsables' => fn (HasMany $query) => $query
+                ->select([
+                    'id',
+                    'activo',
+                    'alumno_id',
+                    'responsable_id',
+                    'vinculo_id',
+                    'orden_contacto',
+                    'fecha_desde',
+                    'fecha_hasta',
+                    'es_responsable_legal',
+                    'es_responsable_pedagogico',
+                    'es_responsable_economico',
+                    'recibe_comunicaciones',
+                    'recibe_informes_academicos',
+                    'recibe_facturacion',
+                    'es_contacto_principal',
+                    'es_contacto_emergencia',
+                    'convive_con_alumno',
+                    'autorizado_retirar',
+                    'habilitado_portal',
+                ])
+                ->orderByDesc('activo')
+                ->orderBy('orden_contacto')
+                ->orderBy('id'),
+            'alumnosResponsables.tipoVinculo:id,nombre',
+            'alumnosResponsables.responsable' => fn (BelongsTo $query) => $query
+                ->select([
+                    'id',
+                    'activo',
+                    'apellido',
+                    'nombre',
+                    'nombre_elegido',
+                    'tipo_documento_id',
+                    'numero_documento',
+                    'email',
+                    'telefono_e164',
+                ]),
+            'alumnosResponsables.responsable.tipoDocumento:id,nombre',
+        ]);
+
+        return Inertia::render('academico/alumnos/show', [
+            'alumno' => $this->detallePayload($alumno),
+            'seccion' => $request->seccion(),
+            'documentacion' => fn () => $alumno->adjuntos()
+                ->with('usuario:id,login')
+                ->orderByDesc('activo')
+                ->orderByDesc('fecha_registro')
+                ->orderByDesc('adjuntos.id')
+                ->get()
+                ->map(fn (Adjunto $adjunto) => [
+                    'id' => $adjunto->id,
+                    'activo' => $adjunto->activo,
+                    'nombre_original' => $adjunto->nombre_original,
+                    'mime' => $adjunto->mime,
+                    'tamano_bytes' => $adjunto->tamano_bytes,
+                    'observaciones' => $adjunto->observaciones,
+                    'fecha_registro' => $adjunto->fecha_registro->toIso8601String(),
+                    'usuario' => $adjunto->usuario->login,
+                ]),
+            'configAdjuntos' => [
+                'max_bytes' => config('adjuntos.max_kb') * 1024,
+                'extensiones' => config('adjuntos.extensiones'),
+            ],
+            'motivosBaja' => MotivoBaja::query()
+                ->select(['id', 'nombre'])
+                ->where('activo', true)
+                ->orderBy('nombre')
+                ->get(),
+            'tiposVinculo' => TipoVinculo::query()
+                ->select(['id', 'nombre'])
+                ->orderBy('id')
+                ->get(),
+        ]);
     }
 
     public function store(AlumnoRequest $request): RedirectResponse
@@ -283,6 +378,98 @@ class AlumnoController extends Controller
                 ->orderBy('codigo')
                 ->get(),
         ]);
+    }
+
+    /** @return array<string, mixed> */
+    private function detallePayload(Alumno $alumno): array
+    {
+        return [
+            'id' => $alumno->id,
+            'activo' => $alumno->activo,
+            'legajo' => $alumno->legajo,
+            'apellido' => $alumno->apellido,
+            'nombre' => $alumno->nombre,
+            'nombre_elegido' => $alumno->nombre_elegido,
+            'tipo_documento' => $alumno->tipoDocumento?->nombre,
+            'numero_documento' => $alumno->numero_documento,
+            'cuilt' => $alumno->cuilt,
+            'fecha_nacimiento' => $alumno->fecha_nacimiento?->format('Y-m-d'),
+            'ciudad_nacimiento' => $alumno->ciudadNacimiento?->nombre,
+            'provincia_nacimiento' => $alumno->ciudadNacimiento?->provincia?->nombre,
+            'nacionalidad' => $alumno->nacionalidad?->nombre,
+            'grupo_sanguineo' => $alumno->grupoSanguineo?->codigo,
+            'sexo_registral' => $alumno->sexo_registral,
+            'genero' => $alumno->genero,
+            'genero_autodescripcion' => $alumno->genero_autodescripcion,
+            'email' => $alumno->email,
+            'domicilio' => $alumno->domicilio,
+            'ciudad' => $alumno->ciudad?->nombre,
+            'provincia' => $alumno->ciudad?->provincia?->nombre,
+            'cpa' => $alumno->cpa,
+            'fecha_ingreso' => $alumno->fecha_ingreso?->format('Y-m-d'),
+            'fecha_inicio_cursado' => $alumno->fecha_inicio_cursado?->format('Y-m-d'),
+            'libro' => $alumno->libro,
+            'folio' => $alumno->folio,
+            'fecha_baja' => $alumno->fecha_baja?->format('Y-m-d'),
+            'motivo_baja' => $alumno->motivoBaja?->nombre,
+            'autoriza_uso_imagen' => $alumno->autoriza_uso_imagen,
+            'observaciones' => $alumno->observaciones,
+            'responsables' => $alumno->alumnosResponsables
+                ->map(fn (AlumnoResponsable $vinculo) => [
+                    'id' => $vinculo->responsable->id,
+                    'alumno_responsable_id' => $vinculo->id,
+                    'activo' => $vinculo->responsable->activo,
+                    'vinculo_activo' => $vinculo->activo,
+                    'apellido' => $vinculo->responsable->apellido,
+                    'nombre' => $vinculo->responsable->nombre,
+                    'nombre_elegido' => $vinculo->responsable->nombre_elegido,
+                    'tipo_documento' => $vinculo->responsable->tipoDocumento?->nombre,
+                    'numero_documento' => $vinculo->responsable->numero_documento,
+                    'email' => $vinculo->responsable->email,
+                    'telefono' => $vinculo->responsable->telefono_e164,
+                    'tipo_vinculo' => $vinculo->tipoVinculo->nombre,
+                    'tipo_vinculo_id' => $vinculo->vinculo_id,
+                    'orden_contacto' => $vinculo->orden_contacto,
+                    'fecha_desde' => $vinculo->fecha_desde?->format('Y-m-d'),
+                    'fecha_hasta' => $vinculo->fecha_hasta?->format('Y-m-d'),
+                    'es_responsable_legal' => $vinculo->es_responsable_legal,
+                    'es_responsable_pedagogico' => $vinculo->es_responsable_pedagogico,
+                    'es_responsable_economico' => $vinculo->es_responsable_economico,
+                    'recibe_comunicaciones' => $vinculo->recibe_comunicaciones,
+                    'recibe_informes_academicos' => $vinculo->recibe_informes_academicos,
+                    'recibe_facturacion' => $vinculo->recibe_facturacion,
+                    'es_contacto_principal' => $vinculo->es_contacto_principal,
+                    'es_contacto_emergencia' => $vinculo->es_contacto_emergencia,
+                    'convive_con_alumno' => $vinculo->convive_con_alumno,
+                    'autorizado_retirar' => $vinculo->autorizado_retirar,
+                    'habilitado_portal' => $vinculo->habilitado_portal,
+                    'observaciones' => $vinculo->observaciones,
+                    'funciones' => $this->funcionesResponsable($vinculo),
+                ])
+                ->values(),
+        ];
+    }
+
+    /** @return array<int, string> */
+    private function funcionesResponsable(AlumnoResponsable $vinculo): array
+    {
+        return collect([
+            'Responsable legal' => $vinculo->es_responsable_legal,
+            'Responsable pedagógico' => $vinculo->es_responsable_pedagogico,
+            'Responsable económico' => $vinculo->es_responsable_economico,
+            'Recibe comunicaciones' => $vinculo->recibe_comunicaciones,
+            'Recibe informes académicos' => $vinculo->recibe_informes_academicos,
+            'Recibe facturación' => $vinculo->recibe_facturacion,
+            'Contacto principal' => $vinculo->es_contacto_principal,
+            'Contacto de emergencia' => $vinculo->es_contacto_emergencia,
+            'Convive con el alumno' => $vinculo->convive_con_alumno,
+            'Autorizado a retirar' => $vinculo->autorizado_retirar,
+            'Acceso al portal' => $vinculo->habilitado_portal,
+        ])
+            ->filter()
+            ->keys()
+            ->values()
+            ->all();
     }
 
     private function toast(string $mensaje): void

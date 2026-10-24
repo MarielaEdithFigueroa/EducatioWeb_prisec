@@ -4,6 +4,7 @@ import {
     ClipboardListIcon,
     CoinsIcon,
     DatabaseIcon,
+    DoorOpenIcon,
     FileTextIcon,
     GraduationCapIcon,
     LandmarkIcon,
@@ -42,10 +43,13 @@ import type { DisplayBreadcrumb, RoleNavItem } from '@/layouts/role-shell';
 import { cn } from '@/lib/utils';
 import { dashboard } from '@/routes';
 import { index as alumnosIndex } from '@/routes/academico/alumnos';
+import { index as aulasIndex } from '@/routes/academico/aulas';
 import { index as cursosIndex } from '@/routes/academico/cursos';
 import { index as divisionesIndex } from '@/routes/academico/divisiones';
+import { index as gruposIndex } from '@/routes/academico/grupos';
 import { index as nivelesIndex } from '@/routes/academico/niveles';
 import { index as planesEstudioIndex } from '@/routes/academico/planes_estudio';
+import { index as responsablesIndex } from '@/routes/academico/responsables';
 import { index as turnosIndex } from '@/routes/academico/turnos';
 import { index as localidadesIndex } from '@/routes/sistema/localidades';
 import type { BreadcrumbItem } from '@/types';
@@ -67,10 +71,6 @@ type AppMenuSection = {
     icon: RoleNavItem['icon'];
     items: AppMenuItem[];
 };
-
-const NAV_ITEMS: RoleNavItem[] = [
-    { label: 'Inicio', href: dashboard.url(), icon: LayoutDashboardIcon },
-];
 
 const APP_MENU_SECTIONS: AppMenuSection[] = [
     {
@@ -117,13 +117,19 @@ const APP_MENU_SECTIONS: AppMenuSection[] = [
                 label: 'Responsables',
                 description: 'Padres, madres y tutores',
                 icon: UserCogIcon,
-                disabled: true,
+                href: responsablesIndex.url(),
             },
             {
                 label: 'Grupos',
                 description: 'Comisiones por ciclo lectivo',
                 icon: LayersIcon,
-                disabled: true,
+                href: gruposIndex.url(),
+            },
+            {
+                label: 'Aulas',
+                description: 'Espacios, capacidad y especialidades',
+                icon: DoorOpenIcon,
+                href: aulasIndex.url(),
             },
             {
                 label: 'Materias',
@@ -223,6 +229,20 @@ const APP_MENU_SECTIONS: AppMenuSection[] = [
             },
         ],
     },
+];
+
+const NAV_ITEMS: RoleNavItem[] = [
+    { label: 'Inicio', href: dashboard.url(), icon: LayoutDashboardIcon },
+    ...APP_MENU_SECTIONS.map((section) => ({
+        label: section.title,
+        icon: section.icon,
+        href: '#',
+        children: section.items.map((item) => ({
+            ...item,
+            href: item.href ?? '#',
+            disabled: item.disabled || !item.href,
+        })),
+    })),
 ];
 
 function AppGlobalMenu() {

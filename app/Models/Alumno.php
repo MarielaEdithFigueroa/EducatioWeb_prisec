@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Fillable([
@@ -110,5 +111,11 @@ class Alumno extends Model
     public function alumnosCondicionesEspeciales(): HasMany
     {
         return $this->hasMany(AlumnoCondicionEspecial::class);
+    }
+
+    /** @return BelongsToMany<Adjunto, $this> */
+    public function adjuntos(): BelongsToMany
+    {
+        return $this->belongsToMany(Adjunto::class, 'alumnos_adjuntos');
     }
 }
