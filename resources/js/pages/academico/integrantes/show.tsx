@@ -6,10 +6,10 @@ import {
     PrinterIcon,
     RotateCcwIcon,
     Trash2Icon,
-    UserCogIcon,
 } from 'lucide-react';
 import { useState } from 'react';
 import EducatioCard from '@/components/educatio-card';
+import FichaRapidaPersona from '@/components/ficha-rapida-persona';
 import { Badge } from '@/components/ui/badge';
 import {
     DropdownMenu,
@@ -305,24 +305,20 @@ export default function IntegranteShow({
         <>
             <Head title={`${integrante.apellido}, ${integrante.nombre}`} />
             <div className="mx-auto flex w-full max-w-6xl flex-col gap-3">
-                <EducatioCard className="px-4 py-3">
+                <EducatioCard className="px-4 py-4.5">
                     <div className="flex flex-wrap items-center gap-x-4 gap-y-3">
-                        {integrante.tiene_foto ? (
-                            <img
-                                src={foto.url(integrante.id)}
-                                alt={`Foto de ${integrante.nombre} ${integrante.apellido}`}
-                                width={116}
-                                height={116}
-                                className="size-14 shrink-0 rounded-md border bg-muted object-cover"
-                            />
-                        ) : (
-                            <span className="grid size-14 shrink-0 place-items-center rounded-md border bg-muted">
-                                <UserCogIcon
-                                    className="size-7 text-educatio-icon"
-                                    aria-hidden="true"
-                                />
-                            </span>
-                        )}
+                        <FichaRapidaPersona
+                            persona={{
+                                apellido: String(integrante.apellido ?? ''),
+                                nombre: String(integrante.nombre ?? ''),
+                                legajo: integrante.legajo,
+                                activo: integrante.activo,
+                                funciones: integrante.funciones,
+                                fotoUrl: integrante.tiene_foto
+                                    ? foto.url(integrante.id)
+                                    : null,
+                            }}
+                        />
                         <div className="min-w-0 flex-1">
                             <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1.5">
                                 <h1 className="text-xl font-semibold break-words">

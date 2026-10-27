@@ -416,6 +416,7 @@ export default function IntegranteForm({
                                 {texto('apellido', 'Apellido', {
                                     max: 100,
                                     required: true,
+                                    autoFocus: seccionInicial === 'personal',
                                 })}
                                 {texto('nombre', 'Nombre', {
                                     max: 100,
@@ -427,8 +428,6 @@ export default function IntegranteForm({
                                     {texto('legajo', 'Legajo', {
                                         max: 30,
                                         required: true,
-                                        autoFocus:
-                                            seccionInicial === 'personal',
                                     })}
                                 </div>
                                 {seleccion(
