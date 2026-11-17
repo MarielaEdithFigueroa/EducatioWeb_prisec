@@ -152,7 +152,7 @@ Educatio debe poder operarse eficientemente con teclado. Sus usuarios realizan c
 
 ### Filtros y búsquedas
 
-- Toda búsqueda backend con `LIKE` debe escapar `%` y `_` para tratarlos como texto literal. Deuda técnica: centralizar este escape en un helper común para no repetirlo por pantalla/controlador.
+- Toda búsqueda backend con `LIKE` debe escapar `%` y `_` para tratarlos como texto literal. Reutilizar `App\Support\Database\LikePattern::contains()`, que también escapa `!`, y declarar `ESCAPE '!'` en la consulta.
 - En filtros sobre entidades relacionadas, incluir opciones inactivas cuando existan datos históricos que puedan apuntar a ellas; mostrarlas con sufijo `(inactivo)`.
 - Las URLs con query string no hacen self-healing: si el usuario edita manualmente una combinación válida pero sin resultados, se muestra vacío. Sólo corregir/rechazar cuando haya un problema de integridad o autorización.
 - Si una pantalla combina filtros server-side con búsqueda client-side de `EureDataTable`, diferenciar el placeholder de la búsqueda client-side, por ejemplo `Buscar en resultados...`.
@@ -203,7 +203,7 @@ Educatio debe poder operarse eficientemente con teclado. Sus usuarios realizan c
 
 EducatioWeb PriSec es la reescritura web del sistema de gestión escolar **Educatio** de Eureka Soluciones Informáticas. El legacy es una aplicación de escritorio VB6 en producción desde ~2004, con dos grandes áreas: **Académico** (alumnos, responsables, materias y planes de estudio, calificaciones, asistencia, boletines, certificados, docentes, sanciones, cuaderno de comunicaciones) y **Administrativo** (facturación electrónica AFIP, cobranzas, cuenta corriente de alumnos y empresas, caja, cheques, morosos, planes de cuotas, débito automático y contabilidad). El alcance de esta reescritura es **Primaria y Secundaria** (PriSec); el nivel Terciario del legacy queda fuera.
 
-El proyecto se construye sobre **EureFramework** (base técnica Laravel + Inertia + React, sin dominio). Al arrancar todavía no hay dominio implementado: se parte de la base y se va incorporando el dominio de Educatio.
+El proyecto se construye sobre **EureFramework** (base técnica Laravel + Inertia + React). Ya incorpora dominio de Educatio: alumnos, responsables, estructura académica y grupos, aulas, equipo institucional y localidades. El avance y los límites de cada circuito se mantienen en `docs/roadmap.md`; el modelo vigente está en el código y las migraciones.
 
 ### El código legacy (referencia)
 
@@ -283,7 +283,7 @@ New pages must follow this naming convention or the layout won't apply.
 
 ### Authentication
 
-Laravel Fortify handles all auth flows (login, register, password reset, email verification, 2FA, passkeys). Views are wired in `FortifyServiceProvider::configureViews()` to render Inertia pages under `auth/`. Passkey support comes from `@laravel/passkeys`.
+Laravel Fortify gestiona el acceso cerrado con `login` y contraseña; `FortifyServiceProvider::configureViews()` conecta la pantalla `auth/login`. `config/fortify.php` mantiene `features` vacío: no están habilitados registro público, recuperación de contraseña, verificación de email, 2FA ni passkeys. Perfil, cambio de contraseña y apariencia se implementan en `routes/settings.php`.
 
 ### UI components
 

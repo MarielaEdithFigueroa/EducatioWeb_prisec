@@ -67,6 +67,7 @@ type MotivoBaja = {
 
 type AlumnoFilters = {
     buscar: string;
+    grupo_id: string;
     provincia_id: string;
     ciudad_id: string;
     solo_activos: boolean;
@@ -91,12 +92,14 @@ type Props = {
     filters: AlumnoFilters;
     resultados: AlumnoResultados;
     provincias: EureSelectOption[];
+    grupos: EureSelectOption[];
     ciudades: CiudadFiltro[];
     motivosBaja: MotivoBaja[];
 };
 
 const ALUMNO_FILTER_KEYS = [
     'buscar',
+    'grupo_id',
     'provincia_id',
     'ciudad_id',
     'solo_activos',
@@ -114,6 +117,7 @@ export default function AlumnosIndex({
     filters,
     resultados,
     provincias,
+    grupos,
     ciudades,
     motivosBaja,
 }: Props) {
@@ -129,6 +133,22 @@ export default function AlumnosIndex({
     const opcionesProvincia = useMemo(
         () => [{ label: 'Todas', value: '' }, ...provincias],
         [provincias],
+    );
+
+    const opcionesGrupo = useMemo(
+        () => [
+            { label: 'Todos', value: '' },
+            { label: 'Sin grupo', value: 'sin_grupo' },
+            ...grupos,
+        ],
+        [grupos],
+    );
+    const grupoSeleccionado =
+        opcionesGrupo.find(
+            (opcion) => String(opcion.value) === filtros.grupo_id,
+        ) ?? opcionesGrupo[0];
+    const grupoFiltrado = opcionesGrupo.find(
+        (opcion) => String(opcion.value) === filters.grupo_id,
     );
 
     const opcionesCiudad = useMemo(() => {
@@ -167,6 +187,7 @@ export default function AlumnosIndex({
     const buildQuery = (): Record<string, string> => {
         const query = {
             buscar: filtros.buscar.trim(),
+            grupo_id: filtros.grupo_id,
             provincia_id: filtros.provincia_id,
             ciudad_id: filtros.ciudad_id,
             solo_activos: filtros.solo_activos ? '1' : '',
@@ -202,6 +223,7 @@ export default function AlumnosIndex({
     const hayFiltrosAplicados = useMemo(
         () =>
             filters.buscar.trim() !== '' ||
+            filters.grupo_id !== '' ||
             filters.provincia_id !== '' ||
             filters.ciudad_id !== '' ||
             filters.solo_activos,
@@ -223,6 +245,14 @@ export default function AlumnosIndex({
             partes.push(`localidad ${ciudadFiltrada.label}`);
         }
 
+        if (filters.grupo_id !== '' && grupoFiltrado) {
+            partes.push(
+                filters.grupo_id === 'sin_grupo'
+                    ? 'sin grupo'
+                    : `grupo ${grupoFiltrado.label}`,
+            );
+        }
+
         if (filters.solo_activos) {
             partes.push('solo activos');
         }
@@ -234,6 +264,7 @@ export default function AlumnosIndex({
             : `Filtrado por ${partes.join(', ')} (${contador})`;
     }, [
         ciudadFiltrada,
+        grupoFiltrado,
         filters,
         provinciaFiltrada,
         resultados.filtrados,
@@ -435,7 +466,23 @@ export default function AlumnosIndex({
                                     }))
                                 }
                                 placeholder="Legajo, alumno, documento o CUIL/T"
-                                className="md:col-span-4 2xl:col-span-1"
+                                className="md:col-span-6 2xl:col-span-1"
+                            />
+
+                            <EureSelectGroup
+                                label="Grupo actual"
+                                name="grupo_id"
+                                value={grupoSeleccionado}
+                                options={opcionesGrupo}
+                                onChange={(opcion) =>
+                                    setFiltros((actuales) => ({
+                                        ...actuales,
+                                        grupo_id: opcion?.value
+                                            ? String(opcion.value)
+                                            : '',
+                                    }))
+                                }
+                                className="md:col-span-6 2xl:col-span-1"
                             />
 
                             <EureSelectGroup
@@ -452,7 +499,7 @@ export default function AlumnosIndex({
                                         ciudad_id: '',
                                     }))
                                 }
-                                className="md:col-span-3 2xl:col-span-1"
+                                className="md:col-span-5 2xl:col-span-1"
                             />
 
                             <EureSelectGroup
@@ -468,7 +515,7 @@ export default function AlumnosIndex({
                                             : '',
                                     }))
                                 }
-                                className="md:col-span-3 2xl:col-span-1"
+                                className="md:col-span-5 2xl:col-span-1"
                             />
 
                             <div className="flex items-end md:col-span-2 2xl:col-span-1">

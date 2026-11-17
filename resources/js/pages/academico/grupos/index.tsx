@@ -8,16 +8,18 @@ import {
     PlusIcon,
     RotateCcwIcon,
     Trash2Icon,
+    Columns2Icon,
 } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import type { FormEvent } from 'react';
 import EducatioCard from '@/components/educatio-card';
 import { Badge } from '@/components/ui/badge';
 import EureButtonPrimary from '@/components/ui/eure/EureButtonPrimary';
+import EureButtonSecondary from '@/components/ui/eure/EureButtonSecondary';
 import EureDataTable from '@/components/ui/eure/EureDataTable';
 import EureSelectGroup from '@/components/ui/eure/EureSelectGroup';
 import { formatId } from '@/lib/utils';
-import { create, edit, index, show } from '@/routes/academico/grupos';
+import { create, edit, index, panel, show } from '@/routes/academico/grupos';
 import { CAMPOS_GRUPO, consultaFiltros, nombreCatalogo } from './types';
 import type { CatalogosGrupo, FiltrosGrupo, Grupo } from './types';
 import { useEstadoGrupo } from './use-estado-grupo';
@@ -158,12 +160,30 @@ export default function GruposIndex({
                             división y turno.
                         </p>
                     </div>
-                    <EureButtonPrimary
-                        onClick={() => router.visit(create(contexto))}
-                    >
-                        <PlusIcon className="size-4" />
-                        Nuevo grupo
-                    </EureButtonPrimary>
+                    <div className="flex flex-wrap gap-2">
+                        <EureButtonSecondary asChild>
+                            <Link
+                                href={panel({
+                                    query: {
+                                        ciclo_lectivo:
+                                            filters.ciclo_lectivo || undefined,
+                                    },
+                                })}
+                            >
+                                <Columns2Icon
+                                    aria-hidden="true"
+                                    className="size-4"
+                                />
+                                Alumnos por grupo
+                            </Link>
+                        </EureButtonSecondary>
+                        <EureButtonPrimary
+                            onClick={() => router.visit(create(contexto))}
+                        >
+                            <PlusIcon className="size-4" />
+                            Nuevo grupo
+                        </EureButtonPrimary>
+                    </div>
                 </EducatioCard>
                 <div className="grid gap-4 2xl:grid-cols-[17rem_minmax(0,1fr)] 2xl:items-start">
                     <EducatioCard className="2xl:sticky 2xl:top-24">

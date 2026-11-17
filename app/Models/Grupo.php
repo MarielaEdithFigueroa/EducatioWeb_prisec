@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Fillable(['activo', 'curso_id', 'turno_id', 'division_id', 'plan_estudio_id', 'nivel_id', 'ciclo_lectivo'])]
 class Grupo extends Model
@@ -83,5 +84,17 @@ class Grupo extends Model
     public function nivel(): BelongsTo
     {
         return $this->belongsTo(Nivel::class);
+    }
+
+    /** @return HasMany<AlumnoGrupo, $this> */
+    public function historialAlumnos(): HasMany
+    {
+        return $this->hasMany(AlumnoGrupo::class);
+    }
+
+    /** @return HasMany<Alumno, $this> */
+    public function alumnos(): HasMany
+    {
+        return $this->hasMany(Alumno::class);
     }
 }

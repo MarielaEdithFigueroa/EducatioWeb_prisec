@@ -2,6 +2,8 @@
 
 Referencia funcional del área **Administrativa** (facturación y cobranzas), derivada del módulo `Administrativo` del legacy (proyecto `EducatioAdm.vbp`). Describe **qué hace** el dominio, no cómo se modela en la base.
 
+Consultar [el roadmap](../roadmap.md) para el estado web. Se conservan los nombres de organismos y servicios usados en el legacy; al implementar cada integración deberán verificarse los requisitos vigentes.
+
 > El legacy tiene varias variantes de este módulo (`Administrativo`, `AdministrativoConIva`, `AdministrativoV4`). `AdministrativoV4` es la más reciente y es la referencia principal. Las diferencias entre variantes (tratamiento de IVA, integraciones bancarias) se resuelven con el PO al implementar.
 
 ## Aranceles y planes de cuotas

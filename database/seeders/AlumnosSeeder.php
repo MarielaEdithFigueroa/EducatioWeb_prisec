@@ -131,13 +131,14 @@ class AlumnosSeeder extends Seeder
         ];
 
         foreach ($alumnos as $indice => $alumno) {
+            $estadoExistente = Alumno::query()->where('legajo', $alumno['legajo'])->whereHas('historialGrupos')->first();
             $inactivo = $alumno['legajo'] === 'SEC-2026-0010';
             $nombreParaEmail = $alumno['nombre_elegido'] ?? $alumno['nombre'];
 
             Alumno::query()->updateOrCreate(
                 ['legajo' => $alumno['legajo']],
                 [
-                    'activo' => ! $inactivo,
+                    'activo' => $estadoExistente?->activo ?? ! $inactivo,
                     'apellido' => $alumno['apellido'],
                     'nombre' => $alumno['nombre'],
                     'nombre_elegido' => $alumno['nombre_elegido'],
@@ -166,8 +167,8 @@ class AlumnosSeeder extends Seeder
                     'fecha_inicio_cursado' => '2026-02-23',
                     'libro' => str_starts_with($alumno['legajo'], 'PRI') ? '1' : '2',
                     'folio' => str_pad((string) ($indice + 1), 3, '0', STR_PAD_LEFT),
-                    'fecha_baja' => $inactivo ? '2026-07-10' : null,
-                    'motivo_baja_id' => $inactivo ? $motivoCambioEstablecimiento->id : null,
+                    'fecha_baja' => $estadoExistente !== null ? $estadoExistente->fecha_baja : ($inactivo ? '2026-07-10' : null),
+                    'motivo_baja_id' => $estadoExistente !== null ? $estadoExistente->motivo_baja_id : ($inactivo ? $motivoCambioEstablecimiento->id : null),
                     'autoriza_uso_imagen' => match ($indice % 3) {
                         0 => true,
                         1 => false,

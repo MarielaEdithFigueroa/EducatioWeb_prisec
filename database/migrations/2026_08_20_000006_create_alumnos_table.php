@@ -14,6 +14,10 @@ return new class extends Migration
         Schema::create('alumnos', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->boolean('activo')->default(true);
+            $table->unsignedBigInteger('grupo_id')->nullable();
+            $table->index('grupo_id', 'alumnos_grupo_idx');
+            $table->foreign('grupo_id', 'alumnos_grupo_fk')->references('id')->on('grupos')
+                ->restrictOnUpdate()->restrictOnDelete();
 
             $table->string('legajo', 30);
             $table->string('apellido', 100);

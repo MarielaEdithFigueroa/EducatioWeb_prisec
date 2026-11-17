@@ -1,6 +1,8 @@
 # Dominio académico — mapa de entidades y preguntas para Mariela (borrador)
 
-> **Encuadre.** Este es un **borrador de trabajo** para alinear el dominio académico con **Mariela** (referente). **No es fuente de verdad ni un esquema de datos.** El modelo real vivirá en el **código + las migraciones**; cuando eso exista, este doc se archiva. Todo lo de acá está **inferido del legacy** (`Legacy/EducatioSecVB/SecundarioV4`, minando el SQL de los formularios VB6) y hay que **confirmarlo**. Los nombres entre paréntesis son las **tablas del legacy** que respaldan cada entidad, para trazabilidad.
+> **Antecedente histórico — revisado el 17/11/2026.** Este mapa precede al modelo web actual. Ya existen estructura académica, alumnos, responsables, aulas y equipo institucional. Consultar [el estado actual](../roadmap.md) y [las decisiones de arquitectura](../decisiones-arquitectura.md). El diagrama y sus cardinalidades son hipótesis originales, no el esquema implementado: por ejemplo, el vínculo alumno–responsable es una entidad propia y la pertenencia alumno–grupo conserva períodos históricos, aunque aún no haya proceso completo de matrícula anual.
+
+> **Encuadre original.** Borrador para alinear el dominio académico con **Mariela** (referente). **No es fuente de verdad ni un esquema de datos.** Se conserva en esta ruta como archivo histórico; el modelo vigente está en el **código + las migraciones**. Las hipótesis se infirieron del legacy (`../Legacy/EducatioSecVB/SecundarioV4`, leyendo SQL de los formularios VB6) y requieren contraste. Los nombres entre paréntesis son las **tablas del legacy** que respaldan cada entidad, para trazabilidad.
 
 ## Cómo se leyó
 

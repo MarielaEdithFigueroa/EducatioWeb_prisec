@@ -1,12 +1,12 @@
 # 02 · Glosario
 
-Terminología del dominio Educatio. Los términos salen del sistema legacy y del vocabulario habitual de la gestión escolar argentina. Se usan **en castellano** en código y UI.
+Terminología del dominio Educatio. Los términos salen del sistema legacy y del vocabulario habitual de la gestión escolar argentina. Se usan **en castellano** en código y UI. Que un concepto aparezca aquí no significa que su circuito esté implementado; consultar [el estado del proyecto](../roadmap.md).
 
 ## General
 
 - **Educatio** — sistema de gestión escolar de Eureka. El legacy (VB6) tiene un módulo **Académico** (escuela) y uno **Administrativo** (facturación/cobranzas).
 - **EureFramework** — base técnica sobre la que se construye este proyecto (Laravel + Inertia + React). No es dominio.
-- **Institución / Establecimiento** — la escuela. Un despliegue puede gestionar una o varias.
+- **Institución / Establecimiento** — la escuela. EducatioWeb PriSec gestiona una institución por despliegue, sin multitenancy.
 - **Año lectivo / Ciclo lectivo** — el año escolar. La operación se organiza por año lectivo; al cerrar el año se hace el pasaje al siguiente ("Nuevo Año").
 - **Baja lógica** — las entidades no se borran: se marcan `activo = false`. Nunca `deleted_at`.
 
@@ -16,10 +16,14 @@ Terminología del dominio Educatio. Los términos salen del sistema legacy y del
 - **Legajo** — número/expediente del alumno; también el conjunto de su documentación.
 - **Matrícula / Matriculación** — alta del alumno en el año lectivo. **Rematriculación** es reinscribir un alumno del año anterior al nuevo año.
 - **Responsable** — adulto a cargo del alumno (padre/madre/tutor), receptor de facturación y comunicaciones. **Responsable pedagógico** es quien responde por lo académico.
-- **Grupo / Curso / División** — la agrupación de alumnos (ej: "2º B"). **Grupo especial** es una agrupación no estándar (ej: para una materia optativa o taller).
+- **Curso** — grado o año de estudio dentro de un nivel.
+- **División** — identificación de una sección, por ejemplo A o B.
+- **Grupo** — combinación de ciclo lectivo, nivel, curso, división y turno (ej: "2026 · Secundaria · 2º B · Mañana"); puede tener un plan de estudio. **Grupo especial** es una agrupación no estándar del legacy (ej: para una materia optativa o taller).
 - **Materia** — asignatura. Puede ser común, **especial** (optativa/taller) o **compartida** entre planes.
 - **Plan de estudios** — conjunto de materias por año/nivel que cursa un alumno. Las materias se cargan "por plan".
 - **Docente / Profesor** — quien dicta materias. Se le **asignan materias**; se registran sus **faltas**, **licencias** y **sanciones**.
+- **Integrante del equipo institucional** — persona con legajo y una o más funciones en la institución. El modelo web reúne datos personales, laborales, contactos y documentación; una función docente no equivale a una asignación a una materia o grupo.
+- **Aula** — espacio físico con capacidad y características propias. Es distinta del grupo académico.
 - **Calificación / Nota** — evaluación del alumno en una materia. Hay **notas por materia**, **notas especiales**, **notas extra**, **nota definitiva** (puede calcularse automáticamente), **recuperatorio** y **promedios**. Las **posibles calificaciones** son la escala válida (numérica o conceptual) que define la institución.
 - **Asistencia** — presencia del alumno. Se toma **diaria**, **masiva** (por grupo), **por código de barras** o **por jornada** (presencia por turno), y se consolida **mensual**.
 - **Boletín** — reporte de calificaciones y asistencia del alumno por período.
@@ -33,6 +37,8 @@ Terminología del dominio Educatio. Los términos salen del sistema legacy y del
 - **Vacante / Solicitud** — cupo e inscripción de un aspirante.
 
 ## Administrativo (facturación y cobranzas)
+
+Se conserva la nomenclatura del legacy, incluidos los nombres de organismos y servicios. Este glosario no especifica normativa ni contratos de integración vigentes.
 
 - **Cuota / Arancel** — importe periódico que paga el responsable por el alumno. Se organiza en **planes de cuotas**; hay **actualización de cuotas**.
 - **Cuenta corriente (Cta Cte)** — saldo del alumno/responsable o de una **empresa**. Puede ser **de alumnos**, **de empresas**, **unificada** o **adicional**.

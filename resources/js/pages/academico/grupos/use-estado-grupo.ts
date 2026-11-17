@@ -1,5 +1,6 @@
 import { router } from '@inertiajs/react';
 import { useState } from 'react';
+import { toast } from 'sonner';
 import EureConfirmSwal from '@/components/ui/eure/EureConfirmSwal';
 import { desactivar, reactivar } from '@/routes/academico/grupos';
 import type { Grupo } from './types';
@@ -32,6 +33,11 @@ export function useEstadoGrupo() {
             {},
             {
                 preserveScroll: true,
+                onError: (errors) =>
+                    toast.error(
+                        Object.values(errors)[0] ??
+                            'No se pudo cambiar el estado del grupo.',
+                    ),
                 onFinish: () => setProcesando(null),
             },
         );

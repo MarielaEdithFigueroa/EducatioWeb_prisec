@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Academico;
 
 use App\Http\Requests\Academico\CambiarEstadoCatalogoRequest;
+use App\Http\Requests\Academico\DesactivarGrupoRequest;
 use App\Http\Requests\Academico\GrupoRequest;
 use App\Http\Requests\Academico\IndexGrupoRequest;
 use App\Models\Curso;
@@ -12,6 +13,7 @@ use App\Models\PlanEstudio;
 use App\Models\Turno;
 use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
@@ -82,6 +84,7 @@ class GrupoController extends CatalogoController
 
         return Inertia::render('academico/grupos/show', [
             'grupo' => $this->detalle($grupo->load(self::RELACIONES)),
+            'alumnos' => $grupo->alumnos()->select(['id', 'legajo', 'apellido', 'nombre'])->orderByDesc('id')->get(),
             'filters' => $request->filters(),
         ]);
     }
@@ -100,15 +103,23 @@ class GrupoController extends CatalogoController
 
     public function update(GrupoRequest $request, Grupo $grupo): RedirectResponse
     {
-        $this->guardar($grupo, $request->datos());
+        DB::transaction(function () use ($request, $grupo): void {
+            $bloqueado = Grupo::query()->lockForUpdate()->findOrFail($grupo->id);
+            $request->validarHistorial($bloqueado);
+            $this->guardar($bloqueado, $request->datos());
+        });
         $this->toast('Grupo actualizado correctamente.');
 
         return to_route('academico.grupos.show', ['grupo' => $grupo->id, 'filtros' => $request->validated('filtros', [])]);
     }
 
-    public function desactivar(CambiarEstadoCatalogoRequest $request, Grupo $grupo): RedirectResponse
+    public function desactivar(DesactivarGrupoRequest $request, Grupo $grupo): RedirectResponse
     {
-        $this->cambiarEstado($grupo, false);
+        DB::transaction(function () use ($request, $grupo): void {
+            $bloqueado = Grupo::query()->lockForUpdate()->findOrFail($grupo->id);
+            $request->validarGrupo($bloqueado);
+            $this->cambiarEstado($bloqueado, false);
+        });
         $this->toast('Grupo desactivado correctamente.');
 
         return back();

@@ -1,8 +1,11 @@
 <?php
 
+use App\Actions\Academico\GestionarGrupoAlumno;
 use App\Models\Alumno;
+use App\Models\AlumnoGrupo;
 use App\Models\AlumnoResponsable;
 use App\Models\Ciudad;
+use App\Models\Grupo;
 use App\Models\GrupoSanguineo;
 use App\Models\Log;
 use App\Models\MotivoBaja;
@@ -421,3 +424,53 @@ it('filtra alumnos desde el servidor y conserva los filtros en la URL', function
         ->get(route('academico.alumnos.index', ['provincia_id' => 999]))
         ->assertSessionHasErrors('provincia_id');
 });
+
+it('filtra por grupo vigente combina filtros y conserva opciones inactivas', function () {
+    seedCatalogosAlumnos();
+    $ciudad = Ciudad::query()->where('nombre', 'Neuquén')->sole();
+    $grupo = Grupo::factory()->create();
+    $otro = Grupo::factory()->create();
+    $alumnos = collect(['Ana', 'Bruno', 'Carla'])->map(fn (string $nombre): Alumno => Alumno::query()->create([
+        'legajo' => 'GRUPO-'.$nombre, 'nombre' => $nombre, 'apellido' => 'Prueba', 'ciudad_id' => $ciudad->id,
+    ]));
+    $gestionar = app(GestionarGrupoAlumno::class);
+    $gestionar->cambiar($alumnos[0], $grupo->id, '0', 'Ingreso');
+    $gestionar->cambiar($alumnos[1], $grupo->id, '0', 'Ingreso');
+    $gestionar->cambiar($alumnos[1], $otro->id, AlumnoGrupo::version($alumnos[1]->asignacionActual()->first()), 'Traslado');
+    $gestionar->cambiar($alumnos[2], $grupo->id, '0', 'Ingreso');
+    $gestionar->cambiar($alumnos[2], null, AlumnoGrupo::version($alumnos[2]->asignacionActual()->first()), 'Cierre');
+    $otro->update(['activo' => false]);
+
+    $this->actingAs(User::factory()->create())
+        ->get(route('academico.alumnos.index', [
+            'grupo_id' => $grupo->id, 'buscar' => 'Ana', 'ciudad_id' => $ciudad->id,
+            'provincia_id' => $ciudad->provincia_id, 'solo_activos' => '1',
+        ]))->assertSuccessful()->assertInertia(fn (Assert $page) => $page
+        ->has('alumnos', 1)->where('alumnos.0.id', $alumnos[0]->id)
+        ->where('filters.grupo_id', (string) $grupo->id)
+        ->where('resultados.total', 3)->where('resultados.filtrados', 1)
+        ->where('grupos', fn ($opciones): bool => collect($opciones)->contains(
+            fn ($opcion): bool => $opcion['value'] === $otro->id && str_ends_with($opcion['label'], ' (inactivo)'),
+        )));
+
+    $this->get(route('academico.alumnos.index', ['grupo_id' => $otro->id]))
+        ->assertSuccessful()->assertInertia(fn (Assert $page) => $page
+        ->has('alumnos', 1)->where('alumnos.0.id', $alumnos[1]->id)
+        ->where('filters.grupo_id', (string) $otro->id));
+    $this->get(route('academico.alumnos.index', ['grupo_id' => $grupo->id, 'buscar' => 'Bruno']))
+        ->assertSuccessful()->assertInertia(fn (Assert $page) => $page
+        ->has('alumnos', 0)->where('filters.grupo_id', (string) $grupo->id));
+    $this->get(route('academico.alumnos.index', ['grupo_id' => 'sin_grupo']))
+        ->assertSuccessful()->assertInertia(fn (Assert $page) => $page
+        ->has('alumnos', 1)->where('alumnos.0.id', $alumnos[2]->id)
+        ->where('filters.grupo_id', 'sin_grupo')->where('resultados.filtrados', 1));
+    $this->get(route('academico.alumnos.index'))
+        ->assertSuccessful()->assertInertia(fn (Assert $page) => $page
+        ->has('alumnos', 3)->where('filters.grupo_id', '')->where('resultados.filtrados', 3));
+});
+
+it('rechaza filtros de grupo inválidos', function (mixed $grupoId) {
+    $this->actingAs(User::factory()->create())
+        ->get(route('academico.alumnos.index', ['grupo_id' => $grupoId]))
+        ->assertSessionHasErrors('grupo_id');
+})->with(['inexistente' => 999999, 'texto' => 'otro', 'decimal' => '1.5', 'lista' => [[1, 2]]]);

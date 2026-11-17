@@ -1,5 +1,7 @@
 # Alumnos — borrador desde el legacy (para validar con Mariela)
 
+> **Antecedente histórico — revisado el 17/11/2026.** Se conserva el relevamiento original. Ya existen alumnos, responsables y vínculos en el modelo web; consultar [el estado actual](../roadmap.md), [Alumno](../../app/Models/Alumno.php) y [AlumnoResponsable](../../app/Models/AlumnoResponsable.php). Las hipótesis y preguntas de abajo no representan necesariamente decisiones pendientes: contrastarlas con el código antes de retomarlas. La pertenencia actual e histórica a grupos ya está implementada; el proceso de matrícula anual sigue pendiente.
+
 > **Encuadre.** Reconstrucción del módulo **Alumnos** a partir del formulario real del legacy (`SecundarioV4/frmAlumnos.frm`, mantenido hasta 2025). **Es un borrador para que Mariela lo corrija**, no el modelo final. Los campos y validaciones exactos se cierran con las **capturas de Mariela** + la **DB del legacy**. Sirve para ir a ella con algo hecho y no con una hoja en blanco.
 
 ## Alumno — campos (del form)
@@ -68,4 +70,4 @@ Grupo (curso/división/turno) · Familia/hermanos · Sanciones · Faltas · Cuen
 
 ---
 
-> Próximo paso: Mariela manda las capturas y responde estas 5; con eso el borrador pasa a issue de diseño validado, y la implementación va aparte (primer CRUD de referencia).
+> Próximo paso propuesto en el relevamiento original: validar estas preguntas con Mariela y llevar el diseño a un issue. Ese texto se conserva como antecedente; no describe el próximo trabajo actual.

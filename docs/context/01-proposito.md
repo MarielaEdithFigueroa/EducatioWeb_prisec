@@ -9,7 +9,7 @@ Esta reescritura acota el alcance a los niveles **Primaria y Secundaria** (de ah
 ## Decisiones de alcance
 
 - **No es multitenant.** Decisión de **Mariela** (referente del dominio). El sistema gestiona **una institución**, no una red de establecimientos con aislamiento de datos por tenant. No se modela "scope"/franquicia ni layouts por tenant. Cualquier scaffolding multitenant heredado de la base técnica se descarta o se reaprovecha solo como marco visual genérico.
-- Alcance de niveles: **Primaria y Secundaria**. Terciario queda fuera.
+- Alcance funcional acordado: **Primaria y Secundaria**. El catálogo y los seeders incluyen también **Inicial**; eso no implica que sus procesos específicos estén definidos. Terciario queda fuera.
 - **Roles diferidos.** Por ahora **no hay autorización**: se requiere usuario autenticado, pero **todos los usuarios pueden hacer todo**. Los roles/permisos se agregan más adelante. No es anarquía: se dejan las costuras desde el inicio (ver "Autorización — diferida" en las convenciones) para que ese agregado sea un relleno y no una reescritura.
 
 ## Por qué se reescribe
@@ -20,13 +20,15 @@ El legacy es un ejecutable de escritorio que se instala por PC, con actualizacio
 
 El proyecto parte de **EureFramework**: una base técnica de Eureka (Laravel 13 + Inertia v3 + React 19 + Tailwind v4 + TypeScript), **sin dominio funcional propio**. EureFramework ya trae:
 
-- autenticación cerrada con `login` y contraseña (Fortify, con 2FA y passkeys);
+- autenticación cerrada con `login` y contraseña mediante Fortify;
 - perfil, cambio de contraseña, sesiones, cache, queues, logs, health endpoint;
 - layout administrativo responsive, modo claro/oscuro y componentes `Eure*`;
 - auditoría general preparada en la tabla `logs`;
 - formatos regionales argentinos y utilidades CUIT/CUIL.
 
-Al arrancar **todavía no hay dominio de Educatio implementado**. El trabajo consiste en incorporar, sobre esa base, el dominio académico y administrativo descripto en estos docs.
+Sobre esa base ya se incorporó dominio de Educatio. El avance y los circuitos pendientes se registran en [el estado y roadmap](../roadmap.md); estos documentos de contexto describen el dominio y no deben usarse como inventario de funcionalidades terminadas.
+
+La configuración vigente de Fortify no habilita registro público, recuperación de contraseña, verificación de email, 2FA ni passkeys. El cambio de contraseña del usuario autenticado se implementa en las rutas de configuración personal.
 
 ## Stack
 

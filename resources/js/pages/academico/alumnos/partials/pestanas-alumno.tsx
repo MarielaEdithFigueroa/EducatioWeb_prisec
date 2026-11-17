@@ -6,6 +6,7 @@ import type { SeccionAlumno } from './types';
 const PESTANAS: Array<{ value: SeccionAlumno; label: string }> = [
     { value: 'personal', label: 'Datos personales' },
     { value: 'institucional', label: 'Datos institucionales' },
+    { value: 'grupos', label: 'Grupos e historial' },
     { value: 'responsables', label: 'Responsables' },
     { value: 'documentacion', label: 'Documentación' },
 ];

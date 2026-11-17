@@ -58,6 +58,11 @@ export function parseDateOnly(
     return isValid(date) ? date : null;
 }
 
+/** Cohorte escolar con corte al 30 de junio; el año identifica el final del intervalo. */
+export function formatCohorteEscolar(anio: number): string {
+    return `${anio} · ${formatDate(`${anio - 1}-07-01`)} al ${formatDate(`${anio}-06-30`)}`;
+}
+
 export function toDateOnlyString(value: Date | null): string {
     return value && isValid(value) ? format(value, 'yyyy-MM-dd') : '';
 }

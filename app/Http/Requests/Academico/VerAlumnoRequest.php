@@ -10,7 +10,7 @@ use Illuminate\Validation\Rule;
 class VerAlumnoRequest extends FormRequest
 {
     /** @var array<int, string> */
-    private const SECCIONES = ['personal', 'institucional', 'responsables', 'documentacion'];
+    private const SECCIONES = ['personal', 'institucional', 'grupos', 'responsables', 'documentacion'];
 
     protected function prepareForValidation(): void
     {

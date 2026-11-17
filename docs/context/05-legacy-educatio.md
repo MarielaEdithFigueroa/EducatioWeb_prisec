@@ -30,6 +30,24 @@ Los nombres de los `.frm` son muy descriptivos y son la mejor pista del dominio.
 
 Para entender una regla puntual, se abre el `.frm` correspondiente y se lee el código VB del formulario. Los `.frx` son binarios (recursos visuales) y no aportan lógica.
 
+Los `.vbp` identifican los formularios y módulos realmente incluidos en cada ejecutable, incluso cuando provienen de otra carpeta. Revisarlos antes de elegir entre archivos de nombre parecido. Si los acentos aparecen dañados, comprobar la codificación del archivo; no reescribir el original para leerlo.
+
+## Referencias para los próximos circuitos
+
+Rutas relativas a `../Legacy/EducatioSecVB`:
+
+| Circuito | Archivo | Comportamiento observado |
+| --- | --- | --- |
+| Legajo y responsables | `SecundarioV4/frmAlumnos.frm` | Datos del alumno, responsables y accesos a otros módulos; distingue grupo actual y futuro |
+| Cambio de grupo | `SecundarioV4/FrmCambiarGrupo.frm` | Actualiza `cod_grupo`/`cod_grupo2`; cierra el vínculo previo de `Alumno-Grupo` y crea o reactiva el correspondiente al grupo elegido |
+| Rematriculación | `SecundarioV4/frmAlumnosRematriculados.frm` | Edita datos de `AlumnosRematriculacion` y la fecha de rematriculación del alumno |
+| Grupos y planes | `SecundarioV4/frmNuevosGrupos.frm`, `SecundarioV4/FrmPlanEstudios.frm`, `SecundarioV4/FrmCargarMateriasPorPlan.frm` | Referencias para composición de grupos y carga de materias por plan |
+| Asignación docente | `SecundarioV4/frmAsignarMateriasaDocente.frm` | Asigna materia, docente y grupo con condición; impide un segundo titular activo para la misma materia y grupo |
+| Cargos por familia | `AdministrativoV4/frmGeneraCtaCtexFamilia.frm` | Genera `ItemsAFacturar` para un alumno seleccionado por familia y comprueba cargos activos del mismo plan y mes |
+| Facturación electrónica | `AdministrativoV4/FrmFacturacionDetalle.frm` | Registra solicitudes y resultados de CAE |
+
+Estas observaciones describen código existente, no decisiones aprobadas para el modelo web. Los SQL de formularios tampoco reemplazan un relevamiento del esquema y de los datos reales. Los borradores de [kickoff](../kickoff) conservan las hipótesis del análisis inicial.
+
 ## Qué se toma y qué no
 
 - **Se toma**: el alcance funcional y las reglas de negocio (qué campos, qué validaciones, qué flujos). Ver `03-academico.md` y `04-administrativo.md`.

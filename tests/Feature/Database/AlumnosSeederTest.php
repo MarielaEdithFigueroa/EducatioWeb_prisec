@@ -11,6 +11,7 @@ it('siembra alumnos de ejemplo de forma coherente e idempotente', function () {
     $this->seed();
 
     $alumnos = Alumno::query()
+        ->whereNotLike('legajo', 'DEMO-PRI-%')
         ->orderBy('id')
         ->get();
     $ids = $alumnos->pluck('id')->all();
@@ -21,10 +22,10 @@ it('siembra alumnos de ejemplo de forma coherente e idempotente', function () {
     $this->seed(AlumnosSeeder::class);
 
     expect($alumnos)->toHaveCount(12)
-        ->and(Alumno::query()->orderBy('id')->pluck('id')->all())->toBe($ids)
+        ->and(Alumno::query()->whereNotLike('legajo', 'DEMO-PRI-%')->orderBy('id')->pluck('id')->all())->toBe($ids)
         ->and(Responsable::query()->orderBy('id')->pluck('id')->all())->toBe($idsResponsables)
         ->and(AlumnoResponsable::query()->orderBy('id')->pluck('id')->all())->toBe($idsVinculos)
-        ->and(Alumno::query()->where('activo', true)->count())->toBe(11)
+        ->and(Alumno::query()->whereNotLike('legajo', 'DEMO-PRI-%')->where('activo', true)->count())->toBe(11)
         ->and(Alumno::query()->where('activo', false)->count())->toBe(1)
         ->and($alumnos->pluck('legajo')->unique())->toHaveCount(12)
         ->and($alumnos->pluck('numero_documento')->unique())->toHaveCount(12)
@@ -32,7 +33,7 @@ it('siembra alumnos de ejemplo de forma coherente e idempotente', function () {
 
     expect($responsables)->toHaveCount(15)
         ->and(AlumnoResponsable::query()->count())->toBe(16)
-        ->and(Alumno::query()->whereDoesntHave('alumnosResponsables')->count())->toBe(0)
+        ->and(Alumno::query()->whereNotLike('legajo', 'DEMO-PRI-%')->whereDoesntHave('alumnosResponsables')->count())->toBe(0)
         ->and($responsables->pluck('numero_documento')->unique())->toHaveCount(15)
         ->and($responsables->pluck('cuilt')->unique())->toHaveCount(15);
 

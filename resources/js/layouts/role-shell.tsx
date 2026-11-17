@@ -69,6 +69,22 @@ export function isActiveNavItem(url: string, item: RoleNavItem) {
     );
 }
 
+export function activeNavItem(
+    url: string,
+    items: RoleNavItem[],
+): RoleNavItem | undefined {
+    return items.reduce<RoleNavItem | undefined>((active, item) => {
+        if (!isActiveNavItem(url, item)) {
+            return active;
+        }
+
+        return !active ||
+            getUrlPath(item.href).length > getUrlPath(active.href).length
+            ? item
+            : active;
+    }, undefined);
+}
+
 export function SidebarNavLink({
     item,
     active,
@@ -149,8 +165,8 @@ function SidebarNavGroup({
     real: boolean;
 }) {
     const Icon = item.icon;
-    const active =
-        item.children?.some((child) => isActiveNavItem(url, child)) ?? false;
+    const activeChild = activeNavItem(url, item.children ?? []);
+    const active = activeChild !== undefined;
 
     return (
         <Collapsible
@@ -182,7 +198,7 @@ function SidebarNavGroup({
                         <SidebarNavLink
                             key={child.label}
                             item={child}
-                            active={isActiveNavItem(url, child)}
+                            active={activeChild === child}
                             onNavigate={onNavigate}
                             real={real}
                         />

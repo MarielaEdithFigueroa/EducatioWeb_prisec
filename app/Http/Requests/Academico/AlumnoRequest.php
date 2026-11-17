@@ -27,6 +27,7 @@ class AlumnoRequest extends FormRequest
         $alumno = $this->route('alumno');
 
         return [
+            'grupo_id' => ['prohibited'],
             'legajo' => [
                 'required',
                 'string',

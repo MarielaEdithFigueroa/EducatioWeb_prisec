@@ -13,18 +13,20 @@ trait RegistraAuditoria
 {
     protected function auditar(string $accion, Model $modelo, ?array $anterior, ?array $nuevo): void
     {
+        $conSesion = request()->hasSession();
+
         Log::create([
             'entidad' => $modelo->getTable(),
             'entidad_id' => $modelo->getKey(),
             'accion' => $accion,
-            'usuario_id' => auth()->id(),
-            'login' => auth()->user()?->login,
-            'session_id' => request()->session()->getId(),
+            'usuario_id' => $conSesion ? auth()->id() : null,
+            'login' => $conSesion ? auth()->user()?->login : null,
+            'session_id' => $conSesion ? request()->session()->getId() : null,
             'anterior' => $anterior,
             'nuevo' => $nuevo,
-            'ip' => request()->ip(),
-            'user_agent' => request()->userAgent(),
-            'origen' => 'web',
+            'ip' => $conSesion ? request()->ip() : null,
+            'user_agent' => $conSesion ? request()->userAgent() : null,
+            'origen' => $conSesion ? 'web' : 'consola',
         ]);
     }
 }

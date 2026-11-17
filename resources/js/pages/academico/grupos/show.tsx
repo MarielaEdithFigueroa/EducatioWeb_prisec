@@ -5,6 +5,7 @@ import {
     PencilIcon,
     RotateCcwIcon,
     Trash2Icon,
+    UserPlusIcon,
 } from 'lucide-react';
 import EducatioCard from '@/components/educatio-card';
 import { Badge } from '@/components/ui/badge';
@@ -15,13 +16,16 @@ import DetalleCampo, {
     BloqueDetalle,
 } from '@/pages/academico/alumnos/partials/detalle-campo';
 import { edit, index, show } from '@/routes/academico/grupos';
+import { create as asignarAlumnos } from '@/routes/academico/grupos/alumnos';
+import AlumnosAsignados from './alumnos-asignados';
+import type { AlumnoAsignado } from './alumnos-asignados';
 import { consultaFiltros, nombreCatalogo } from './types';
 import type { FiltrosGrupo, Grupo } from './types';
 import { useEstadoGrupo } from './use-estado-grupo';
 
-type Props = { grupo: Grupo; filters: FiltrosGrupo };
+type Props = { grupo: Grupo; filters: FiltrosGrupo; alumnos: AlumnoAsignado[] };
 
-export default function VerGrupo({ grupo, filters }: Props) {
+export default function VerGrupo({ grupo, filters, alumnos }: Props) {
     const { procesando, cambiarEstado } = useEstadoGrupo();
 
     return (
@@ -44,6 +48,19 @@ export default function VerGrupo({ grupo, filters }: Props) {
                         </p>
                     </div>
                     <div className="flex flex-wrap gap-2">
+                        {grupo.activo && (
+                            <EureButtonPrimary
+                                onClick={() =>
+                                    router.visit(asignarAlumnos(grupo.id))
+                                }
+                            >
+                                <UserPlusIcon
+                                    aria-hidden="true"
+                                    className="size-4"
+                                />
+                                Asignar alumnos
+                            </EureButtonPrimary>
+                        )}
                         <EureButtonSecondary asChild>
                             <Link
                                 href={index({
@@ -96,6 +113,12 @@ export default function VerGrupo({ grupo, filters }: Props) {
                         value={nombreCatalogo(grupo.plan_estudio)}
                     />
                 </BloqueDetalle>
+                <EducatioCard>
+                    <h2 className="mb-3 text-lg font-semibold">
+                        Alumnos asignados ({alumnos.length})
+                    </h2>
+                    <AlumnosAsignados alumnos={alumnos} />
+                </EducatioCard>
                 <div className="flex justify-end">
                     <EureButtonSecondary
                         disabled={procesando !== null}

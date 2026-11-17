@@ -13,6 +13,7 @@ import {
     ListTreeIcon,
     MapPinIcon,
     NotebookTextIcon,
+    PlusIcon,
     ReceiptIcon,
     SettingsIcon,
     ShieldIcon,
@@ -38,6 +39,7 @@ import {
     RoleLayoutFrame,
     RoleSidebar,
     SidebarUserFooter,
+    activeNavItem,
 } from '@/layouts/role-shell';
 import type { DisplayBreadcrumb, RoleNavItem } from '@/layouts/role-shell';
 import { cn } from '@/lib/utils';
@@ -46,7 +48,11 @@ import { index as alumnosIndex } from '@/routes/academico/alumnos';
 import { index as aulasIndex } from '@/routes/academico/aulas';
 import { index as cursosIndex } from '@/routes/academico/cursos';
 import { index as divisionesIndex } from '@/routes/academico/divisiones';
-import { index as gruposIndex } from '@/routes/academico/grupos';
+import {
+    create as gruposCreate,
+    index as gruposIndex,
+    panel as gruposPanel,
+} from '@/routes/academico/grupos';
 import { index as integrantesIndex } from '@/routes/academico/integrantes';
 import { index as nivelesIndex } from '@/routes/academico/niveles';
 import { index as planesEstudioIndex } from '@/routes/academico/planes_estudio';
@@ -75,6 +81,31 @@ type AppMenuSection = {
 };
 
 const APP_MENU_SECTIONS: AppMenuSection[] = [
+    {
+        title: 'Grupos',
+        icon: LayersIcon,
+        items: [
+            {
+                label: 'Alumnos por grupo',
+                description:
+                    'Consultar alumnos y acceder a la asignación por grupo',
+                icon: UsersIcon,
+                href: gruposPanel.url(),
+            },
+            {
+                label: 'Listado de grupos',
+                description: 'Consultar y administrar grupos por ciclo lectivo',
+                icon: ListTreeIcon,
+                href: gruposIndex.url(),
+            },
+            {
+                label: 'Nuevo grupo',
+                description: 'Crear un grupo',
+                icon: PlusIcon,
+                href: gruposCreate.url(),
+            },
+        ],
+    },
     {
         title: 'Académico',
         icon: GraduationCapIcon,
@@ -120,12 +151,6 @@ const APP_MENU_SECTIONS: AppMenuSection[] = [
                 description: 'Padres, madres y tutores',
                 icon: UserCogIcon,
                 href: responsablesIndex.url(),
-            },
-            {
-                label: 'Grupos',
-                description: 'Comisiones por ciclo lectivo',
-                icon: LayersIcon,
-                href: gruposIndex.url(),
             },
             {
                 label: 'Aulas',
@@ -260,15 +285,23 @@ const NAV_ITEMS: RoleNavItem[] = [
 ];
 
 function AppGlobalMenu() {
+    const { url } = usePage();
+    const activeItem = activeNavItem(
+        url,
+        NAV_ITEMS.flatMap((item) => item.children ?? [item]),
+    );
     const renderItem = (item: AppMenuItem) => {
         const Icon = item.icon;
+        const active =
+            item.href !== undefined && item.href === activeItem?.href;
         const className = cn(
             'gap-2',
+            active && 'bg-accent font-semibold text-accent-foreground',
             item.disabled && 'cursor-not-allowed opacity-45',
         );
         const content = (
             <>
-                <Icon className="size-4" />
+                <Icon aria-hidden="true" className="size-4" />
                 <span>{item.label}</span>
             </>
         );
@@ -287,7 +320,12 @@ function AppGlobalMenu() {
 
         return (
             <DropdownMenuItem key={item.label} asChild className={className}>
-                <Link href={item.href}>{content}</Link>
+                <Link
+                    href={item.href}
+                    aria-current={active ? 'page' : undefined}
+                >
+                    {content}
+                </Link>
             </DropdownMenuItem>
         );
     };
@@ -320,8 +358,20 @@ function AppGlobalMenu() {
 
                     return (
                         <DropdownMenuSub key={section.title}>
-                            <DropdownMenuSubTrigger>
-                                <SectionIcon className="mr-2 size-4" />
+                            <DropdownMenuSubTrigger
+                                className={cn(
+                                    section.items.some(
+                                        (item) =>
+                                            item.href !== undefined &&
+                                            item.href === activeItem?.href,
+                                    ) &&
+                                        'bg-accent font-semibold text-accent-foreground',
+                                )}
+                            >
+                                <SectionIcon
+                                    aria-hidden="true"
+                                    className="mr-2 size-4"
+                                />
                                 {section.title}
                             </DropdownMenuSubTrigger>
                             <DropdownMenuSubContent className="w-64">

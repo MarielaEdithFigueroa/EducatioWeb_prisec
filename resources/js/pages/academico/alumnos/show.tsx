@@ -33,10 +33,13 @@ import type { TipoVinculo } from '../responsables/types';
 import DatosInstitucionales from './partials/datos-institucionales';
 import DatosPersonales from './partials/datos-personales';
 import Documentacion from './partials/documentacion';
+import GruposAlumno from './partials/grupos';
 import PestanasAlumno from './partials/pestanas-alumno';
 import Responsables from './partials/responsables';
 import type {
     AlumnoDetalle,
+    AsignacionGrupo,
+    GrupoDisponible,
     MotivoBaja,
     SeccionAlumno,
 } from './partials/types';
@@ -48,6 +51,9 @@ type Props = {
     tiposVinculo: TipoVinculo[];
     documentacion: Adjunto[];
     configAdjuntos: ConfigAdjuntos;
+    historialGrupos: AsignacionGrupo[];
+    gruposDisponibles: GrupoDisponible[];
+    versionHistorial: string;
 };
 
 type DatosBaja = {
@@ -62,6 +68,9 @@ export default function AlumnoShow({
     tiposVinculo,
     documentacion,
     configAdjuntos,
+    historialGrupos,
+    gruposDisponibles,
+    versionHistorial,
 }: Props) {
     const [seccionActiva, setSeccionActiva] = useState<SeccionAlumno>(seccion);
     const [dialogoBajaAbierto, setDialogoBajaAbierto] = useState(false);
@@ -221,6 +230,15 @@ export default function AlumnoShow({
                     )}
                     {seccionActiva === 'institucional' && (
                         <DatosInstitucionales alumno={alumno} />
+                    )}
+                    {seccionActiva === 'grupos' && (
+                        <GruposAlumno
+                            key={`${alumno.id}:${versionHistorial}`}
+                            alumno={alumno}
+                            historial={historialGrupos}
+                            grupos={gruposDisponibles}
+                            version={versionHistorial}
+                        />
                     )}
                     {seccionActiva === 'responsables' && (
                         <Responsables

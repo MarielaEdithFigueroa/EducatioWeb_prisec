@@ -9,14 +9,15 @@ use Database\Seeders\NivelesSeeder;
 use Database\Seeders\PlanesEstudioSeeder;
 use Database\Seeders\TurnosSeeder;
 
-it('incluye grupos coherentes de tres ciclos en el seed general con eventos silenciados', function () {
+it('incluye catorce grupos de primaria del ciclo actual con eventos silenciados', function () {
     $this->travelTo(now()->setDate(2026, 10, 24));
     $this->seed();
 
     $grupos = Grupo::query()->with(['nivel', 'curso', 'division', 'turno', 'planEstudio'])->get();
-    expect($grupos)->toHaveCount(90)
-        ->and($grupos->pluck('ciclo_lectivo')->unique()->sort()->values()->all())->toBe([2025, 2026, 2027])
-        ->and($grupos->where('activo', false))->toHaveCount(30);
+    expect($grupos)->toHaveCount(14)
+        ->and($grupos->pluck('ciclo_lectivo')->unique()->values()->all())->toBe([2026])
+        ->and($grupos->pluck('nivel.codigo')->unique()->values()->all())->toBe(['PRIMARIA'])
+        ->and($grupos->where('activo', false))->toHaveCount(0);
 
     foreach ($grupos as $grupo) {
         expect($grupo->curso->nivel_id)->toBe($grupo->nivel_id)
@@ -42,9 +43,14 @@ it('omite niveles inactivos y permite grupos sin plan', function () {
     Nivel::query()->where('codigo', 'INICIAL')->update(['activo' => false]);
     $this->seed(GruposSeeder::class);
 
-    expect(Grupo::query()->count())->toBe(72)
+    expect(Grupo::query()->count())->toBe(14)
         ->and(Grupo::query()->whereNotNull('plan_estudio_id')->exists())->toBeFalse()
         ->and(Grupo::query()->whereHas('nivel', fn ($query) => $query->where('codigo', 'INICIAL'))->exists())->toBeFalse();
+
+    Nivel::query()->where('codigo', 'PRIMARIA')->update(['activo' => false]);
+    $this->travel(1)->years();
+    $this->seed(GruposSeeder::class);
+    expect(Grupo::query()->where('ciclo_lectivo', now()->year)->count())->toBe(0);
 });
 
 it('no carga ejemplos fuera de desarrollo y tests', function () {

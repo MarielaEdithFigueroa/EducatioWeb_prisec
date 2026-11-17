@@ -1,6 +1,7 @@
 export type SeccionAlumno =
     | 'personal'
     | 'institucional'
+    | 'grupos'
     | 'responsables'
     | 'documentacion';
 
@@ -39,6 +40,8 @@ export type ResponsableVinculado = {
 export type AlumnoDetalle = {
     id: number;
     activo: boolean;
+    grupo_id: number | null;
+    grupo_descripcion: string | null;
     legajo: string;
     apellido: string;
     nombre: string;
@@ -74,3 +77,22 @@ export type MotivoBaja = {
     id: number;
     nombre: string;
 };
+
+export type AsignacionGrupo = {
+    id: number;
+    grupo_id: number;
+    grupo_activo: boolean;
+    grupo_descripcion: string;
+    fecha_desde: string;
+    fecha_hasta: string | null;
+    motivo_ingreso: string;
+    motivo_egreso: string | null;
+    auditoria: Array<{
+        id: number;
+        accion: string;
+        login: string | null;
+        fecha: string;
+    }>;
+};
+
+export type GrupoDisponible = { id: number; descripcion: string };

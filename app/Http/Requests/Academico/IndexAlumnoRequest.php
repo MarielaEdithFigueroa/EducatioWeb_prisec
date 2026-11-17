@@ -5,6 +5,7 @@ namespace App\Http\Requests\Academico;
 use App\Models\Alumno;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class IndexAlumnoRequest extends FormRequest
 {
@@ -24,12 +25,17 @@ class IndexAlumnoRequest extends FormRequest
             'buscar' => ['nullable', 'string', 'max:100'],
             'provincia_id' => ['nullable', 'integer', 'exists:provincias,id'],
             'ciudad_id' => ['nullable', 'integer', 'exists:ciudades,id'],
+            'grupo_id' => ['nullable', Rule::when(
+                $this->input('grupo_id') === 'sin_grupo',
+                ['in:sin_grupo'],
+                ['integer', 'exists:grupos,id'],
+            )],
             'solo_activos' => ['nullable', 'boolean'],
         ];
     }
 
     /**
-     * @return array{buscar: string, provincia_id: string, ciudad_id: string, solo_activos: bool}
+     * @return array{buscar: string, provincia_id: string, ciudad_id: string, grupo_id: string, solo_activos: bool}
      */
     public function filters(): array
     {
@@ -39,6 +45,7 @@ class IndexAlumnoRequest extends FormRequest
             'buscar' => trim((string) ($validated['buscar'] ?? '')),
             'provincia_id' => (string) ($validated['provincia_id'] ?? ''),
             'ciudad_id' => (string) ($validated['ciudad_id'] ?? ''),
+            'grupo_id' => (string) ($validated['grupo_id'] ?? ''),
             'solo_activos' => $this->boolean('solo_activos'),
         ];
     }

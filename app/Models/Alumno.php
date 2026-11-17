@@ -3,10 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use LogicException;
 
 #[Fillable([
     'activo',
@@ -47,10 +50,39 @@ class Alumno extends Model
         'activo' => true,
     ];
 
+    protected static function booted(): void
+    {
+        static::saving(function (Alumno $alumno): void {
+            if (! $alumno->isDirty('grupo_id')) {
+                return;
+            }
+
+            $vigente = $alumno->exists ? $alumno->asignacionActual()->first() : null;
+            if ($alumno->grupo_id !== $vigente?->grupo_id) {
+                throw new LogicException('El grupo del alumno debe modificarse mediante GestionarGrupoAlumno junto con su historial.');
+            }
+        });
+    }
+
+    /**
+     * Año final del intervalo de nacimientos del 1 de julio al 30 de junio.
+     *
+     * @return Attribute<int|null, never>
+     */
+    protected function cohorteNacimiento(): Attribute
+    {
+        return Attribute::get(function (): ?int {
+            $fecha = $this->fecha_nacimiento;
+
+            return $fecha === null ? null : $fecha->year + ($fecha->month > 6 ? 1 : 0);
+        });
+    }
+
     protected function casts(): array
     {
         return [
             'activo' => 'boolean',
+            'grupo_id' => 'integer',
             'tipo_documento_id' => 'integer',
             'fecha_nacimiento' => 'date',
             'ciudad_nacimiento_id' => 'integer',
@@ -117,5 +149,29 @@ class Alumno extends Model
     public function adjuntos(): BelongsToMany
     {
         return $this->belongsToMany(Adjunto::class, 'alumnos_adjuntos');
+    }
+
+    /** @return BelongsTo<Grupo, $this> */
+    public function grupo(): BelongsTo
+    {
+        return $this->belongsTo(Grupo::class);
+    }
+
+    /** @return HasMany<AlumnoGrupo, $this> */
+    public function historialGrupos(): HasMany
+    {
+        return $this->hasMany(AlumnoGrupo::class);
+    }
+
+    /** @return HasOne<AlumnoGrupo, $this> */
+    public function asignacionActual(): HasOne
+    {
+        return $this->hasOne(AlumnoGrupo::class)->whereNull('fecha_hasta');
+    }
+
+    /** @return HasOne<AlumnoGrupo, $this> */
+    public function ultimaAsignacionGrupo(): HasOne
+    {
+        return $this->hasOne(AlumnoGrupo::class)->latestOfMany();
     }
 }

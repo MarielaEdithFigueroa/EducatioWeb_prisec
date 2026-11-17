@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Academico;
 
+use App\Actions\Academico\GestionarGrupoAlumno;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Academico\AlumnoRequest;
 use App\Http\Requests\Academico\CambiarEstadoAlumnoRequest;
@@ -10,9 +11,12 @@ use App\Http\Requests\Academico\IndexAlumnoRequest;
 use App\Http\Requests\Academico\VerAlumnoRequest;
 use App\Models\Adjunto;
 use App\Models\Alumno;
+use App\Models\AlumnoGrupo;
 use App\Models\AlumnoResponsable;
 use App\Models\Ciudad;
+use App\Models\Grupo;
 use App\Models\GrupoSanguineo;
+use App\Models\Log;
 use App\Models\MotivoBaja;
 use App\Models\Nacionalidad;
 use App\Models\Provincia;
@@ -89,6 +93,12 @@ class AlumnoController extends Controller
                 fn (Builder $query) => $query->where('ciudad_id', (int) $filters['ciudad_id']),
             )
             ->when(
+                $filters['grupo_id'] !== '',
+                fn (Builder $query) => $filters['grupo_id'] === 'sin_grupo'
+                    ? $query->whereNull('grupo_id')
+                    : $query->where('grupo_id', (int) $filters['grupo_id']),
+            )
+            ->when(
                 $filters['solo_activos'],
                 fn (Builder $query) => $query->where('activo', true),
             );
@@ -103,6 +113,13 @@ class AlumnoController extends Controller
                 ->orderBy('nombre')
                 ->get(),
             'filters' => $filters,
+            'grupos' => fn () => Grupo::query()
+                ->with(['nivel', 'curso', 'division', 'turno'])
+                ->orderByDesc('ciclo_lectivo')->orderBy('nivel_id')->orderBy('curso_id')->orderBy('division_id')->orderBy('turno_id')
+                ->get()->map(fn (Grupo $grupo): array => [
+                    'value' => $grupo->id,
+                    'label' => $grupo->descripcion.($grupo->activo ? '' : ' (inactivo)'),
+                ]),
             'resultados' => [
                 'total' => $totalAlumnos,
                 'filtrados' => $alumnosFiltrados,
@@ -157,6 +174,10 @@ class AlumnoController extends Controller
         Gate::authorize('view', $alumno);
 
         $alumno->load([
+            'grupo.nivel', 'grupo.curso', 'grupo.division', 'grupo.turno',
+            'historialGrupos' => fn (HasMany $query) => $query->orderByDesc('id')
+                ->with(['grupo:id,activo', 'auditoria' => fn (HasMany $logs) => $logs
+                    ->select(['id', 'entidad', 'entidad_id', 'accion', 'login', 'created_at'])->orderBy('id')]),
             'tipoDocumento:id,nombre',
             'ciudad:id,activo,provincia_id,nombre,codigo_postal',
             'ciudad.provincia:id,activo,nombre',
@@ -209,6 +230,24 @@ class AlumnoController extends Controller
         return Inertia::render('academico/alumnos/show', [
             'alumno' => $this->detallePayload($alumno),
             'seccion' => $request->seccion(),
+            'versionHistorial' => AlumnoGrupo::version($alumno->historialGrupos->first()),
+            'historialGrupos' => $alumno->historialGrupos->map(fn (AlumnoGrupo $asignacion): array => [
+                'id' => $asignacion->id,
+                'grupo_id' => $asignacion->grupo_id,
+                'grupo_activo' => $asignacion->grupo->activo,
+                'grupo_descripcion' => $asignacion->grupo_descripcion,
+                'fecha_desde' => $asignacion->fecha_desde->toIso8601String(),
+                'fecha_hasta' => $asignacion->fecha_hasta?->toIso8601String(),
+                'motivo_ingreso' => $asignacion->motivo_ingreso,
+                'motivo_egreso' => $asignacion->motivo_egreso,
+                'auditoria' => $asignacion->auditoria->map(fn (Log $log): array => [
+                    'id' => $log->id, 'accion' => $log->accion, 'login' => $log->login,
+                    'fecha' => $log->created_at->toIso8601String(),
+                ]),
+            ]),
+            'gruposDisponibles' => Grupo::query()->where('activo', true)
+                ->with(['nivel', 'curso', 'division', 'turno'])->orderByDesc('ciclo_lectivo')->orderBy('id')
+                ->get()->map(fn (Grupo $grupo): array => ['id' => $grupo->id, 'descripcion' => $grupo->descripcion]),
             'documentacion' => fn () => $alumno->adjuntos()
                 ->with('usuario:id,login')
                 ->orderByDesc('activo')
@@ -267,6 +306,7 @@ class AlumnoController extends Controller
     public function update(AlumnoRequest $request, Alumno $alumno): RedirectResponse
     {
         DB::transaction(function () use ($request, $alumno): void {
+            $alumno = Alumno::query()->lockForUpdate()->findOrFail($alumno->id);
             $anterior = $alumno->attributesToArray();
             $alumno->fill($request->validated());
 
@@ -285,13 +325,15 @@ class AlumnoController extends Controller
         return back();
     }
 
-    public function desactivar(DarBajaAlumnoRequest $request, Alumno $alumno): RedirectResponse
+    public function desactivar(DarBajaAlumnoRequest $request, Alumno $alumno, GestionarGrupoAlumno $gestionar): RedirectResponse
     {
-        DB::transaction(function () use ($request, $alumno): void {
+        DB::transaction(function () use ($request, $alumno, $gestionar): void {
+            $alumno = Alumno::query()->lockForUpdate()->findOrFail($alumno->id);
             if (! $alumno->activo) {
                 return;
             }
 
+            $gestionar->cerrarPorBaja($alumno);
             $anterior = $alumno->attributesToArray();
             $alumno->fill([
                 ...$request->validated(),
@@ -310,6 +352,7 @@ class AlumnoController extends Controller
     public function reactivar(CambiarEstadoAlumnoRequest $request, Alumno $alumno): RedirectResponse
     {
         DB::transaction(function () use ($alumno): void {
+            $alumno = Alumno::query()->lockForUpdate()->findOrFail($alumno->id);
             if ($alumno->activo) {
                 return;
             }
@@ -386,6 +429,8 @@ class AlumnoController extends Controller
         return [
             'id' => $alumno->id,
             'activo' => $alumno->activo,
+            'grupo_id' => $alumno->grupo_id,
+            'grupo_descripcion' => $alumno->grupo?->descripcion,
             'legajo' => $alumno->legajo,
             'apellido' => $alumno->apellido,
             'nombre' => $alumno->nombre,

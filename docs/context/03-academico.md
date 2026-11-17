@@ -2,6 +2,8 @@
 
 Referencia funcional del área **Académica** (gestión escolar), derivada del módulo académico del legacy (proyecto `Escuelas.vbp`, carpeta `SecundarioV4`). Describe **qué hace** el dominio, no cómo se modela en la base.
 
+El estado de la implementación web se consulta en [el roadmap](../roadmap.md). Los circuitos enumerados aquí incluyen funcionalidades del legacy todavía pendientes de análisis o implementación.
+
 > Alcance de la reescritura: **Primaria y Secundaria**. Lo del legacy que sea propio de Terciario (correlatividades, mesas de examen, inscripción a finales, pasantías) queda fuera.
 
 ## Alumnos y responsables

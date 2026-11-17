@@ -7,6 +7,8 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Exists;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Validation\Validator;
 
 class GrupoRequest extends FormRequest
 {
@@ -75,5 +77,44 @@ class GrupoRequest extends FormRequest
     public function datos(): array
     {
         return [...$this->safe()->only(['ciclo_lectivo', 'nivel_id', 'curso_id', 'division_id', 'turno_id']), 'plan_estudio_id' => $this->validated('plan_estudio_id')];
+    }
+
+    /** @return array<callable> */
+    public function after(): array
+    {
+        return [function (Validator $validator): void {
+            $grupo = $this->route('grupo');
+            if ($grupo instanceof Grupo && $validator->errors()->isEmpty()) {
+                foreach ($this->erroresHistorial($grupo) as $campo => $mensaje) {
+                    $validator->errors()->add($campo, $mensaje);
+                }
+            }
+        }];
+    }
+
+    public function validarHistorial(Grupo $grupo): void
+    {
+        $errores = $this->erroresHistorial($grupo);
+        if ($errores !== []) {
+            throw ValidationException::withMessages($errores);
+        }
+    }
+
+    /** @return array<string, string> */
+    private function erroresHistorial(Grupo $grupo): array
+    {
+        if (! $grupo->historialAlumnos()->exists()) {
+            return [];
+        }
+
+        $errores = [];
+        foreach (['ciclo_lectivo', 'nivel_id', 'curso_id', 'division_id', 'turno_id', 'plan_estudio_id'] as $campo) {
+            $nuevo = $this->input($campo) === null ? null : $this->integer($campo);
+            if ($grupo->getAttribute($campo) !== $nuevo) {
+                $errores[$campo] = 'Este grupo tiene historial de alumnos. Conservá su composición y creá otro grupo para una composición diferente.';
+            }
+        }
+
+        return $errores;
     }
 }

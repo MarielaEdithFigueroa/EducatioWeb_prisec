@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Academico\AdjuntoIntegranteController;
 use App\Http\Controllers\Academico\AlumnoController;
+use App\Http\Controllers\Academico\AlumnoGrupoController;
 use App\Http\Controllers\Academico\AlumnoResponsableController;
 use App\Http\Controllers\Academico\AulaController;
 use App\Http\Controllers\Academico\CursoController;
@@ -9,7 +10,9 @@ use App\Http\Controllers\Academico\DivisionController;
 use App\Http\Controllers\Academico\DocumentoAlumnoController;
 use App\Http\Controllers\Academico\DocumentoIntegranteController;
 use App\Http\Controllers\Academico\FotoAulaController;
+use App\Http\Controllers\Academico\GrupoAlumnoController;
 use App\Http\Controllers\Academico\GrupoController;
+use App\Http\Controllers\Academico\GrupoPanelController;
 use App\Http\Controllers\Academico\IntegranteController;
 use App\Http\Controllers\Academico\NivelController;
 use App\Http\Controllers\Academico\PlanEstudioController;
@@ -66,9 +69,13 @@ Route::middleware('auth')->group(function () {
         });
 
         Route::get('grupos', [GrupoController::class, 'index'])->name('grupos.index');
+        Route::get('grupos/panel', GrupoPanelController::class)->name('grupos.panel');
         Route::get('grupos/nuevo', [GrupoController::class, 'create'])->name('grupos.create');
         Route::post('grupos', [GrupoController::class, 'store'])->name('grupos.store');
         Route::get('grupos/{grupo}', [GrupoController::class, 'show'])->name('grupos.show');
+        Route::get('grupos/{grupo}/asignar-alumnos', [GrupoAlumnoController::class, 'create'])->name('grupos.alumnos.create');
+        Route::post('grupos/{grupo}/alumnos', [GrupoAlumnoController::class, 'store'])->name('grupos.alumnos.store');
+        Route::get('grupos/{grupo}/alumnos', [GrupoAlumnoController::class, 'index'])->name('grupos.alumnos.index');
         Route::get('grupos/{grupo}/editar', [GrupoController::class, 'edit'])->name('grupos.edit');
         Route::patch('grupos/{grupo}', [GrupoController::class, 'update'])->name('grupos.update');
         Route::patch('grupos/{grupo}/desactivar', [GrupoController::class, 'desactivar'])->name('grupos.desactivar');
@@ -110,6 +117,7 @@ Route::middleware('auth')->group(function () {
         Route::get('alumnos/{alumno}', [AlumnoController::class, 'show'])->name('alumnos.show');
         Route::get('alumnos/{alumno}/editar', [AlumnoController::class, 'edit'])->name('alumnos.edit');
         Route::patch('alumnos/{alumno}', [AlumnoController::class, 'update'])->name('alumnos.update');
+        Route::patch('alumnos/{alumno}/grupo', [AlumnoGrupoController::class, 'update'])->name('alumnos.grupo.update');
         Route::patch('alumnos/{alumno}/desactivar', [AlumnoController::class, 'desactivar'])->name('alumnos.desactivar');
         Route::patch('alumnos/{alumno}/reactivar', [AlumnoController::class, 'reactivar'])->name('alumnos.reactivar');
 

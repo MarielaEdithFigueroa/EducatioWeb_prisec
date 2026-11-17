@@ -346,3 +346,558 @@ Visit https://react.dev/link/error-boundaries to learn more about error boundari
 Visit https://react.dev/link/error-boundaries to learn more about error boundaries. {"url":"http://localhost:8002/academico/docentes/nuevo?filtros%5Bbuscar%5D=&filtros%5Bestado%5D=activos&filtros%5Btipo%5D=&filtros%5Bsector_id%5D=","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36","timestamp":"2026-10-24T17:01:47.785Z"} 
 [2026-10-24 15:51:48] local.ERROR: [vite] Failed to reload /resources/js/layouts/admin-general-layout.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above) {"url":"http://localhost:8002/dashboard","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36","timestamp":"2026-10-24T18:51:46.036Z"} 
 [2026-10-24 17:21:41] local.ERROR: [vite] Failed to reload /@id/D:/Eureka/EducatioWeb/EducatioWeb_PriSec-main/resources/js/pages/academico/integrantes/relaciones.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above) {"url":"http://localhost:8002/academico/integrantes","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36","timestamp":"2026-10-24T20:21:41.164Z"} 
+[2026-11-17 12:50:36] local.ERROR: React does not recognize the `%s` prop on a DOM element. If you intentionally want it to appear in the DOM as a custom attribute, spell it as lowercase `%s` instead. If you accidentally passed it from a parent component, remove it from the DOM element. asChild aschild {"url":"http://localhost:8002/academico/grupos/90","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36","timestamp":"2026-11-17T15:50:35.373Z"} 
+[2026-11-17 12:50:36] local.ERROR: React does not recognize the `%s` prop on a DOM element. If you intentionally want it to appear in the DOM as a custom attribute, spell it as lowercase `%s` instead. If you accidentally passed it from a parent component, remove it from the DOM element. asChild aschild {"url":"http://localhost:8002/academico/grupos/90","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36","timestamp":"2026-11-17T15:50:35.373Z"} 
+[2026-11-17 12:50:36] local.ERROR: React does not recognize the `%s` prop on a DOM element. If you intentionally want it to appear in the DOM as a custom attribute, spell it as lowercase `%s` instead. If you accidentally passed it from a parent component, remove it from the DOM element. asChild aschild {"url":"http://localhost:8002/academico/grupos/90","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36","timestamp":"2026-11-17T15:50:36.746Z"} 
+[2026-11-17 13:04:22] local.ERROR: Uncaught Error: Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <div className="min-h-scre...">
+      <RoleSidebar>
+      <RoleLayoutFrame sidebarOpen={false} onToggleSidebar={function t8} breadcrumbs={[...]} ...>
+        <div className="min-h-scre...">
+          <div className="min-h-[cal...">
+            <header>
+            <main className="w-full px-...">
+              <AsignarAlumnos errors={{}} name="Educatio Web" auth={{...}} sidebarOpen={true} grupo={{id:90, ...}} ...>
+                <Head>
+                <div className="mx-auto fl...">
+                  <EducatioCard>
+                  <EducatioCard>
+                    <EureCard variant="plain" headingLevel="h2" className={"rounded-..."}>
+                      <div className={"border b..."} style={undefined}>
+                        <h2>
+                        <div className="mb-3 grid ...">
+                          <EureInputGroup>
+                          <EureSelectGroup>
+                          <EureSelectGroup>
+                          <EureSelectGroup className="xl:col-span-2" name="cohorte_na..." label="Año de nac..." ...>
+                            <div className="xl:col-span-2">
+                              <label
++                               htmlFor="cohorte_nacimiento"
+-                               htmlFor="anio_nacimiento"
+                                className="block text-sm font-semibold tracking-wide mb-1.5 text-[var(--eure-text)]"
+                              >
++                               Año de nacimiento
+                              ...
+                                <SelectContainer clearValue={function} cx={function} getStyles={function} ...>
+                                  <EmotionCssPropInternal css={{label:"con...", ...}} className="" id={undefined} ...>
+                                    <Insertion>
+                                    <div className="css-b62m3t..." id={undefined} onKeyDown={function}>
+                                      <LiveRegion>
+                                      ...
+                                        <Input clearValue={function} cx={function} getStyles={function} ...>
+                                          <EmotionCssPropInternal css={{...}} className="" data-value="" ...>
+                                            <Insertion>
+                                            <div className="css-1050ytg" data-value="">
+                                              <input
+                                                className=""
+                                                ref={function}
+                                                style={{label:"input",color:"inherit",background:0,opacity:1,width:"100%",gridArea:"1 / 2", ...}}
+                                                disabled={false}
+                                                autoCapitalize="none"
+                                                autoComplete="off"
+                                                autoCorrect="off"
++                                               id="cohorte_nacimiento"
+-                                               id="anio_nacimiento"
+                                                onBlur={function}
+                                                onChange={function}
+                                                onFocus={function}
+                                                spellCheck="false"
+                                                tabIndex={0}
+                                                form={undefined}
+                                                type="text"
+                                                value=""
+                                                aria-autocomplete="list"
+                                                aria-expanded={false}
+                                                aria-haspopup={true}
+                                                aria-errormessage={undefined}
+                                                aria-invalid={undefined}
+                                                aria-label={undefined}
+                                                aria-labelledby={undefined}
+                                                aria-required={false}
+                                                role="combobox"
+                                                aria-activedescendant=""
+                                              >
++                                     <input name="cohorte_nacimiento" type="hidden" value="todos">
+-                                     <input type="hidden" name="anio_nacimiento" value="todos">
+                        ...
+                        ...
+                  ... http://[::1]:5173/node_modules/.vite/deps/client-B05GRim-.js?v=f761f5f5 2967 51 Error Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <div className="min-h-scre...">
+      <RoleSidebar>
+      <RoleLayoutFrame sidebarOpen={false} onToggleSidebar={function t8} breadcrumbs={[...]} ...>
+        <div className="min-h-scre...">
+          <div className="min-h-[cal...">
+            <header>
+            <main className="w-full px-...">
+              <AsignarAlumnos errors={{}} name="Educatio Web" auth={{...}} sidebarOpen={true} grupo={{id:90, ...}} ...>
+                <Head>
+                <div className="mx-auto fl...">
+                  <EducatioCard>
+                  <EducatioCard>
+                    <EureCard variant="plain" headingLevel="h2" className={"rounded-..."}>
+                      <div className={"border b..."} style={undefined}>
+                        <h2>
+                        <div className="mb-3 grid ...">
+                          <EureInputGroup>
+                          <EureSelectGroup>
+                          <EureSelectGroup>
+                          <EureSelectGroup className="xl:col-span-2" name="cohorte_na..." label="Año de nac..." ...>
+                            <div className="xl:col-span-2">
+                              <label
++                               htmlFor="cohorte_nacimiento"
+-                               htmlFor="anio_nacimiento"
+                                className="block text-sm font-semibold tracking-wide mb-1.5 text-[var(--eure-text)]"
+                              >
++                               Año de nacimiento
+                              ...
+                                <SelectContainer clearValue={function} cx={function} getStyles={function} ...>
+                                  <EmotionCssPropInternal css={{label:"con...", ...}} className="" id={undefined} ...>
+                                    <Insertion>
+                                    <div className="css-b62m3t..." id={undefined} onKeyDown={function}>
+                                      <LiveRegion>
+                                      ...
+                                        <Input clearValue={function} cx={function} getStyles={function} ...>
+                                          <EmotionCssPropInternal css={{...}} className="" data-value="" ...>
+                                            <Insertion>
+                                            <div className="css-1050ytg" data-value="">
+                                              <input
+                                                className=""
+                                                ref={function}
+                                                style={{label:"input",color:"inherit",background:0,opacity:1,width:"100%",gridArea:"1 / 2", ...}}
+                                                disabled={false}
+                                                autoCapitalize="none"
+                                                autoComplete="off"
+                                                autoCorrect="off"
++                                               id="cohorte_nacimiento"
+-                                               id="anio_nacimiento"
+                                                onBlur={function}
+                                                onChange={function}
+                                                onFocus={function}
+                                                spellCheck="false"
+                                                tabIndex={0}
+                                                form={undefined}
+                                                type="text"
+                                                value=""
+                                                aria-autocomplete="list"
+                                                aria-expanded={false}
+                                                aria-haspopup={true}
+                                                aria-errormessage={undefined}
+                                                aria-invalid={undefined}
+                                                aria-label={undefined}
+                                                aria-labelledby={undefined}
+                                                aria-required={false}
+                                                role="combobox"
+                                                aria-activedescendant=""
+                                              >
++                                     <input name="cohorte_nacimiento" type="hidden" value="todos">
+-                                     <input type="hidden" name="anio_nacimiento" value="todos">
+                        ...
+                        ...
+                  ... Error: Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <div className="min-h-scre...">
+      <RoleSidebar>
+      <RoleLayoutFrame sidebarOpen={false} onToggleSidebar={function t8} breadcrumbs={[...]} ...>
+        <div className="min-h-scre...">
+          <div className="min-h-[cal...">
+            <header>
+            <main className="w-full px-...">
+              <AsignarAlumnos errors={{}} name="Educatio Web" auth={{...}} sidebarOpen={true} grupo={{id:90, ...}} ...>
+                <Head>
+                <div className="mx-auto fl...">
+                  <EducatioCard>
+                  <EducatioCard>
+                    <EureCard variant="plain" headingLevel="h2" className={"rounded-..."}>
+                      <div className={"border b..."} style={undefined}>
+                        <h2>
+                        <div className="mb-3 grid ...">
+                          <EureInputGroup>
+                          <EureSelectGroup>
+                          <EureSelectGroup>
+                          <EureSelectGroup className="xl:col-span-2" name="cohorte_na..." label="Año de nac..." ...>
+                            <div className="xl:col-span-2">
+                              <label
++                               htmlFor="cohorte_nacimiento"
+-                               htmlFor="anio_nacimiento"
+                                className="block text-sm font-semibold tracking-wide mb-1.5 text-[var(--eure-text)]"
+                              >
++                               Año de nacimiento
+                              ...
+                                <SelectContainer clearValue={function} cx={function} getStyles={function} ...>
+                                  <EmotionCssPropInternal css={{label:"con...", ...}} className="" id={undefined} ...>
+                                    <Insertion>
+                                    <div className="css-b62m3t..." id={undefined} onKeyDown={function}>
+                                      <LiveRegion>
+                                      ...
+                                        <Input clearValue={function} cx={function} getStyles={function} ...>
+                                          <EmotionCssPropInternal css={{...}} className="" data-value="" ...>
+                                            <Insertion>
+                                            <div className="css-1050ytg" data-value="">
+                                              <input
+                                                className=""
+                                                ref={function}
+                                                style={{label:"input",color:"inherit",background:0,opacity:1,width:"100%",gridArea:"1 / 2", ...}}
+                                                disabled={false}
+                                                autoCapitalize="none"
+                                                autoComplete="off"
+                                                autoCorrect="off"
++                                               id="cohorte_nacimiento"
+-                                               id="anio_nacimiento"
+                                                onBlur={function}
+                                                onChange={function}
+                                                onFocus={function}
+                                                spellCheck="false"
+                                                tabIndex={0}
+                                                form={undefined}
+                                                type="text"
+                                                value=""
+                                                aria-autocomplete="list"
+                                                aria-expanded={false}
+                                                aria-haspopup={true}
+                                                aria-errormessage={undefined}
+                                                aria-invalid={undefined}
+                                                aria-label={undefined}
+                                                aria-labelledby={undefined}
+                                                aria-required={false}
+                                                role="combobox"
+                                                aria-activedescendant=""
+                                              >
++                                     <input name="cohorte_nacimiento" type="hidden" value="todos">
+-                                     <input type="hidden" name="anio_nacimiento" value="todos">
+                        ...
+                        ...
+                  ...
+
+    at throwOnHydrationMismatch (http://[::1]:5173/node_modules/.vite/deps/client-B05GRim-.js?v=f761f5f5:2967:51)
+    at beginWork (http://[::1]:5173/node_modules/.vite/deps/client-B05GRim-.js?v=f761f5f5:6199:914)
+    at runWithFiberInDEV (http://[::1]:5173/node_modules/.vite/deps/client-B05GRim-.js?v=f761f5f5:850:66)
+    at performUnitOfWork (http://[::1]:5173/node_modules/.vite/deps/client-B05GRim-.js?v=f761f5f5:8428:92)
+    at workLoopSync (http://[::1]:5173/node_modules/.vite/deps/client-B05GRim-.js?v=f761f5f5:8324:37)
+    at renderRootSync (http://[::1]:5173/node_modules/.vite/deps/client-B05GRim-.js?v=f761f5f5:8308:6)
+    at performWorkOnRoot (http://[::1]:5173/node_modules/.vite/deps/client-B05GRim-.js?v=f761f5f5:7956:181)
+    at performWorkOnRootViaSchedulerTask (http://[::1]:5173/node_modules/.vite/deps/client-B05GRim-.js?v=f761f5f5:9058:4)
+    at MessagePort.performWorkUntilDeadline (http://[::1]:5173/node_modules/.vite/deps/client-B05GRim-.js?v=f761f5f5:35:38) {"url":"http://localhost:8002/academico/grupos/90/asignar-alumnos","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36","timestamp":"2026-11-17T16:04:22.695Z"} 
+[2026-11-17 13:04:22] local.ERROR: Uncaught Error: Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <div className="min-h-scre...">
+      <RoleSidebar>
+      <RoleLayoutFrame sidebarOpen={false} onToggleSidebar={function t8} breadcrumbs={[...]} ...>
+        <div className="min-h-scre...">
+          <div className="min-h-[cal...">
+            <header>
+            <main className="w-full px-...">
+              <AsignarAlumnos errors={{}} name="Educatio Web" auth={{...}} sidebarOpen={true} grupo={{id:90, ...}} ...>
+                <Head>
+                <div className="mx-auto fl...">
+                  <EducatioCard>
+                  <EducatioCard>
+                    <EureCard variant="plain" headingLevel="h2" className={"rounded-..."}>
+                      <div className={"border b..."} style={undefined}>
+                        <h2>
+                        <div className="mb-3 grid ...">
+                          <EureInputGroup>
+                          <EureSelectGroup>
+                          <EureSelectGroup>
+                          <EureSelectGroup className="xl:col-span-2" name="cohorte_na..." label="Año de nac..." ...>
+                            <div className="xl:col-span-2">
+                              <label
++                               htmlFor="cohorte_nacimiento"
+-                               htmlFor="anio_nacimiento"
+                                className="block text-sm font-semibold tracking-wide mb-1.5 text-[var(--eure-text)]"
+                              >
++                               Año de nacimiento
+                              ...
+                                <SelectContainer clearValue={function} cx={function} getStyles={function} ...>
+                                  <EmotionCssPropInternal css={{label:"con...", ...}} className="" id={undefined} ...>
+                                    <Insertion>
+                                    <div className="css-b62m3t..." id={undefined} onKeyDown={function}>
+                                      <LiveRegion>
+                                      ...
+                                        <Input clearValue={function} cx={function} getStyles={function} ...>
+                                          <EmotionCssPropInternal css={{...}} className="" data-value="" ...>
+                                            <Insertion>
+                                            <div className="css-1050ytg" data-value="">
+                                              <input
+                                                className=""
+                                                ref={function}
+                                                style={{label:"input",color:"inherit",background:0,opacity:1,width:"100%",gridArea:"1 / 2", ...}}
+                                                disabled={false}
+                                                autoCapitalize="none"
+                                                autoComplete="off"
+                                                autoCorrect="off"
++                                               id="cohorte_nacimiento"
+-                                               id="anio_nacimiento"
+                                                onBlur={function}
+                                                onChange={function}
+                                                onFocus={function}
+                                                spellCheck="false"
+                                                tabIndex={0}
+                                                form={undefined}
+                                                type="text"
+                                                value=""
+                                                aria-autocomplete="list"
+                                                aria-expanded={false}
+                                                aria-haspopup={true}
+                                                aria-errormessage={undefined}
+                                                aria-invalid={undefined}
+                                                aria-label={undefined}
+                                                aria-labelledby={undefined}
+                                                aria-required={false}
+                                                role="combobox"
+                                                aria-activedescendant=""
+                                              >
++                                     <input name="cohorte_nacimiento" type="hidden" value="todos">
+-                                     <input type="hidden" name="anio_nacimiento" value="todos">
+                        ...
+                        ...
+                  ... http://[::1]:5173/node_modules/.vite/deps/client-B05GRim-.js?v=f761f5f5 2967 51 Error Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <div className="min-h-scre...">
+      <RoleSidebar>
+      <RoleLayoutFrame sidebarOpen={false} onToggleSidebar={function t8} breadcrumbs={[...]} ...>
+        <div className="min-h-scre...">
+          <div className="min-h-[cal...">
+            <header>
+            <main className="w-full px-...">
+              <AsignarAlumnos errors={{}} name="Educatio Web" auth={{...}} sidebarOpen={true} grupo={{id:90, ...}} ...>
+                <Head>
+                <div className="mx-auto fl...">
+                  <EducatioCard>
+                  <EducatioCard>
+                    <EureCard variant="plain" headingLevel="h2" className={"rounded-..."}>
+                      <div className={"border b..."} style={undefined}>
+                        <h2>
+                        <div className="mb-3 grid ...">
+                          <EureInputGroup>
+                          <EureSelectGroup>
+                          <EureSelectGroup>
+                          <EureSelectGroup className="xl:col-span-2" name="cohorte_na..." label="Año de nac..." ...>
+                            <div className="xl:col-span-2">
+                              <label
++                               htmlFor="cohorte_nacimiento"
+-                               htmlFor="anio_nacimiento"
+                                className="block text-sm font-semibold tracking-wide mb-1.5 text-[var(--eure-text)]"
+                              >
++                               Año de nacimiento
+                              ...
+                                <SelectContainer clearValue={function} cx={function} getStyles={function} ...>
+                                  <EmotionCssPropInternal css={{label:"con...", ...}} className="" id={undefined} ...>
+                                    <Insertion>
+                                    <div className="css-b62m3t..." id={undefined} onKeyDown={function}>
+                                      <LiveRegion>
+                                      ...
+                                        <Input clearValue={function} cx={function} getStyles={function} ...>
+                                          <EmotionCssPropInternal css={{...}} className="" data-value="" ...>
+                                            <Insertion>
+                                            <div className="css-1050ytg" data-value="">
+                                              <input
+                                                className=""
+                                                ref={function}
+                                                style={{label:"input",color:"inherit",background:0,opacity:1,width:"100%",gridArea:"1 / 2", ...}}
+                                                disabled={false}
+                                                autoCapitalize="none"
+                                                autoComplete="off"
+                                                autoCorrect="off"
++                                               id="cohorte_nacimiento"
+-                                               id="anio_nacimiento"
+                                                onBlur={function}
+                                                onChange={function}
+                                                onFocus={function}
+                                                spellCheck="false"
+                                                tabIndex={0}
+                                                form={undefined}
+                                                type="text"
+                                                value=""
+                                                aria-autocomplete="list"
+                                                aria-expanded={false}
+                                                aria-haspopup={true}
+                                                aria-errormessage={undefined}
+                                                aria-invalid={undefined}
+                                                aria-label={undefined}
+                                                aria-labelledby={undefined}
+                                                aria-required={false}
+                                                role="combobox"
+                                                aria-activedescendant=""
+                                              >
++                                     <input name="cohorte_nacimiento" type="hidden" value="todos">
+-                                     <input type="hidden" name="anio_nacimiento" value="todos">
+                        ...
+                        ...
+                  ... Error: Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <div className="min-h-scre...">
+      <RoleSidebar>
+      <RoleLayoutFrame sidebarOpen={false} onToggleSidebar={function t8} breadcrumbs={[...]} ...>
+        <div className="min-h-scre...">
+          <div className="min-h-[cal...">
+            <header>
+            <main className="w-full px-...">
+              <AsignarAlumnos errors={{}} name="Educatio Web" auth={{...}} sidebarOpen={true} grupo={{id:90, ...}} ...>
+                <Head>
+                <div className="mx-auto fl...">
+                  <EducatioCard>
+                  <EducatioCard>
+                    <EureCard variant="plain" headingLevel="h2" className={"rounded-..."}>
+                      <div className={"border b..."} style={undefined}>
+                        <h2>
+                        <div className="mb-3 grid ...">
+                          <EureInputGroup>
+                          <EureSelectGroup>
+                          <EureSelectGroup>
+                          <EureSelectGroup className="xl:col-span-2" name="cohorte_na..." label="Año de nac..." ...>
+                            <div className="xl:col-span-2">
+                              <label
++                               htmlFor="cohorte_nacimiento"
+-                               htmlFor="anio_nacimiento"
+                                className="block text-sm font-semibold tracking-wide mb-1.5 text-[var(--eure-text)]"
+                              >
++                               Año de nacimiento
+                              ...
+                                <SelectContainer clearValue={function} cx={function} getStyles={function} ...>
+                                  <EmotionCssPropInternal css={{label:"con...", ...}} className="" id={undefined} ...>
+                                    <Insertion>
+                                    <div className="css-b62m3t..." id={undefined} onKeyDown={function}>
+                                      <LiveRegion>
+                                      ...
+                                        <Input clearValue={function} cx={function} getStyles={function} ...>
+                                          <EmotionCssPropInternal css={{...}} className="" data-value="" ...>
+                                            <Insertion>
+                                            <div className="css-1050ytg" data-value="">
+                                              <input
+                                                className=""
+                                                ref={function}
+                                                style={{label:"input",color:"inherit",background:0,opacity:1,width:"100%",gridArea:"1 / 2", ...}}
+                                                disabled={false}
+                                                autoCapitalize="none"
+                                                autoComplete="off"
+                                                autoCorrect="off"
++                                               id="cohorte_nacimiento"
+-                                               id="anio_nacimiento"
+                                                onBlur={function}
+                                                onChange={function}
+                                                onFocus={function}
+                                                spellCheck="false"
+                                                tabIndex={0}
+                                                form={undefined}
+                                                type="text"
+                                                value=""
+                                                aria-autocomplete="list"
+                                                aria-expanded={false}
+                                                aria-haspopup={true}
+                                                aria-errormessage={undefined}
+                                                aria-invalid={undefined}
+                                                aria-label={undefined}
+                                                aria-labelledby={undefined}
+                                                aria-required={false}
+                                                role="combobox"
+                                                aria-activedescendant=""
+                                              >
++                                     <input name="cohorte_nacimiento" type="hidden" value="todos">
+-                                     <input type="hidden" name="anio_nacimiento" value="todos">
+                        ...
+                        ...
+                  ...
+
+    at throwOnHydrationMismatch (http://[::1]:5173/node_modules/.vite/deps/client-B05GRim-.js?v=f761f5f5:2967:51)
+    at beginWork (http://[::1]:5173/node_modules/.vite/deps/client-B05GRim-.js?v=f761f5f5:6199:914)
+    at runWithFiberInDEV (http://[::1]:5173/node_modules/.vite/deps/client-B05GRim-.js?v=f761f5f5:850:66)
+    at performUnitOfWork (http://[::1]:5173/node_modules/.vite/deps/client-B05GRim-.js?v=f761f5f5:8428:92)
+    at workLoopSync (http://[::1]:5173/node_modules/.vite/deps/client-B05GRim-.js?v=f761f5f5:8324:37)
+    at renderRootSync (http://[::1]:5173/node_modules/.vite/deps/client-B05GRim-.js?v=f761f5f5:8308:6)
+    at performWorkOnRoot (http://[::1]:5173/node_modules/.vite/deps/client-B05GRim-.js?v=f761f5f5:7956:181)
+    at performWorkOnRootViaSchedulerTask (http://[::1]:5173/node_modules/.vite/deps/client-B05GRim-.js?v=f761f5f5:9058:4)
+    at MessagePort.performWorkUntilDeadline (http://[::1]:5173/node_modules/.vite/deps/client-B05GRim-.js?v=f761f5f5:35:38) {"url":"http://localhost:8002/academico/grupos/90/asignar-alumnos","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36","timestamp":"2026-11-17T16:04:22.695Z"} 
+[2026-11-17 15:53:15] local.ERROR: Uncaught TypeError: grupos is not iterable http://[::1]:5173/@id/D:/Eureka/EducatioWeb/EducatioWeb_PriSec-main/resources/js/pages/academico/alumnos/index.tsx?t=1794941591482 98 7 TypeError grupos is not iterable TypeError: grupos is not iterable
+    at AlumnosIndex (http://[::1]:5173/@id/D:/Eureka/EducatioWeb/EducatioWeb_PriSec-main/resources/js/pages/academico/alumnos/index.tsx?t=1794941591482:98:7)
+    at Object.react_stack_bottom_frame (http://[::1]:5173/node_modules/.vite/deps/client-B05GRim-.js?v=f761f5f5:12867:12)
+    at renderWithHooks (http://[::1]:5173/node_modules/.vite/deps/client-B05GRim-.js?v=f761f5f5:4212:19)
+    at updateFunctionComponent (http://[::1]:5173/node_modules/.vite/deps/client-B05GRim-.js?v=f761f5f5:5568:16)
+    at beginWork (http://[::1]:5173/node_modules/.vite/deps/client-B05GRim-.js?v=f761f5f5:6139:20)
+    at runWithFiberInDEV (http://[::1]:5173/node_modules/.vite/deps/client-B05GRim-.js?v=f761f5f5:850:66)
+    at performUnitOfWork (http://[::1]:5173/node_modules/.vite/deps/client-B05GRim-.js?v=f761f5f5:8428:92)
+    at workLoopSync (http://[::1]:5173/node_modules/.vite/deps/client-B05GRim-.js?v=f761f5f5:8324:37)
+    at renderRootSync (http://[::1]:5173/node_modules/.vite/deps/client-B05GRim-.js?v=f761f5f5:8308:6)
+    at performWorkOnRoot (http://[::1]:5173/node_modules/.vite/deps/client-B05GRim-.js?v=f761f5f5:7993:27) {"url":"http://localhost:8002/academico/alumnos","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36","timestamp":"2026-11-17T18:53:12.034Z"} 
+[2026-11-17 15:53:15] local.ERROR: Uncaught TypeError: grupos is not iterable http://[::1]:5173/@id/D:/Eureka/EducatioWeb/EducatioWeb_PriSec-main/resources/js/pages/academico/alumnos/index.tsx?t=1794941591482 98 7 TypeError grupos is not iterable TypeError: grupos is not iterable
+    at AlumnosIndex (http://[::1]:5173/@id/D:/Eureka/EducatioWeb/EducatioWeb_PriSec-main/resources/js/pages/academico/alumnos/index.tsx?t=1794941591482:98:7)
+    at Object.react_stack_bottom_frame (http://[::1]:5173/node_modules/.vite/deps/client-B05GRim-.js?v=f761f5f5:12867:12)
+    at renderWithHooks (http://[::1]:5173/node_modules/.vite/deps/client-B05GRim-.js?v=f761f5f5:4212:19)
+    at updateFunctionComponent (http://[::1]:5173/node_modules/.vite/deps/client-B05GRim-.js?v=f761f5f5:5568:16)
+    at beginWork (http://[::1]:5173/node_modules/.vite/deps/client-B05GRim-.js?v=f761f5f5:6139:20)
+    at runWithFiberInDEV (http://[::1]:5173/node_modules/.vite/deps/client-B05GRim-.js?v=f761f5f5:850:66)
+    at performUnitOfWork (http://[::1]:5173/node_modules/.vite/deps/client-B05GRim-.js?v=f761f5f5:8428:92)
+    at workLoopSync (http://[::1]:5173/node_modules/.vite/deps/client-B05GRim-.js?v=f761f5f5:8324:37)
+    at renderRootSync (http://[::1]:5173/node_modules/.vite/deps/client-B05GRim-.js?v=f761f5f5:8308:6)
+    at performWorkOnRoot (http://[::1]:5173/node_modules/.vite/deps/client-B05GRim-.js?v=f761f5f5:7993:27) {"url":"http://localhost:8002/academico/alumnos","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36","timestamp":"2026-11-17T18:53:12.034Z"} 
+[2026-11-17 15:53:15] local.WARNING: %s
+
+%s An error occurred in the <AlumnosIndex> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. {"url":"http://localhost:8002/academico/alumnos","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36","timestamp":"2026-11-17T18:53:12.035Z"} 
